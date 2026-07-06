@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paper Review"
+  short_description: "Review drafts, rebuttals, and revisions"
+  default_prompt: "Use $paper-review to audit this manuscript and produce a prioritized fix list."
