@@ -39,13 +39,18 @@ When the comparison requirement is active, produce a plan with:
 
 1. Table purpose: what gap or axis the table makes visible.
 2. Row groups: paper families, systems, datasets, threat models, or approaches.
-3. Columns: normally 3 to 4 high-signal comparison dimensions; use 5 only if essential, and avoid 6 or more unless the user explicitly wants a wide table.
+3. Columns: normally 3 to 4 high-signal comparison dimensions; use 5 only if essential. Use 6 to 7 with a justified dense empirical design. When 8 or more dimensions remain after pruning and derive from the paper's conceptual layers, propose `table_profile: layered_capability_matrix` and name the 2--4 column groups.
 4. Placement preference: single-column by default after pruning; request `table*` only with an explicit reason.
 5. Marker semantics: `\cmark` = full support, `\pmark` = partial support, `\xmark` = absent, only when marker symbols are needed.
 6. Proposed row: the paper's method or artifact, only if the manuscript has one.
 7. Compact caption draft. Do not include internal provenance notes, placeholder-citation status, or long marker notes.
 8. In-text reference sentence.
 9. Handoff note for Figures & Tables when final LaTeX rendering is needed.
+
+For a proposed-row or cell-level coverage delta, define the compared corpus and
+state only what its row evidence supports. Unless the corpus is exhaustive,
+write "not covered by the compared work" or "absent from the compared rows"
+rather than an unqualified "unique to this work."
 
 Writing may include a compact LaTeX skeleton only when it helps explain content. Final layout, `resizebox`, color, grouped headers, and compile polishing belong to Figures & Tables.
 
@@ -88,6 +93,9 @@ Figures & Tables handoff:
 - Rows:
 - Columns:
 - Placement preference: single-column unless the dimensions cannot be pruned further
+- Table profile: compact | dense empirical | layered capability matrix
+- Semantic column groups: <required for layered capability matrix>
+- Comparison-corpus boundary:
 - Marker semantics:
 - Caption draft:
 - In-text reference sentence:

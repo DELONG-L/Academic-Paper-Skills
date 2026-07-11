@@ -376,6 +376,69 @@ class ResolvePolicyTests(unittest.TestCase):
         )
         self.assertNotIn("RELATED.AXIS_ORGANIZATION", self.ids(result, "active_hard"))
 
+    def test_layered_capability_matrix_prefers_soft_table_guidance(self) -> None:
+        context = load_yaml(FIXTURES / "related-work.yaml")
+        context["table_profile"] = "layered_capability_matrix"
+        result = resolve_policy(
+            context, self.hard, self.soft, self.profiles, self.policy_sets
+        )
+        self.assertIn("layered-capability-matrix", result["active_profiles"])
+        rules = {item["id"]: item for item in result["active_soft"]}
+        for rule_id in {
+            "TABLE.DENSE_EMPIRICAL_STYLE",
+            "TABLE.RELATED_ROW_GRANULARITY",
+            "TABLE.CAPTION_AND_HIGHLIGHT",
+            "TABLE.TARGET_WIDTH",
+            "RELATED.DIMENSION_BUDGET",
+        }:
+            self.assertIn(rule_id, rules)
+            self.assertIn(
+                "layered-capability-matrix",
+                rules[rule_id]["preferred_by_profiles"],
+            )
+            self.assertNotIn(rule_id, self.ids(result, "active_hard"))
+
+        hard = {item["id"]: item for item in result["active_hard"]}
+        self.assertIn("RELATED.COMPARISON_REQUIRED", hard)
+        self.assertIn(
+            "does not turn the profile's dimension or layout guidance into a hard requirement",
+            hard["RELATED.COMPARISON_REQUIRED"]["requirement"],
+        )
+
+    def test_public_layered_profile_exposes_its_complete_soft_contract(self) -> None:
+        context = load_yaml(FIXTURES / "related-work.yaml")
+        context.pop("policy_sets")
+        context["table_profile"] = "layered_capability_matrix"
+        result = resolve_policy(
+            context, self.hard, self.soft, self.profiles, self.policy_sets
+        )
+        self.assertIn("layered-capability-matrix", result["active_profiles"])
+        rules = {item["id"]: item for item in result["active_soft"]}
+        for rule_id in {
+            "TABLE.DENSE_EMPIRICAL_STYLE",
+            "TABLE.RELATED_ROW_GRANULARITY",
+            "TABLE.CAPTION_AND_HIGHLIGHT",
+            "TABLE.TARGET_WIDTH",
+            "RELATED.DIMENSION_BUDGET",
+        }:
+            self.assertIn(rule_id, rules)
+            self.assertIn(
+                "layered-capability-matrix",
+                rules[rule_id]["preferred_by_profiles"],
+            )
+            self.assertNotIn(rule_id, self.ids(result, "active_hard"))
+        self.assertNotIn(
+            "TABLE.CANONICAL_RELATED_MARKERS", self.ids(result, "active_hard")
+        )
+
+    def test_unknown_table_profile_is_rejected(self) -> None:
+        context = load_yaml(FIXTURES / "related-work.yaml")
+        context["table_profile"] = "layered_capabilty_matrix"
+        with self.assertRaisesRegex(ValueError, "invalid value"):
+            resolve_policy(
+                context, self.hard, self.soft, self.profiles, self.policy_sets
+            )
+
     def test_dense_empirical_table_style_remains_soft(self) -> None:
         result = self.resolve("final-table.yaml")
         self.assertIn("TABLE.DENSE_EMPIRICAL_STYLE", self.ids(result, "active_soft"))

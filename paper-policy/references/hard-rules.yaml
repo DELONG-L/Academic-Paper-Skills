@@ -572,9 +572,9 @@ rules:
     artifacts: [prose, table]
     phases: [draft, polish, submission, camera_ready]
     activation: {type: profile, when: [related-work-full, sok]}
-    requirement: Include an argumentative axis-based comparison-table plan that makes the paper gap visible, uses three to four fair high-signal dimensions, and prefers single-column placement after pruning.
+    requirement: Include an argumentative axis-based comparison-table plan that makes the paper gap visible and uses fair high-signal dimensions. Default to three to four dimensions and single-column placement after pruning; a documented soft adaptation or an explicitly selected table profile exempts that default but does not turn the profile's dimension or layout guidance into a hard requirement.
     checks:
-      - {kind: semantic, evidence_required: true, description: 'Inspect table purpose, axes, row evidence, and the gap exposed.'}
+      - {kind: semantic, evidence_required: true, description: 'Inspect table purpose, fair axes, row evidence, the gap exposed, and whether any departure from the default is identified as a soft adaptation or explicit profile selection.'}
     failure: {draft: report, final: block}
     autofix: none
     waiver: {allowed: true, authorities: [user, venue]}
@@ -582,20 +582,21 @@ rules:
     source: {origin: local-house-policy, note: 'Full Related Work contract.'}
 
   - id: TABLE.PROPOSED_ROW_GROUNDED
-    title: Proposed rows require a real manuscript artifact
+    title: Ground proposed rows and uniqueness highlights
     force: hard
     scope: [review, tables]
     artifacts: [table]
     phases: [draft, polish, submission, camera_ready]
     activation: {type: feature, when: [related_work_table]}
-    requirement: Include a proposed, ours, or this-work row only when the manuscript actually contains the named artifact and every marker is supported by that artifact.
+    requirement: Include a proposed, ours, or this-work row only when the manuscript actually contains the named artifact and every marker is supported by that artifact. Treat a meaning-bearing uniqueness label or coverage-delta cell highlight as factual only when the comparison corpus is defined and row-wise evidence supports the distinction; unless that corpus is exhaustive, describe the capability as absent from the compared rows rather than universally unique to this work.
     checks:
       - {kind: semantic, evidence_required: true, description: 'Trace the proposed row label and every marker to an existing manuscript artifact.'}
+      - {kind: semantic, evidence_required: true, description: 'Trace every meaning-bearing uniqueness label or coverage-delta highlight to a defined comparison corpus and defensible row-wise evidence, and verify that the wording does not exceed that corpus.'}
     failure: {draft: block, final: block}
     autofix: none
     waiver: {allowed: false, authorities: []}
     decision_refs: [G09]
-    source: {origin: local-house-policy, note: 'Separated from soft row granularity because proposed-row grounding remains a factual hard constraint.'}
+    source: {origin: local-house-policy, note: 'Proposed-row grounding and meaning-bearing uniqueness claims remain factual hard constraints; row granularity and visual emphasis remain soft.'}
 
   - id: TABLE.VALUES_GROUNDED
     title: Table values are grounded
@@ -621,14 +622,14 @@ rules:
     artifacts: [table]
     phases: [draft, polish, submission, camera_ready]
     activation: {type: feature, when: [related_work_table]}
-    requirement: Use a green check for full support, an amber filled pifont circle (\ding{108}) for partial support, and a red cross for absence instead of ad hoc marker systems; when a proposed row exists, use the house light-background highlight.
+    requirement: Use a green check for full support, an amber filled pifont circle (\ding{108}) for partial support, and a red cross for absence instead of ad hoc marker systems.
     checks:
       - {kind: deterministic, evidence_required: false, description: 'Check marker macro definitions and table usage.'}
       - {kind: manual, evidence_required: true, description: 'Confirm venue, grayscale, and accessibility constraints do not require an authorized alternative.'}
     failure: {draft: block, final: block}
     autofix: assisted
     waiver: {allowed: true, authorities: [venue]}
-    decision_refs: [H11, H12, H13]
+    decision_refs: [H11, H12]
     source: {origin: user-decision, note: 'Optional strict-house marker scheme using an amber filled pifont circle for partial support.'}
 
   - id: TABLE.BOOKTABS_FINAL

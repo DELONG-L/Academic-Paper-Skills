@@ -27,7 +27,7 @@ Do not let generic artifact advice override user facts, enabled policy rules, or
 | Task | Load |
 |---|---|
 | Decide table vs figure | `artifact-routing.md`, `captions.md` |
-| Related Work comparison table | `tables.md`, `captions.md`; add `dense-empirical-tables.md` for a load-bearing multi-axis matrix |
+| Related Work comparison table | `tables.md`, `captions.md`; add `dense-empirical-tables.md` for a load-bearing multi-axis matrix and `layered-capability-matrix.md` when 8+ dimensions form explicit semantic layers |
 | Result table, findings index, sample ledger, taxonomy table, risk matrix | `tables.md`, `captions.md`, `quality-checks.md`; add `dense-empirical-tables.md` when hierarchy or density is high |
 | Precise experiment/data plot from CSV/JSON/logs | `data-figures.md`, `data-profiling.md`, `chart-selection.md`, `visual-pitfalls.md`, `figure-contract.md`, `plot-patterns.md`, `captions.md`, `quality-checks.md` |
 | Journal/venue-specific plot sizing or export | `journal-specs.md`, `visual-qa.md`, `publication-checklist.md`, then the relevant artifact reference |
@@ -71,7 +71,7 @@ For LaTeX tables:
 3. Include `\caption{}` and `\label{}`.
 4. Avoid up/down arrows in headers only when `TABLE.NO_DIRECTION_ARROWS` is enabled; otherwise follow the venue and manuscript notation.
 5. Define markers such as `\cmark`, `\pmark`, and `\xmark` only when needed for readability, preferably in a short caption phrase rather than a separate note.
-6. Select either the compact default or the dense empirical soft profile, then render at the actual target width before finalizing spacing, rules, or font size.
+6. Select the compact default, dense empirical profile, or explicit layered capability matrix profile, then render at the actual target width before finalizing spacing, rules, or font size.
 
 For data figures:
 
@@ -99,6 +99,7 @@ For conceptual figures:
 - `references/artifact-routing.md`: table vs figure selection.
 - `references/tables.md`: LaTeX table style and resizebox rule.
 - `references/dense-empirical-tables.md`: optional reference-paper-informed profile for grouped headers, compact empirical matrices, findings-at-a-glance tables, and sample ledgers.
+- `references/layered-capability-matrix.md`: explicit profile for wide Related Work capability matrices with semantic column layers, conservative family-row evidence, and grounded coverage-delta highlights.
 - `references/data-figures.md`: reproducible data-driven plotting workflow.
 - `references/data-profiling.md`, `references/chart-selection.md`, `references/visual-pitfalls.md`: data profiling, chart selection, and visual-risk guidance.
 - `references/journal-specs.md`, `references/visual-qa.md`, `references/publication-checklist.md`: venue sizing, final-size rendering, and visual QA.

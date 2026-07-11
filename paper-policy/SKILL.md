@@ -106,6 +106,7 @@ For full-paper, multi-section, polish, submission, rebuttal, or camera-ready wor
 - `reader_risk`
 - `measurement_bias_status` when a systematic measurement or extraction error is characterized
 - `evidence_structure` when evidence sources have distinct substantive, validation, calibration, control, case-study, or exploratory roles
+- `table_profile: layered_capability_matrix` when an explicitly selected wide Related Work matrix has semantic column layers
 - approved citation sources
 - venue source and `as_of` date
 - `scopes` and generic `artifacts` for applicability

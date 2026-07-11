@@ -13,7 +13,10 @@ Do not use dense grid lines. Prefer spacing, grouped headers, and row order to c
 
 Use the compact patterns in this file when compatible with active policy. Load
 `dense-empirical-tables.md` only when `TABLE.DENSE_EMPIRICAL_STYLE` is enabled
-or the user explicitly requests that profile.
+or the user explicitly requests that profile. Also load
+`layered-capability-matrix.md` when `table_profile: layered_capability_matrix`
+is selected or when a requested Related Work matrix has eight or more dimensions
+organized into explicit semantic layers.
 
 Common packages and macros:
 
@@ -80,7 +83,7 @@ When the strict placement preferences are enabled, default to the smallest reada
 
 - Prefer single-column `table` for compact comparison tables, notation tables, and most Related Work comparison tables.
 - Before using `table*`, prune columns to the minimum set that supports the table's claim.
-- A Related Work comparison table should normally use 3--4 high-signal dimensions. Use 5 only when the fifth dimension is essential. Use 6 or more only with an explicit reason in the artifact spec.
+- A Related Work comparison table should normally use 3--4 high-signal dimensions. Use 5 only when the fifth dimension is essential. Use 6--7 with a justified dense empirical design. Use 8 or more only for an activated layered capability matrix with 2--4 semantic groups and readable final-width rendering.
 - If a table becomes wide because the column names are verbose, shorten the headers before switching to `table*`.
 - Do not add a Notes block unless the table cannot be read without it.
 
@@ -99,6 +102,14 @@ When disabled, choose accessible symbols or text that fit the venue and define
 their semantics locally.
 
 Prefer rows that are atomic enough for every marker to be directly defensible. A clearly named literature family is an allowed soft adaptation when its membership is coherent and every marker is assigned conservatively across the entire family. Do not use a naked merged citation row such as `\citep{a,b,c}`. Cite representative works in prose or in the row label, and use `\pmark` whenever support is mixed or only partial across the group.
+
+Do not treat highlighting as proof. A proposed-row background is optional: bold
+the row label, use a light whole-row tint, use sparse cell-level coverage-delta
+highlights, or omit highlighting according to the active soft guidance. Any
+meaning-bearing color needs a non-color cue. A highlighted cell must be supported
+against a defined comparison corpus; unless that corpus is exhaustive, describe
+the capability as "absent from the compared rows," not universally "unique to
+this work."
 
 Represent missing values explicitly. Prefer `N/A`, `Not reported`, or `Not applicable`, and define shortened forms locally. Avoid `---` and unexplained dash glyphs because they obscure whether a value is absent, inapplicable, or merely unreported.
 
@@ -121,7 +132,6 @@ Use this compact single-column pattern for paper-positioning tables that compare
 \midrule
 \citep{prior1} & \pmark & \xmark & \xmark & \xmark & \xmark \\
 \citep{prior2} & \cmark & \pmark & \xmark & \xmark & \pmark \\
-\rowcolor{MethodBlue}
 \textbf{Ours} & \cmark & \cmark & \cmark & \cmark & \cmark \\
 \bottomrule
 \end{tabular}%
@@ -147,6 +157,7 @@ Rules:
 - Use `\multirow`, `\makecell`, or italic `\multicolumn` group labels when repeated row labels obscure the table's structure.
 - Use `\rowcolor{blue!8}` or a local method macro sparingly for the proposed method.
 - Use `threeparttable` when definitions or caveats would make the caption too long.
+- Keep `threeparttable` only when the table has actual `tablenotes`; otherwise remove the empty wrapper.
 
 ## Notation And Dataset Tables
 
@@ -160,6 +171,8 @@ Notation tables should define only symbols used later. Dataset tables should inc
 - Do not color every result cell.
 - Do not replace the canonical marker scheme when `TABLE.CANONICAL_RELATED_MARKERS` is active.
 - Do not merge multiple unrelated papers into one citation-only row; split rows unless the row is an explicitly named family and the marker values are conservative.
+- Do not label or shade a cell as unique without a defined comparison corpus and row-wise evidence.
+- Do not use color as the only carrier of a novelty or coverage-delta claim.
 - Do not force a wide matrix into a single-column table with unreadable text.
 - Do not write captions that merely restate the table label.
 - Do not keep a wide table only because the first draft had many dimensions.

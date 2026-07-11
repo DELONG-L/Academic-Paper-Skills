@@ -123,6 +123,9 @@ Flag:
 - Tables lacking `booktabs` when `TABLE.BOOKTABS_FINAL` is active.
 - Tables that fail target-width readability; enforce the house `resizebox` pattern only when its rule is enabled.
 - Related Work tables that are wider or denser than their argument requires; enforce house placement budgets only when enabled.
+- Related Work family rows whose full-support marker is not defensible for every named member; mixed support should be partial.
+- Cells labeled or shaded as unique without a defined comparison corpus, row-wise evidence, or corpus-bounded wording.
+- Meaning-bearing color highlights with no non-color cue or grayscale interpretation.
 - Up/down arrows in table headers when `TABLE.NO_DIRECTION_ARROWS` is enabled.
 - Unnecessary Notes blocks, long marker explanations, or captions that carry too much table metadata.
 - Conceptual figures that violate `FIG.CONCEPT_HOUSE_STYLE` when that optional rule is active.

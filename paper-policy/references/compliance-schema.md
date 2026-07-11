@@ -104,6 +104,11 @@ definitions/usage, and declared source/script presence. It cannot establish visu
 component fidelity, row defensibility, value correctness, or accessibility by
 declaration alone.
 
+For `TABLE.PROPOSED_ROW_GROUNDED`, proposed-row marker support and uniqueness
+highlighting are semantic evidence. A color token, `\cellcolor`, dagger, or
+caption claim can identify what needs review, but none can establish that the
+comparison corpus is adequate or that the claimed distinction is supported.
+
 The standalone artifact checker reports public-default rules unless
 `--strict-house-style` is passed. Context-driven assessment always filters its
 findings against the exact resolved hard-rule IDs.

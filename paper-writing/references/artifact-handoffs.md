@@ -18,10 +18,14 @@ Figures & Tables handoff:
 - Claim supported:
 - Label: tab:related-comparison
 - Row groups:
-- Columns / dimensions: default to 3--4 high-signal dimensions; include an explicit reason for 5+ dimensions
+- Columns / dimensions: default 3--4; justify 5; use a dense design for 6--7; use the layered profile for 8+
+- Table profile: compact | dense empirical | layered capability matrix
+- Semantic column groups: required for a layered capability matrix
+- Comparison-corpus boundary:
 - Placement preference: single-column by default; use full-width only when pruning would weaken the argument
 - Marker semantics: \cmark = full support, \pmark = partial support, \xmark = absent, only if symbol markers are needed
 - Proposed method row:
+- Coverage-delta highlight evidence and non-color cue:
 - Caption draft: compact paper caption, not internal provenance prose
 - In-text reference sentence:
 ```

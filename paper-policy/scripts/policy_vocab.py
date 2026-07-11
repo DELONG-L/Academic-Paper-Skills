@@ -90,6 +90,7 @@ PROFILE_MATCH_FIELDS = {
     "evidence_structure",
     "structure_profile",
     "evaluation_structure",
+    "table_profile",
     "task_scope",
 }
 
@@ -126,6 +127,7 @@ CONTEXT_VALUE_VOCABS = {
     },
     "structure_profile": {"standard_conference", "venue_defined"},
     "evaluation_structure": {"rq_driven", "claim_driven", "exploratory"},
+    "table_profile": {"layered_capability_matrix"},
     "task_scope": {"short", "section", "artifact", "multi_section", "full_paper", "polish", "submission", "rebuttal"},
 }
 
