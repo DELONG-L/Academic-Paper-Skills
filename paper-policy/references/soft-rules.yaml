@@ -434,9 +434,10 @@ rules:
     default: Use three to four high-signal dimensions.
     allowed_variants:
       - Use a fifth dimension when it is essential to the stated gap.
-      - Use more only with an explicit readability and argument justification.
-    selection_factors: [paper_gap, column_width, row_count, page_pressure]
-    avoid: [six-plus dimensions by default, dimensions chosen only to favor the proposed method]
+      - Use six or seven dimensions with a dense empirical design when the artifact spec explains why pruning would weaken the comparison and final-width rendering remains readable.
+      - Use eight or more dimensions only for an explicitly selected layered capability matrix whose dimensions form two to four semantic column groups, whose artifact spec explains why pruning would weaken the comparison, and whose final-width rendering remains readable.
+    selection_factors: [paper_gap, dimension_count, group_structure, table_profile, column_width, row_count, page_pressure]
+    avoid: [six-plus dimensions by default, eight-plus dimensions outside the layered profile, dimensions chosen only to favor the proposed method]
     report_when: The table requires full width or aggressive scaling.
     decision_refs: [G05, G06, G07, G08, G12]
     source: {origin: local-house-policy, note: 'Originated in Academic-Paper-Skills.'}
@@ -511,11 +512,15 @@ rules:
     artifacts: [table, prose]
     phases: [draft, polish, submission, camera_ready]
     features: [related_work_table, data_table, result_table]
-    default: Explain scope, abbreviations, and marker semantics; use a light proposed-row highlight only when it improves scanning.
+    default: Explain scope, abbreviations, marker semantics, and any comparison-corpus boundary; use restrained emphasis only when it improves scanning.
     allowed_variants:
-      - Omit highlighting when the venue forbids color or the row is already clear.
-    selection_factors: [marker_complexity, grayscale, venue_style]
-    avoid: [captions that restate the title, coloring every cell]
+      - Bold only the proposed-row label when the row is already easy to locate.
+      - Use a light whole-row tint when it improves scanability without implying that every cell is novel.
+      - Use sparse cell-level highlights for evidence-backed novelty or coverage deltas.
+      - Omit highlighting when venue, color, accessibility, or layout constraints make typographic structure clearer.
+      - Pair any meaning-bearing color highlight with a non-color cue such as a dagger and define it locally.
+    selection_factors: [marker_complexity, comparison_corpus, novelty_evidence, grayscale, accessibility, venue_style]
+    avoid: [captions that restate the title, coloring every cell, unsupported uniqueness claims, color-only semantics]
     report_when: Highlighting carries argumentative weight.
     decision_refs: [H10, H13, H14, H15]
     source: {origin: local-house-policy, note: 'Table presentation guidance.'}

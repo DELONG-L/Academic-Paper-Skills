@@ -41,6 +41,7 @@ policy_sets: [strict-house-style]
 - 如果系统认为需要某篇文献，但本地 `.bib` 中没有对应条目，只提示用户手动更新 BibTeX。
 - 只有启用严格规则时才强制 Related Work 规划对比表；公开默认在确实改善论证时提出。
 - 表格应该紧凑、服务论点；`booktabs`、marker、placement 和 resize 规范仅在对应规则启用时强制。
+- 对经过明确论证的宽幅 Related Work 矩阵，可用 `table_profile: layered_capability_matrix` 按语义层分组；coverage delta 高亮必须有证据，且不能只靠颜色传义。
 - 数值实验图必须由源数据驱动，用 Python 绘制。
 - 概念图工具根据拓扑、可编辑性、venue 与启用规则选择；生成式渲染属于可选 house default。
 - Review 与 Writing、Figures/Tables 分离：review 先诊断问题；大段正文改写交给 `paper-writing`，图表制作或重排交给 `paper-figures-tables`。
@@ -68,6 +69,12 @@ Use $paper-writing to rewrite this introduction with clearer RQs and scoped clai
 
 ```text
 Use $paper-figures-tables to turn this related-work table spec into compact LaTeX.
+```
+
+需要宽幅分层 capability matrix 时，可加入受控 context 值：
+
+```yaml
+table_profile: layered_capability_matrix
 ```
 
 ```text

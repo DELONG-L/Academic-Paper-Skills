@@ -26,6 +26,19 @@ profiles:
       - TABLE.CAPTION_AND_HIGHLIGHT
     source: {kind: local, url: null, as_of: null}
 
+  - id: layered-capability-matrix
+    match:
+      field: table_profile
+      any_of: [layered_capability_matrix]
+    activate_hard: []
+    prefer_soft:
+      - TABLE.DENSE_EMPIRICAL_STYLE
+      - TABLE.RELATED_ROW_GRANULARITY
+      - TABLE.CAPTION_AND_HIGHLIGHT
+      - TABLE.TARGET_WIDTH
+      - RELATED.DIMENSION_BUDGET
+    source: {kind: user, url: null, as_of: null}
+
   - id: related-work-full
     match:
       field: task_mode

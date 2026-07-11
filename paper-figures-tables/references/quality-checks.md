@@ -15,13 +15,17 @@ Use this before finishing any figure or table task.
 
 ## Table Checks
 
-- Uses `booktabs`.
-- Uses `\resizebox` to align with `\columnwidth`, `\textwidth`, or `\linewidth` unless natural width is visibly better.
+- Uses `booktabs` when the final-table hard rule or venue requires it; otherwise the selected rule style is internally consistent.
+- Aligns with `\columnwidth`, `\textwidth`, or `\linewidth`; uses `\resizebox` only when the active rule requires it or structural fitting is insufficient and the scaled text remains readable.
 - Uses the smallest readable placement; Related Work and comparison tables are single-column by default after pruning to high-signal dimensions.
 - Related Work tables use the axis-based comparison-table style unless explicitly waived.
 - Up/down arrows are not used in headers by default; metric directions, if needed, are stated briefly in caption or prose.
 - `\cmark`, `\pmark`, `\xmark`, colors, abbreviations, or ratios are defined.
+- Every family-row marker is conservative across all named members; mixed support uses `\pmark`.
+- Every uniqueness or coverage-delta highlight has a defined comparison corpus, row-wise evidence, and wording bounded to that corpus.
+- Every meaning-bearing color highlight has a non-color cue and remains interpretable in grayscale.
 - Notes are omitted unless necessary for interpretation.
+- `threeparttable` is used only with actual `tablenotes`; the caption states the claim and scope while notes carry secondary definitions or caveats.
 - Semantic emphasis is used sparingly; not every strong-looking cell is bolded or colored.
 - Wide matrices use `table*` before becoming unreadable single-column tables.
 - Captions do not include internal source paths, plotting scripts, renderer names, DPI checks, or internal provenance status unless the manuscript explicitly requires an audit section.

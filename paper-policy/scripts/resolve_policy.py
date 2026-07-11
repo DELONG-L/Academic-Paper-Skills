@@ -43,6 +43,7 @@ CONTEXT_FIELDS = {
     "artifact_mode",
     "structure_profile",
     "evaluation_structure",
+    "table_profile",
     "experiment_type",
     "measurement_bias_status",
     "evidence_structure",

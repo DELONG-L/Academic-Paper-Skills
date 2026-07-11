@@ -15,6 +15,10 @@ Declare `figure` or `table` in `artifacts`, then declare semantic types in
 - use `artifact_mode: final_figure` or `final_table` for a single final QA
   profile; use `[final_figure, final_table]` when a full-paper run must compose
   both profiles.
+- set `table_profile: layered_capability_matrix` only when a load-bearing
+  Related Work table has eight or more retained dimensions organized into
+  explicit semantic layers. This selects soft design guidance; it does not
+  turn that guidance into hard policy.
 
 Run:
 
@@ -91,6 +95,8 @@ final-width rule.
 - File existence does not prove that values, rows, components, or arrows are
   correct.
 - Canonical marker tokens do not prove that related-work rows are defensible.
+- A cell tint or dagger does not prove that a capability is absent from the
+  comparison corpus; record the corpus boundary and row-wise evidence.
 - Vector export does not prove color accessibility.
 - A declared script does not prove that it produced the inspected output.
 

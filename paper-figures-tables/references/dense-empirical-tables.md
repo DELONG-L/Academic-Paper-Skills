@@ -28,6 +28,11 @@ Use this profile for:
 Keep the compact default in `tables.md` when the table has one flat header, few
 rows, or no meaningful group hierarchy.
 
+For a Related Work table with eight or more capability dimensions grouped by
+the paper's conceptual layers, continue with `layered-capability-matrix.md`.
+That profile adds a comparison-corpus and uniqueness-evidence contract that a
+generic dense empirical table does not need.
+
 ## Visual Grammar
 
 Build hierarchy in this order:

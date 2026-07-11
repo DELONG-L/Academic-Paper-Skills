@@ -61,6 +61,10 @@ fail resolution instead of silently suppressing rules.
 `artifact_mode` accepts either one controlled value or a non-empty list. Use a
 list when one run governs multiple final artifact families, for example
 `[final_figure, final_table]`; matching profiles compose by set intersection.
+`table_profile` is optional. Set it to `layered_capability_matrix` only for a
+load-bearing comparison table whose dimensions form explicit semantic layers.
+The profile prefers the relevant soft table guidance; it does not promote that
+guidance to hard rules or make wide matrices the default.
 `features` is optional only for genuinely short, untyped work; section,
 artifact, multi-section, full-paper, polish, submission, and rebuttal scopes
 must declare at least one semantic selector.

@@ -43,6 +43,7 @@ house formatting or structure.
 - Prompt the user to manually update BibTeX when a needed citation is missing.
 - Require a related-work comparison-table plan only when the optional strict rule is active; otherwise propose one when it improves the argument.
 - Keep tables compact and argumentative; apply `booktabs`, marker, placement, and resizing house rules only when enabled.
+- For an explicitly justified wide Related Work matrix, use `table_profile: layered_capability_matrix` to group capabilities by semantic layer; coverage-delta highlights remain evidence-bound and color is never the sole cue.
 - Use source-data-driven Python plots for numeric figures.
 - Select conceptual-figure tooling from topology, editability, venue constraints, and enabled policy; generative rendering is an optional house default.
 - Keep review work separate from writing and artifact creation: diagnose first, then route substantial rewrites to `paper-writing` or artifact changes to `paper-figures-tables`.
@@ -70,6 +71,12 @@ Use $paper-writing to rewrite this introduction with clearer RQs and scoped clai
 
 ```text
 Use $paper-figures-tables to turn this related-work table spec into compact LaTeX.
+```
+
+For a wide, layered capability matrix, add this controlled context value:
+
+```yaml
+table_profile: layered_capability_matrix
 ```
 
 ```text
