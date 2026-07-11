@@ -1,0 +1,33 @@
+name: Validate skills
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: |
+            requirements-policy.txt
+            requirements-figures.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-policy.txt -r requirements-figures.txt
+      - name: Validate policy registries
+        run: python paper-policy/scripts/validate_registry.py
+      - name: Compile Python helpers
+        run: python -m py_compile paper-policy/scripts/*.py paper-figures-tables/scripts/*.py
+      - name: Run policy tests
+        run: python -m unittest discover -s paper-policy/scripts -p 'test_*.py'
+      - name: Run figure policy tests
+        run: python -m unittest discover -s paper-figures-tables/scripts -p 'test_*.py'

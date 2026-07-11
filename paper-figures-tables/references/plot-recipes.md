@@ -64,7 +64,7 @@ y2_samples = np.cos(x)[:, None] + rng.normal(0, 0.3, (100, n))
 y1_mean, y1_sem = y1_samples.mean(1), y1_samples.std(1, ddof=1) / np.sqrt(n)
 y2_mean, y2_sem = y2_samples.mean(1), y2_samples.std(1, ddof=1) / np.sqrt(n)
 
-fig, ax = plt.subplots(figsize=(3.5, 2.625))
+fig, ax = plt.subplots(figsize=(10.5, 7.875))
 lineplot_with_band(ax, x, y1_mean, y1_sem, 'Condition A',
                    color=OKABE[2], ls='-')
 lineplot_with_band(ax, x, y2_mean, y2_sem, 'Condition B',
@@ -75,7 +75,7 @@ ax.legend(frameon=False, loc='lower right')
 
 # 图注必须写: shaded band = SEM, n = 12 mice per group.
 export_figure(fig, 'figs/01_line', formats=['pdf', 'svg', 'png'],
-              size_inches=(3.5, 2.625), dpi=300, grayscale_preview=True)
+              size_inches=(10.5, 7.875), dpi=300, grayscale_preview=True)
 ```
 
 **坑**：
@@ -104,7 +104,7 @@ data = pd.DataFrame({
 
 # 用 seaborn barplot——默认就是 mean + 95%CI（bootstrap）
 # 想要 SD/SEM 改 errorbar 参数
-fig, ax = plt.subplots(figsize=(3.5, 2.625))
+fig, ax = plt.subplots(figsize=(10.5, 7.875))
 sns.barplot(
     data=data, x='group', y='value', hue='condition',
     palette=[OKABE[2], OKABE[6]],
@@ -125,7 +125,7 @@ ax.legend(title='', frameon=False, loc='upper left')
 
 # 图注: bars = mean ± SEM; dots = individual replicates; n = 10 per group.
 export_figure(fig, 'figs/02_bar', formats=['pdf', 'svg', 'png'],
-              size_inches=(3.5, 2.625), dpi=300)
+              size_inches=(10.5, 7.875), dpi=300)
 ```
 
 **坑**：
@@ -149,7 +149,7 @@ df = pd.DataFrame({
 })
 df['y'] = 0.6 * df['x'] + np.where(df['group']=='B', 0.5, 0) + rng.normal(0, 0.5, N)
 
-fig, ax = plt.subplots(figsize=(3.5, 3.0))
+fig, ax = plt.subplots(figsize=(10.5, 9.0))
 sns.scatterplot(
     data=df, x='x', y='y',
     hue='group', style='group',     # 颜色 + marker 形状双重编码
@@ -170,13 +170,13 @@ for g, c in zip(['A', 'B'], [OKABE[2], OKABE[6]]):
     r, p = pearsonr(sub.x, sub.y)
     ax.text(0.05 if g=='A' else 0.05, 0.95 if g=='A' else 0.88,
             f'{g}: r={r:.2f}, p={p:.1e}',
-            transform=ax.transAxes, fontsize=6, color=c, va='top')
+            transform=ax.transAxes, fontsize=24, color=c, va='top')
 
 ax.set_xlabel('Predictor x'); ax.set_ylabel('Response y')
 ax.legend(title='Group', frameon=False, loc='lower right')
 
 export_figure(fig, 'figs/03_scatter', formats=['pdf', 'svg', 'png'],
-              size_inches=(3.5, 3.0), dpi=300)
+              size_inches=(10.5, 9.0), dpi=300)
 ```
 
 **坑**：
@@ -192,7 +192,7 @@ export_figure(fig, 'figs/03_scatter', formats=['pdf', 'svg', 'png'],
 
 ```python
 # 同任务 2 的数据
-fig, ax = plt.subplots(figsize=(3.5, 2.625))
+fig, ax = plt.subplots(figsize=(10.5, 7.875))
 sns.boxplot(
     data=data, x='group', y='value', hue='condition',
     palette=[OKABE[2], OKABE[6]],
@@ -216,14 +216,14 @@ ax.legend(title='', frameon=False)
 # inner=None 关掉内部小条；cut=0 让小提琴不超出数据范围
 
 export_figure(fig, 'figs/04_box', formats=['pdf', 'svg', 'png'],
-              size_inches=(3.5, 2.625), dpi=300)
+              size_inches=(10.5, 7.875), dpi=300)
 ```
 
 **显著性标注**（如需）：
 
 ```python
 from matplotlib.lines import Line2D
-def sig_bracket(ax, x1, x2, y, h, text, fontsize=6):
+def sig_bracket(ax, x1, x2, y, h, text, fontsize=24):
     """在 (x1, x2) 之间画一道带文字的桥。"""
     ax.plot([x1, x1, x2, x2], [y, y+h, y+h, y],
             color='black', linewidth=0.6)
@@ -253,24 +253,24 @@ mat = (mat + mat.T) / 2     # 对称
 np.fill_diagonal(mat, 1.0)
 labels = [f'f{i+1}' for i in range(8)]
 
-fig, ax = plt.subplots(figsize=(3.5, 3.0))
+fig, ax = plt.subplots(figsize=(10.5, 9.0))
 hm = sns.heatmap(
     mat, ax=ax,
     cmap='RdBu_r',          # 双向数据用发散色图；单向数据用 'viridis' / 'magma'
     vmin=-1, vmax=1,        # 显式锁定范围 -> 多个图可比较
     center=0,
     annot=True, fmt='.2f',
-    annot_kws={'fontsize': 5},
+    annot_kws={'fontsize': 24},
     cbar_kws={'label': "Pearson's r", 'shrink': 0.8},
     linewidths=0.5, linecolor='white',
     xticklabels=labels, yticklabels=labels,
     square=True,
 )
-ax.tick_params(labelsize=6)
-hm.collections[0].colorbar.ax.tick_params(labelsize=6)
+ax.tick_params(labelsize=24)
+hm.collections[0].colorbar.ax.tick_params(labelsize=24)
 
 export_figure(fig, 'figs/05_heatmap', formats=['pdf', 'svg', 'png'],
-              size_inches=(3.5, 3.0), dpi=300)
+              size_inches=(10.5, 9.0), dpi=300)
 ```
 
 **坑**：
@@ -293,7 +293,7 @@ responses = (np.log10(doses + 1) * 2 + rng.normal(0, 0.5, (n, doses.size)))
 mean = responses.mean(0)
 sem = responses.std(0, ddof=1) / np.sqrt(n)
 
-fig, ax = plt.subplots(figsize=(3.5, 2.625))
+fig, ax = plt.subplots(figsize=(10.5, 7.875))
 ax.errorbar(
     doses, mean, yerr=sem,
     fmt='o',                  # marker
@@ -309,7 +309,7 @@ ax.legend(frameon=False, loc='lower right')
 
 # 图注: data = mean ± SEM, n = 8 wells per dose.
 export_figure(fig, 'figs/06_errbar', formats=['pdf', 'svg', 'png'],
-              size_inches=(3.5, 2.625), dpi=300)
+              size_inches=(10.5, 7.875), dpi=300)
 ```
 
 **坑**：
@@ -330,7 +330,7 @@ data1 = np.concatenate([rng.normal(0, 1, 200), rng.normal(4, 1, 200)])
 # 模拟偏态分布
 data2 = rng.lognormal(0, 0.5, 400)
 
-fig, axes = plt.subplots(1, 2, figsize=(7.0, 2.8), constrained_layout=True)
+fig, axes = plt.subplots(1, 2, figsize=(21.0, 8.4), constrained_layout=True)
 
 # === 直方图 + KDE 叠加 ===
 ax = axes[0]
@@ -343,7 +343,7 @@ sns.kdeplot(data1, ax=ax, color=OKABE[6], linewidth=1.2, label='KDE')
 sns.rugplot(data1, ax=ax, color='black', height=0.04, alpha=0.4)
 ax.set_xlabel('Value'); ax.set_ylabel('Density')
 ax.set_title('Bimodal distribution')
-ax.legend(frameon=False, fontsize=6)
+ax.legend(frameon=False, fontsize=24)
 
 # === 偏态分布 + 中位数 vs 均值 ===
 ax = axes[1]
@@ -356,10 +356,10 @@ ax.axvline(np.median(data2), color='black', linestyle=':', linewidth=0.8,
            label=f'median={np.median(data2):.2f}')
 ax.set_xlabel('Value (log-normal)'); ax.set_ylabel('Density')
 ax.set_title('Right-skewed: mean vs median')
-ax.legend(frameon=False, fontsize=6)
+ax.legend(frameon=False, fontsize=24)
 
 export_figure(fig, 'figs/07_distribution', formats=['pdf', 'svg', 'png'],
-              size_inches=(7.0, 2.8), dpi=300)
+              size_inches=(21.0, 8.4), dpi=300)
 ```
 
 **坑**：
@@ -395,20 +395,20 @@ corr = df.corr(method='pearson')
 # 半矩阵更易读（对称，画一半就够）
 mask = np.triu(np.ones_like(corr, dtype=bool), k=1)
 
-fig, ax = plt.subplots(figsize=(4.0, 3.5))
+fig, ax = plt.subplots(figsize=(12.0, 10.5))
 sns.heatmap(
     corr, mask=mask,
     cmap='RdBu_r', vmin=-1, vmax=1, center=0,
-    annot=True, fmt='.2f', annot_kws={'fontsize': 6},
+    annot=True, fmt='.2f', annot_kws={'fontsize': 24},
     cbar_kws={'label': "Pearson's r", 'shrink': 0.7},
     linewidths=0.5, linecolor='white',
     square=True, ax=ax,
 )
-ax.tick_params(labelsize=6)
-ax.set_title('Feature correlations', fontsize=8)
+ax.tick_params(labelsize=24)
+ax.set_title('Feature correlations', fontsize=24)
 
 export_figure(fig, 'figs/08a_corr_heatmap', formats=['pdf', 'svg', 'png'],
-              size_inches=(4.0, 3.5), dpi=300)
+              size_inches=(12.0, 10.5), dpi=300)
 ```
 
 ### 8b. 散点矩阵 (pairplot)
@@ -430,12 +430,12 @@ g = sns.pairplot(
 g.fig.set_size_inches(6.0, 6.0)
 for ax in g.axes.flat:
     if ax is not None:
-        ax.tick_params(labelsize=6)
-        ax.set_xlabel(ax.get_xlabel(), fontsize=7)
-        ax.set_ylabel(ax.get_ylabel(), fontsize=7)
+        ax.tick_params(labelsize=24)
+        ax.set_xlabel(ax.get_xlabel(), fontsize=24)
+        ax.set_ylabel(ax.get_ylabel(), fontsize=24)
 
 export_figure(g.fig, 'figs/08b_pairplot', formats=['pdf', 'svg', 'png'],
-              size_inches=(6.0, 6.0), dpi=300)
+              size_inches=(18.0, 18.0), dpi=300)
 ```
 
 **坑**：
@@ -452,7 +452,7 @@ export_figure(g.fig, 'figs/08b_pairplot', formats=['pdf', 'svg', 'png'],
 ```python
 fig, axes = plt.subplots(
     2, 2,
-    figsize=(7.2, 5.4),                # Nature 双栏 7.2 in
+    figsize=(21.6, 16.2),                # Nature 双栏 7.2 in
     constrained_layout=True,           # 比 tight_layout 智能
 )
 
@@ -462,7 +462,7 @@ x = np.linspace(0, 10, 50)
 ax.plot(x, np.sin(x), color=OKABE[2], label='A')
 ax.plot(x, np.cos(x), color=OKABE[6], linestyle='--', label='B')
 ax.set_xlabel('Time (s)'); ax.set_ylabel('Signal')
-ax.legend(frameon=False, fontsize=6)
+ax.legend(frameon=False, fontsize=24)
 
 # === 子图 b：散点 ===
 ax = axes[0, 1]
@@ -490,10 +490,10 @@ ax.set_ylabel('Value')
 # 子图标签：a, b, c, d (Nature 风格)
 for ax, label in zip(axes.flat, ['a', 'b', 'c', 'd']):
     ax.text(-0.20, 1.05, label, transform=ax.transAxes,
-            fontsize=9, fontweight='bold', va='top', ha='right')
+            fontsize=24, fontweight='bold', va='top', ha='right')
 
 export_figure(fig, 'figs/09_panels', formats=['pdf', 'svg', 'png'],
-              size_inches=(7.2, 5.4), dpi=300, grayscale_preview=True)
+              size_inches=(21.6, 16.2), dpi=300, grayscale_preview=True)
 ```
 
 **坑**：
@@ -517,7 +517,7 @@ pio.templates.default = 'plotly_white'
 common_layout = dict(
     font=dict(family='Noto Sans CJK SC, Source Han Sans, SimHei, Arial',
               size=12),
-    title_font_size=14,
+    title_font_size=24,
 )
 
 df = pd.DataFrame({

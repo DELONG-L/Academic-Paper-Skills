@@ -1,0 +1,17 @@
+version: 1
+rules:
+  - id: TEST.INVALID_FORCE
+    title: Invalid hard force
+    force: soft
+    scope: [workflow]
+    artifacts: [policy]
+    phases: [draft]
+    activation: {type: always, when: []}
+    requirement: Fail validation.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: Check fixture structure.}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [A01]
+    source: {origin: local-house-policy, note: Test fixture.}

@@ -4,7 +4,10 @@ Use this for manual-BibTeX-first citation writing and local citation hygiene.
 
 ## Core Rule
 
-The user-maintained `.bib` file is the citation source of truth. User-provided paper notes, reading lists, related-work matrices, and manuscript text are the only other trusted citation inputs.
+Use only citation and evidence sources declared by the user or project. By
+default, trust the user-maintained `.bib`, supplied notes, reading lists,
+related-work matrices, and manuscript text; add other sources only through an
+explicitly authorized verification workflow.
 
 Do not search for, fetch, invent, externally verify, or complete references by default. Do not create BibTeX entries. Do not infer authors, venues, years, DOIs, arXiv IDs, or citation keys from memory.
 
@@ -125,4 +128,6 @@ A proposed X~\cite{a}. B studied Y~\cite{b}. C introduced Z~\cite{c}.
 
 ## If The User Explicitly Requests External Checking
 
-Treat external checking as exploratory assistance, not authoritative verification. State that the user-maintained `.bib` remains the source of truth. Return candidates, discrepancies, or unresolved questions rather than definitive claims.
+Treat external checking as exploratory assistance until its output is approved
+as a project citation source. Return candidates, discrepancies, or unresolved
+questions rather than silently converting search output into claim support.

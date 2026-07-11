@@ -21,7 +21,7 @@ Usage
     from layout_tools import add_panel_labels, finalize_figure
     import matplotlib.pyplot as plt
 
-    fig, axes = plt.subplots(2, 2, figsize=(7.2, 5.4))
+    fig, axes = plt.subplots(2, 2, figsize=(21.6, 16.2))
     # ... 在 4 个子图上各自作图 ...
     finalize_figure(fig)                 # 先把版面理顺
     add_panel_labels(fig, style="nature")  # a b c d，自动对齐
@@ -141,7 +141,7 @@ def add_panel_labels(
         )
 
     if fontsize is None:
-        fontsize = plt.rcParams.get("axes.labelsize", 9)
+        fontsize = plt.rcParams.get("axes.labelsize", 24)
 
     placed = []
     for ax, lab in zip(axes, labels):
@@ -212,7 +212,7 @@ def _demo(out_basename: str) -> None:
     import numpy as np
     rng = np.random.default_rng(0)
 
-    fig, axes = plt.subplots(2, 2, figsize=(7.2, 5.4))
+    fig, axes = plt.subplots(2, 2, figsize=(21.6, 16.2))
     # 左上：普通量级
     axes[0, 0].plot(np.arange(10), rng.normal(0, 1, 10), marker="o")
     axes[0, 0].set_ylabel("score")

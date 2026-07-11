@@ -4,9 +4,12 @@ Use this for Related Work and Background and Related Work prose.
 
 ## Core Rule
 
-Related Work must expose the missing comparison axis, not summarize papers one by one.
+Related Work should expose the missing comparison axis rather than summarize papers one by one.
 
-Every full Related Work or Background and Related Work draft must include an axis-based comparison-table plan unless the user explicitly requests prose-only output or the target venue forbids tables.
+When `RELATED.COMPARISON_REQUIRED` is active, a full Related Work or Background
+and Related Work draft must include an axis-based comparison-table plan unless
+an authorized waiver or venue requirement applies. Otherwise propose a table
+only when it materially improves comparison.
 
 ## Organization
 
@@ -30,9 +33,9 @@ Preferred paragraph pattern:
 One line of work assumes [axis/value] and therefore evaluates [scope]~\cite{...}. This is effective for [setting], but it leaves [missing boundary] untested. A second line of work studies [adjacent axis]~\cite{...}; however, its comparison unit is [different unit]. Our work differs by treating [your axis] as the primary object of analysis.
 ```
 
-## Mandatory Comparison Table Plan
+## Conditional Comparison Table Plan
 
-For a full Related Work task, produce a comparison-table plan with:
+When the comparison requirement is active, produce a plan with:
 
 1. Table purpose: what gap or axis the table makes visible.
 2. Row groups: paper families, systems, datasets, threat models, or approaches.

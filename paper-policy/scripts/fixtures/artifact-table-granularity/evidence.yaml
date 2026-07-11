@@ -1,0 +1,26 @@
+version: 1
+artifacts:
+  - id: good-table
+    kind: table
+    artifact_types: [paper_table]
+    claim: The good table exercises exact environment extraction.
+    latex_label: tab:good
+    files:
+      outputs: []
+      scripts: []
+      source_data: []
+      previews: []
+      table_sources: [main.tex]
+  - id: bad-table
+    kind: table
+    artifact_types: [paper_table]
+    claim: The bad table must not inherit booktabs from another environment.
+    latex_label: tab:bad
+    files:
+      outputs: []
+      scripts: []
+      source_data: []
+      previews: []
+      table_sources: [main.tex]
+hard_results: []
+soft_results: []

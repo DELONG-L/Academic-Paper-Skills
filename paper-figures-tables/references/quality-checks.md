@@ -28,6 +28,7 @@ Use this before finishing any figure or table task.
 
 ## Precise Data Figure Checks
 
+- Source canvas uses the declared scale; below-24pt text is reported as a soft adaptation with final-width evidence.
 - Generated from source data or explicitly supplied values.
 - No image-generation model was used to create numeric axes, points, bars, lines, trends, error bars, or p-values.
 - Chart choice matches the claim and data shape; bad-chart risks are noted when relevant.
@@ -39,6 +40,8 @@ Use this before finishing any figure or table task.
 - Script reruns from a documented working directory.
 - Exports include PDF or SVG for LaTeX when practical.
 - Visual QA was performed for final venue-ready plots when a rendered preview is available.
+- The final-width human QA result and artifact ID are recorded in
+  `compliance-evidence.yaml`; source-level PASS alone is not treated as complete.
 
 ## Conceptual Figure Checks
 

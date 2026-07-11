@@ -1,0 +1,15 @@
+version: 1
+artifacts:
+  - id: related-matrix
+    kind: table
+    artifact_types: [paper_table, related_work_table]
+    claim: The comparison exposes the manuscript's stated missing axis.
+    latex_label: tab:related-matrix
+    files:
+      outputs: [tables/related.tex]
+      scripts: []
+      source_data: []
+      previews: []
+      table_sources: [tables/related.tex]
+hard_results: []
+soft_results: []

@@ -1,0 +1,13 @@
+version: 1
+paper_type: empirical
+submission_stage: draft
+task_scope: multi_section
+task_mode: writing
+evaluation_structure: rq_driven
+measurement_bias_status: known_systematic
+evidence_structure: multi_role
+scopes: [writing, review]
+artifacts: [prose, tex]
+features: [paper_prose, latex_manuscript, evaluation_section, threats_to_validity]
+provenance:
+  submission_stage: user

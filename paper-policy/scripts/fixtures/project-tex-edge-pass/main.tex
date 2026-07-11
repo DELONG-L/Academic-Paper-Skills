@@ -1,0 +1,23 @@
+\documentclass{article}
+\newcommand{\fixtureurl}{https://example.org/a---b}
+\begin{document}
+\section{Introduction}
+Adjacent inline spans are allowed: $\Delta = 1$$\uparrow$.
+Public code such as \texttt{train.py} is scientific content, not internal provenance.
+The project page is \href{https://example.org/a---b}{publicly documented}.
+\begin{verbatim}
+code---literal /tmp/not-paper-facing.py
+\end{verbatim}
+\begin{lstlisting}
+another---literal /Users/example/script.py
+\end{lstlisting}
+\begin{table}
+\caption{Missing values are retained for this checker fixture.}
+\begin{tabular}{lc}
+System & Value \\[2pt]
+A & --- \\
+\end{tabular}
+\end{table}
+\section{Conclusion}
+One bounded conclusion paragraph that states the study limitation.
+\end{document}

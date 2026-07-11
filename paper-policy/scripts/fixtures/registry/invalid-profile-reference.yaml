@@ -1,0 +1,7 @@
+version: 1
+profiles:
+  - id: invalid-profile
+    match: {field: task_mode, any_of: [invalid]}
+    activate_hard: [TEST.DOES_NOT_EXIST]
+    prefer_soft: [TEST.SOFT_RULE]
+    source: {kind: local, url: null, as_of: null}

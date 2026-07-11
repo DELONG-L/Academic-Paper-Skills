@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paper Policy"
+  short_description: "Resolve and validate academic paper constraints"
+  default_prompt: "Use $paper-policy to resolve and validate the active hard and soft constraints for this manuscript."

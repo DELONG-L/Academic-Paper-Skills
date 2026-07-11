@@ -47,7 +47,9 @@ print_report(issues)
 
 ### 第 3 步：AI 读图自检（关键）
 
-用 `Read` 工具读 `figs/_preview.png`，然后**逐条**对照下面的清单核对。不要扫一眼说"看起来不错"——一项一项看。
+先把图按实际 `\columnwidth` 或 `\textwidth` 放置并渲染预览，再读取
+`figs/_preview.png`，然后**逐条**对照下面的清单核对。源码是否达到 24pt
+只是 soft source-scale 证据，不能代替这一 hard 终检。
 
 #### 读图自检清单
 
@@ -113,7 +115,7 @@ print_report(issues)
 ## 循环纪律
 
 - **每改一处就重渲一次**——不要一次改五处然后猜结果，看不到就是没验证。
-- **最多 3 轮**：3 轮还过不了，多半是图型选错了（回 `chart_selection.md` 重选）或数据维度太多（拆图，见 `viz_pitfalls.md` P12）。
+- **最多 3 轮**：3 轮还过不了，多半是图型选错了（回 `chart-selection.md` 重选）或数据维度太多（拆图，见 `visual-pitfalls.md` P12）。
 - **留痕**：把每轮发现的问题和改法简要告诉用户，让 ta 知道图为什么长这样。
 
 ## 一个完整示例
@@ -127,7 +129,7 @@ from export_figure import export_figure
 
 setup_style(journal='nature', lang='zh')      # 中文 + 自动 CJK 字体 + constrained_layout
 
-fig, axes = plt.subplots(2, 2, figsize=(7.2, 5.4))
+fig, axes = plt.subplots(2, 2, figsize=(21.6, 16.2))
 # ... 在 axes 上作图 ...
 
 # —— 自检闭环 ——
@@ -139,7 +141,7 @@ print_report(audit_layout(fig))                # 程序自检
 # 有问题 → 按回改表改 → 重渲 → 再读；全过后再导出最终矢量图：
 
 export_figure(fig, 'figs/fig1', formats=['pdf', 'svg'],
-              size_inches=(7.2, 5.4), grayscale_preview=True)
+              size_inches=(21.6, 16.2), grayscale_preview=True)
 ```
 
 **记住**：导出矢量图是**最后一步**，在读图清单全过之后。把问题挡在导出之前，而不是投稿之后。

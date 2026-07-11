@@ -23,6 +23,14 @@ If no source exists, mark it as blocked or ask the user.
 - Every issue is answered, deferred, or marked needs-user-input.
 - No reviewer comment disappears because it is small.
 
+## Evidence-Architecture Gate
+
+- Every evidence source with a distinct role names the claims it may and may not support.
+- Validation, calibration, controls, case studies, and exploratory analyses do not silently become substantive evidence.
+- Every characterized systematic measurement error names affected claims and an evidence-backed bias direction or explicit indeterminacy.
+- Dependent RQs follow a stated logical order; independent RQs remain parallel under a common contribution claim.
+- Every load-bearing threat maps to an affected claim or RQ, a mitigation or explicit absence, and a residual boundary.
+
 ## Commitment Gate
 
 - Every promise in a rebuttal appears in the revision plan.
@@ -47,6 +55,18 @@ Flag and revise:
 - Vague "we will improve" promises.
 - Overconfident words without support.
 
+## Anti-AI Revision Gate
+
+- Check concrete prose patterns rather than detector or human-likeness scores.
+- Do not infer AI authorship from style alone or recommend detector-evasion edits.
+- Compare source and revision for claim strength, causal status, evidence scope,
+  terminology, citation attachment, quantitative facts, and caveats.
+- Treat negative parallelism, sentence-final ing clauses, rhetorical
+  self-answers, repeated openings, fragments, and list rhythm as soft diagnostics
+  unless another hard integrity rule is independently violated.
+- Preserve measured author judgment; reject casual humanizer language or humor
+  that substitutes for analysis.
+
 ## House-Style Gate
 
 Check:
@@ -63,6 +83,10 @@ Check:
 - External literature-management workflows are not invoked unless explicitly requested.
 
 ## Submission-Compliance Gate
+
+For the user's own manuscript, run `policy-compliance.md` first. Do not return a
+submission-ready judgment unless its evidence-backed assessor returns READY.
+Convert every FAIL or UNVERIFIED hard blocker into a traceable issue card.
 
 When venue rules are known, check:
 

@@ -1,5 +1,19 @@
 # Third-Party Notices
 
+## Design Inspiration Not Incorporated
+
+The policy architecture was informed by a comparative review of the public
+behavior and documentation of
+[`OniReimu/claude-scholar`](https://github.com/OniReimu/claude-scholar).
+That repository did not expose a recognized open-source license when reviewed
+on 2026-07-11. This project therefore does not copy, adapt, vendor, or
+redistribute its code or documentation; the rules and implementation here are
+independently authored.
+
+Some optional table and evidence-architecture preferences were informed by
+reading reference research papers. No paper text, data, result values, figures,
+or manuscript-specific claims are redistributed in this repository.
+
 This repository includes figure/table workflow ideas and helper-script patterns adapted from the following MIT-licensed project:
 
 - `Haojae/scipilot-figure-skill`

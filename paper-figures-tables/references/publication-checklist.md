@@ -2,7 +2,7 @@
 
 每张图投稿前**逐条勾选**。任何 FAIL 必须重新出图——`scripts/check_figure.py --strict` 是机器版的这份清单。
 
-> 这份清单只查**形式合规**（尺寸、DPI、字号、误差是否写明）。**语义层面**的避坑（均值柱掩盖分布、双 Y 轴误导、饼图等）在 [`viz_pitfalls.md`](viz_pitfalls.md) — 提交前两份清单都要过。
+> 这份清单只查**形式合规**（尺寸、DPI、字号、误差是否写明）。**语义层面**的避坑（均值柱掩盖分布、双 Y 轴误导、饼图等）在 [`visual-pitfalls.md`](visual-pitfalls.md) — 提交前两份清单都要过。
 
 ## 目录
 
@@ -21,8 +21,8 @@
 
 ## 尺寸 & 分辨率
 
-- [ ] `figsize` 直接设成目标期刊的最终尺寸（**单栏 ~3.5 in / 双栏 ~7.2 in**）
-- [ ] 导出后**没有**在 Word / LaTeX / PPT 里再缩放
+- [ ] 源画布默认采用目标尺寸的 3 倍（单栏约 10.5 in / 双栏约 21.6 in）
+- [ ] 只使用一次受控缩放放入最终栏宽，并在渲染后的论文中复核
 - [ ] 位图 DPI ≥ 300（普通彩色）/ ≥ 600（线条图、IEEE）
 - [ ] 用 `check_figure.py` 验证文件内嵌的实际尺寸与目标尺寸偏差 < 0.1 in
 
@@ -37,7 +37,8 @@
 ## 字体 & 字号
 
 - [ ] 字体与期刊一致：Nature/Science/Elsevier/PNAS → Helvetica/Arial；IEEE → Times；中文期刊 → 宋体+TNR
-- [ ] 最终尺寸下正文标签 7–9 pt，刻度数字 6–8 pt，**最小字 ≥ 6 pt**
+- [ ] 源码默认显式字号约 **>=24pt**；更小字号已记录 soft adaptation 理由
+- [ ] 缩放到最终尺寸后满足 venue 的有效字号和可读性要求
 - [ ] 所有字符可读，没有方框（中文模式必查）
 - [ ] 同一张图字体不超过 2 种
 
@@ -78,7 +79,7 @@
 
 ## 语义合规（viz_pitfalls 交叉检查）
 
-形式合规 ≠ 语义合规。下面 8 条是 [`viz_pitfalls.md`](viz_pitfalls.md) 里 15 条避坑清单的**精选 must-pass 项**：
+形式合规 ≠ 语义合规。下面 8 条是 [`visual-pitfalls.md`](visual-pitfalls.md) 里 15 条避坑清单的**精选 must-pass 项**：
 
 - [ ] **P1**：n<10/组的话**不**用均值柱状图——叠加 stripplot 或换箱线
 - [ ] **P2**：没有双 Y 轴（除非两个变量量纲相同）
@@ -89,7 +90,7 @@
 - [ ] **P12**：一张图只讲一个核心结论（多个论点拆图）
 - [ ] **P14**：连续值用 viridis / magma / RdBu_r，**没有** rainbow / jet
 
-完整 15 条详见 [`viz_pitfalls.md`](viz_pitfalls.md)。
+完整 15 条详见 [`visual-pitfalls.md`](visual-pitfalls.md)。
 
 ## 中文图额外项
 
@@ -105,12 +106,13 @@
 - [ ] 跑一遍：
   ```bash
   python scripts/check_figure.py figs/*.pdf figs/*.png \
-         --min-dpi 300 --width-in 3.5 --height-in 2.625 --strict
+         --min-dpi 300 --width-in 10.5 --height-in 7.875 --strict
   ```
   exit code 0 才算 PASS。
 
 - [ ] 把生成的 PDF **打印出来**（或缩放到论文实际尺寸）肉眼看一遍——字够大吗？线够清吗？颜色对比够吗？
 - [ ] 用色盲模拟工具（Color Oracle / Coblis）查一遍
+- [ ] 将最终宽度视觉 QA 作为 human evidence 写入 `compliance-evidence.yaml`
 - [ ] 给非同行（家人朋友）看一眼能不能看懂三条信息：x 是啥、y 是啥、几条线/柱有什么区别——看不懂说明图传达失败
 
 ---
@@ -123,7 +125,7 @@
 # 1. 出图（已经做完）
 # 2. 末端审计
 python scripts/check_figure.py figs/*.pdf figs/*.png \
-       --min-dpi 300 --width-in 3.5 --height-in 2.625 --strict
+       --min-dpi 300 --width-in 10.5 --height-in 7.875 --strict
 
 # 3. 人眼终检
 ls figs/ | xargs -I{} echo "open figs/{}"   # 一一打开看

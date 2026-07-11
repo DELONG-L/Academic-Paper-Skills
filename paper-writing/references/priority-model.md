@@ -4,19 +4,27 @@ Use this file to resolve conflicts among local writing sources.
 
 ## Authority Order
 
-1. User-provided paper facts, target venue, and explicit instructions.
-2. The house style in `style-profile.md`.
-3. Task-specific writing references in this skill.
+1. Core integrity rules from the sibling `paper-policy` skill.
+2. User-provided paper facts, approved evidence, author intent, and explicit task constraints.
+3. Verified venue or template requirements with source and freshness date.
+4. Hard rules from explicitly activated policy sets.
+5. Public academic defaults and enabled optional house guidance in `style-profile.md`.
+6. Task-specific writing references in this skill.
+7. Generic academic or domain advice.
 
-The house style is not optional. Generic ML paper advice is a fallback for structure, venue conventions, and missing section scaffolds.
+Apply hard rules before soft guidance. The public academic defaults govern the
+remaining freedom unless the context explicitly enables `strict-house-style`.
 
 ## Conflict Rules
 
-- If generic advice says to maximize reviewer scanability but house style says to narrow claims, narrow the claim first.
-- If a venue requires a section or checklist, satisfy the venue but keep the section title traditional.
+- Narrow unsupported claims regardless of style profile; claim integrity is not a house preference.
+- If a verified venue requires a section or checklist, satisfy the venue. Apply
+  Apply traditional section naming only when its strict rule is enabled.
 - If a prose cleanup rule would make text casual, keep academic density and remove only the formulaic pattern.
 - If a table or figure style question appears, produce a writing-level spec and hand off artifact rendering.
-- Citation source of truth is manual: use only user-maintained `.bib` entries, existing manuscript citation keys, and user-provided notes or matrices. Automatic citation search or verification is out of scope unless the user explicitly requests it as a separate task.
+- Citation source of truth is declared by the user or project; local `.bib` entries, manuscript keys, and supplied notes are the default. Automatic search or verification remains out of scope unless explicitly requested as a separate task.
+- If venue, anonymity, or submission state is inferred or lacks provenance, do
+  not activate its hard rules. Report the unresolved context instead.
 
 ## Default Behavior
 

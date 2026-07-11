@@ -1,0 +1,26 @@
+\documentclass{article}
+\usepackage{booktabs}
+\begin{document}
+\begin{table}[t]
+\centering
+\caption{A correctly ruled table.}
+\label{tab:good}
+\begin{tabular}{lc}
+\toprule
+Item & Value \\
+\midrule
+A & 1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{A table without booktabs rules.}
+\label{tab:bad}
+\begin{tabular}{lc}
+Item & Value \\
+B & 2 \\
+\end{tabular}
+\end{table}
+\end{document}

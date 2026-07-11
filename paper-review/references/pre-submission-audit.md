@@ -21,6 +21,7 @@ Flag:
 - Causal claims without causal evidence.
 - Universal claims that exceed the evaluated scope.
 - Abstract, contributions, experiments, and conclusion making inconsistent claims.
+- Section or RQ order with no recoverable argumentative dependency or common contribution spine.
 - "Obviously", "clearly", or similar phrases where a proof or explanation is missing.
 
 ### Empirical Rigor
@@ -33,6 +34,19 @@ Flag:
 - Missing seed count, variance, confidence intervals, or significance tests when needed.
 - Baselines with unequal data splits, tuning budgets, training budgets, or evaluation windows.
 - Ablations that do not isolate the claimed mechanism.
+- Validation, calibration, control, case-study, or exploratory evidence used as substantive support outside its declared role.
+- Known systematic measurement or extraction errors without an evidence-backed bias direction, affected claim, or explicit statement that the direction is indeterminate.
+
+### Threats and Limitations
+
+Check every load-bearing threat or limitation as a claim-level argument.
+
+Flag:
+- Threats that do not identify the affected claim, RQ, metric, or inference.
+- Mitigations named without evidence that they address the stated threat.
+- Mitigations presented as eliminating risk when a residual boundary remains.
+- A fixed validity taxonomy that hides domain-specific failure modes.
+- If the strict Conclusion rules are active, a missing Conclusion limitation or a Conclusion that violates the configured paragraph shape.
 
 ### Contribution and Positioning
 
@@ -44,26 +58,32 @@ Flag:
 - Contributions that restate implementation details rather than scientific advances.
 - Scope too narrow for the stated claim.
 
-Required house rule:
-- Related Work must include the axis-based comparison table unless the user explicitly waived it or the venue forbids it.
+Conditional house rule:
+- When `RELATED.COMPARISON_REQUIRED` is active, Related Work must include the axis-based comparison table unless an authorized waiver or venue requirement applies.
 
 ### Writing and Structure
 
 Check whether the manuscript reads like a traditional academic paper.
 
 Flag:
-- Top-level section names that are clever, marketing-like, or overly long.
+- Top-level section names that cause a concrete clarity problem; enforce traditional names as a rule only when `STRUCT.TRADITIONAL_HEADINGS` is active.
 - Paragraphs without a clear topic sentence.
-- Overclaims, promotional adjectives, template phrases, and AI-smell.
+- Overclaims, promotional adjectives, filler, repeated formulaic structures, or other concrete prose defects.
 - Excessive lists, bolding, or rhetorical self-answering.
 - Excessive `\textit{}`, `\texttt{}`, small caps, underlining, or other special typography in normal prose.
 - Paper-body text that reads like internal provenance, including local file paths, script names, renderer names, DPI checks, or artifact-bundle mechanics.
+- Detector, perplexity, authenticity, or human-likeness scores used as evidence of manuscript quality, readiness, or authorship.
+- Anti-AI rewrites that change claim strength, causality, scope, terminology, citation attachment, values, or required caveats.
+
+Report the observed pattern and its effect on academic clarity. Do not label a
+passage AI-generated or infer authorship from style alone.
 
 For rewriting, hand off to `paper-writing`.
 
 ### Citations and Attribution
 
-Use only local `.bib`, local manuscript text, and user notes.
+Use only citation and evidence sources declared by the user or project; local
+`.bib`, manuscript text, and supplied notes are the default.
 
 Flag:
 - `\cite{}` keys missing from local `.bib`.
@@ -96,16 +116,16 @@ Diagnose only; route creation/revision to `paper-figures-tables`.
 
 Flag:
 - Figure/table not referenced or interpreted.
-- In-figure title text.
+- In-figure title text when `FIG.NO_IN_FIGURE_TITLE` is active or when it duplicates the caption.
 - Captions that lack what/how/takeaway.
 - Captions that read like internal audit logs or include renderer names, local data paths, plotting scripts, DPI checks, or internal-validation notes without a venue reason.
 - Precise data figures not traceable to source data.
-- Tables lacking `booktabs`.
-- LaTeX tables not using `\resizebox` to align with target width unless natural width is already clean and better.
-- Related Work or comparison tables that use `table*` or many dimensions when a pruned single-column table would carry the claim.
-- Up/down arrows in table headers unless the user or venue explicitly wants that style.
+- Tables lacking `booktabs` when `TABLE.BOOKTABS_FINAL` is active.
+- Tables that fail target-width readability; enforce the house `resizebox` pattern only when its rule is enabled.
+- Related Work tables that are wider or denser than their argument requires; enforce house placement budgets only when enabled.
+- Up/down arrows in table headers when `TABLE.NO_DIRECTION_ARROWS` is enabled.
 - Unnecessary Notes blocks, long marker explanations, or captions that carry too much table metadata.
-- Figure 1 or overview-style conceptual figures with gray, gradient, textured, or atmospheric backgrounds instead of a pure white page background.
+- Conceptual figures that violate `FIG.CONCEPT_HOUSE_STYLE` when that optional rule is active.
 
 ### Reproducibility
 
@@ -118,6 +138,11 @@ Flag:
 ```markdown
 ## Review Summary
 <2-4 sentences on overall readiness.>
+
+## Policy Compliance
+- Readiness: <READY | BLOCKED | NOT_EVALUATED>
+- Hard results: <PASS n | FAIL n | UNVERIFIED n | NOT_APPLICABLE n | WAIVED n>
+- Context blockers: <none or list>
 
 ## Critical Findings
 - [critical] <issue> [anchor]  

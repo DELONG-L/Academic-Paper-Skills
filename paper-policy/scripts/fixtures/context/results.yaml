@@ -1,0 +1,14 @@
+version: 1
+paper_type: empirical
+submission_stage: draft
+language: en
+task_scope: section
+task_mode: writing
+policy_sets: [strict-house-style]
+evaluation_structure: rq_driven
+experiment_type: stochastic
+scopes: [writing, tables]
+artifacts: [prose, table]
+features: [paper_prose, evaluation_section, result_table]
+provenance:
+  submission_stage: user

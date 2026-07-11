@@ -2,6 +2,23 @@
 
 Use the mode that matches the user's intent. If the user gives only a paper and says "review", default to pre-submission audit for the user's own paper unless they say they are reviewing someone else's submission.
 
+Set the machine-readable `task_mode` as follows. These values are controlled;
+unknown values are rejected rather than silently disabling policy.
+
+| Human workflow | Canonical `task_mode` |
+|---|---|
+| Pre-submission audit | `self_review` |
+| Reviewer panel for own draft | `self_review` |
+| Formal review of another paper | `formal_review` |
+| External review analysis | `external_review_analysis` |
+| Rebuttal strategy/drafting | `rebuttal` |
+| Revision verification | `revision_verification` |
+
+`pre_submission_audit` and `reviewer_panel` are accepted aliases for
+`self_review`. Detector-specific review must use `detector_review` or
+`authorship_review`; ordinary self-review does not activate a detector-related
+workflow gate.
+
 ## Mode A: Pre-submission Audit
 
 Goal: find rejection risks before advisor review, collaborator review, or submission.

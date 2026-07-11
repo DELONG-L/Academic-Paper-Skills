@@ -1,0 +1,208 @@
+version: 1
+registry: paper-policy-profiles
+profiles:
+  - id: final-manuscript
+    match:
+      field: submission_stage
+      any_of: [submission, camera_ready]
+    activate_hard:
+      - FINAL.NO_UNRESOLVED_MARKERS
+    prefer_soft:
+      - STRUCT.SECTION_COUNT
+      - PROSE.FILLER_AND_PROMOTION
+      - FIG.EXPORT_AND_ACCESSIBILITY
+    source: {kind: local, url: null, as_of: null}
+
+  - id: final-table
+    match:
+      field: artifact_mode
+      any_of: [final_table]
+    activate_hard:
+      - TABLE.BOOKTABS_FINAL
+      - TABLE.FINAL_TARGET_WIDTH
+    prefer_soft:
+      - TABLE.SINGLE_COLUMN_FIRST
+      - TABLE.TARGET_WIDTH
+      - TABLE.CAPTION_AND_HIGHLIGHT
+    source: {kind: local, url: null, as_of: null}
+
+  - id: related-work-full
+    match:
+      field: task_mode
+      any_of: [related_work_full, background_and_related_work_full]
+    activate_hard:
+      - RELATED.COMPARISON_REQUIRED
+    prefer_soft:
+      - RELATED.AXIS_ORGANIZATION
+      - RELATED.DIMENSION_BUDGET
+      - TABLE.SINGLE_COLUMN_FIRST
+      - TABLE.NO_DIRECTION_ARROWS
+    source: {kind: local, url: null, as_of: null}
+
+  - id: citation-audit
+    match:
+      field: task_mode
+      any_of: [citation_audit]
+    activate_hard:
+      - CITE.SOURCE_LOCATOR_REQUIRED
+    prefer_soft: []
+    source: {kind: user, url: null, as_of: null}
+
+  - id: final-citation-check
+    match:
+      field: task_mode
+      any_of: [final_citation_check]
+    activate_hard:
+      - CITE.SOURCE_LOCATOR_REQUIRED
+      - CITE.UNUSED_KEYS_REPORTED
+      - FINAL.NO_UNRESOLVED_MARKERS
+    prefer_soft: []
+    source: {kind: user, url: null, as_of: null}
+
+  - id: double-blind
+    match:
+      field: double_blind
+      any_of: [true]
+    activate_hard:
+      - ANON.DOUBLE_BLIND
+    prefer_soft: []
+    source: {kind: user, url: null, as_of: null}
+
+  - id: sok
+    match:
+      field: paper_type
+      any_of: [sok]
+    activate_hard:
+      - SOK.REQUIRED_CONTENT
+      - RELATED.COMPARISON_REQUIRED
+    prefer_soft:
+      - STRUCT.SECTION_COUNT
+      - INTRO.RQ_FRAMING
+      - RELATED.AXIS_ORGANIZATION
+      - RELATED.DIMENSION_BUDGET
+    source: {kind: local, url: null, as_of: null}
+
+  - id: stochastic-experiment
+    match:
+      field: experiment_type
+      any_of: [stochastic, multi_run]
+    activate_hard:
+      - EXPERIMENT.STOCHASTIC_UNCERTAINTY
+    prefer_soft:
+      - RESULTS.FOUR_MOVE
+      - FIG.EXPORT_AND_ACCESSIBILITY
+    source: {kind: local, url: null, as_of: null}
+
+  - id: known-measurement-bias
+    match:
+      field: measurement_bias_status
+      any_of: [known_systematic, characterized_missingness]
+    activate_hard:
+      - CLAIM.KNOWN_BIAS_DIRECTION
+    prefer_soft:
+      - RESULTS.FOUR_MOVE
+      - THREATS.ADAPTIVE_TAXONOMY
+    source: {kind: user, url: null, as_of: null}
+
+  - id: multi-role-evidence
+    match:
+      field: evidence_structure
+      any_of: [multi_role, tiered, validation_and_substantive]
+    activate_hard:
+      - METHOD.EVIDENCE_ROLE_BOUNDARY
+    prefer_soft:
+      - METHOD.EVIDENCE_ROLE_LEDGER
+      - STRUCT.ARGUMENTATIVE_SPINE
+    source: {kind: user, url: null, as_of: null}
+
+  - id: reproducibility
+    match:
+      field: task_mode
+      any_of: [reproducibility_check, submission_readiness]
+    activate_hard:
+      - EXPERIMENT.REPRODUCIBILITY
+    prefer_soft: []
+    source: {kind: local, url: null, as_of: null}
+
+  - id: paper-run-final
+    match:
+      field: task_mode
+      any_of: [paper_run_final]
+    activate_hard:
+      - EXPERIMENT.ACTUAL_RUN_CONFIRMATION
+      - FINAL.NO_UNRESOLVED_MARKERS
+    prefer_soft:
+      - RESULTS.FOUR_MOVE
+    source: {kind: local, url: null, as_of: null}
+
+  - id: architecture-review
+    match:
+      field: task_mode
+      any_of: [architecture_review]
+    activate_hard:
+      - REVIEW.ARCHITECTURE_SAFETY
+    prefer_soft:
+      - PARAGRAPH.ONE_JOB
+      - REVIEW.SUBSTANCE_VS_MISREAD
+    source: {kind: imported-design, url: null, as_of: null}
+
+  - id: standard-conference-structure
+    match:
+      field: structure_profile
+      any_of: [standard_conference]
+    activate_hard:
+      - STRUCT.SECTION_COUNT_PROFILE
+    prefer_soft:
+      - STRUCT.SECTION_COUNT
+    source: {kind: user, url: null, as_of: null}
+
+  - id: rq-driven-evaluation
+    match:
+      field: evaluation_structure
+      any_of: [rq_driven]
+    activate_hard:
+      - RESULTS.RQ_EXPLICIT_ANSWER
+    prefer_soft:
+      - INTRO.RQ_FRAMING
+      - INTRO.RQ_RESPONSE_MAP
+      - STRUCT.ARGUMENTATIVE_SPINE
+      - RESULTS.FOUR_MOVE
+      - RESULTS.RQ_ANSWER_BOX
+    source: {kind: user, url: null, as_of: null}
+
+  - id: full-paper-workflow
+    match:
+      field: task_scope
+      any_of: [full_paper, multi_section, polish, submission, rebuttal]
+    activate_hard:
+      - WORKFLOW.COMPLEX_TASK_STATE
+    prefer_soft:
+      - PROFILE.COMPOSITION
+      - STRUCT.SECTION_COUNT
+      - STRUCT.ARGUMENTATIVE_SPINE
+      - THREATS.ADAPTIVE_TAXONOMY
+    source: {kind: user, url: null, as_of: null}
+
+  - id: cold-reader
+    match:
+      field: task_mode
+      any_of: [cold_reader, comprehension_test]
+    activate_hard:
+      - WORKFLOW.COLD_READER_AUTHORIZATION
+    prefer_soft:
+      - REVIEW.SUBSTANCE_VS_MISREAD
+    source: {kind: user, url: null, as_of: null}
+
+  - id: final-figure
+    match:
+      field: artifact_mode
+      any_of: [final_figure]
+    activate_hard:
+      - FIG.FINAL_EXPORT_ACCESSIBILITY
+      - FIG.FINAL_WIDTH_READABLE
+      - FIG.TRACEABLE_SCRIPT
+    prefer_soft:
+      - FIG.EXPORT_AND_ACCESSIBILITY
+      - FIG.SOURCE_FONT_SCALE
+      - FIG.CAPTION_SELF_CONTAINED
+    source: {kind: local, url: null, as_of: null}

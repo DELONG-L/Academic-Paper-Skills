@@ -1,0 +1,11 @@
+version: 1
+paper_type: empirical
+submission_stage: draft
+language: en
+task_scope: section
+task_mode: writing
+scopes: [writing]
+artifacts: [prose]
+features: [paper_prose, introduction]
+provenance:
+  submission_stage: user

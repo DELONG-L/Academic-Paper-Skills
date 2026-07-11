@@ -4,26 +4,30 @@ Use this file to resolve conflicts among artifact sources and routes.
 
 ## Authority Order
 
-1. User-provided data, manuscript facts, target venue, and explicit instructions.
-2. Writing handoff specs from `paper-writing`.
-3. House artifact style in this skill's task-specific references.
-4. Data-visualization advisor rules for precise data figures only.
-5. Security/system figure contracts and plotting helpers for precise paper plots.
+1. Core integrity constraints from the sibling `paper-policy` skill.
+2. User-provided data, manuscript facts, approved evidence, and explicit instructions.
+3. Verified venue requirements with source and freshness date.
+4. Writing handoff specs from `paper-writing`.
+5. Hard rules from explicitly activated policy sets.
+6. Enabled public defaults and optional house artifact guidance.
+7. Data-visualization and security/system plotting advice for precise figures.
 
 ## Route Boundaries
 
 - Tables are governed by `tables.md`; chart advice does not override table style.
 - Precise experiment plots are governed by `data-figures.md`; image generation must not be used for numeric data figures.
-- Conceptual figures are governed by `conceptual-figures.md`; Python is not the default renderer for conceptual paper images.
+- Conceptual figures are governed by `conceptual-figures.md`; select the renderer from topology, editability, active policy, and available tools.
 - Writing prose belongs to `paper-writing`; this skill may emit captions, labels, artifact plans, and short callout sentences.
 
 ## Conflict Rules
 
 - If prose says a result exists but source data is absent, do not plot or tabulate it as a fact. Ask for data or produce a placeholder spec.
-- If generic advice conflicts with house table/figure style, use house style.
+- If generic advice conflicts with an enabled house rule, use the enabled rule; otherwise adapt the public default.
 - If the chart-selection references recommend a different chart from the user request, explain the concern and propose the safer option before proceeding.
 - If a venue template imposes stricter layout rules, satisfy the venue while preserving the artifact's claim and readability.
 - If the user asks for quick drafting with placeholder values, label placeholders explicitly and do not present them as actual results.
+- Prefer source text at or above 24pt on the 3x source canvas. Below-24pt text is
+  a reportable soft adaptation and must still pass the final-width hard gate.
 
 ## Source of Truth
 

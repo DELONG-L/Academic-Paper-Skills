@@ -1,0 +1,12 @@
+version: 1
+paper_type: empirical
+submission_stage: draft
+language: en
+task_scope: section
+task_mode: related_work_full
+policy_sets: [strict-house-style]
+scopes: [writing, tables]
+artifacts: [prose, table]
+features: [paper_prose, related_work, related_work_table]
+provenance:
+  submission_stage: user
