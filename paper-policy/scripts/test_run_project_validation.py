@@ -13,11 +13,12 @@ from run_project_validation import run_validation
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+POLICY_DIR = SCRIPT_DIR.parent
 FIXTURES = SCRIPT_DIR / "fixtures"
 
 
 class ProjectValidationRunnerTests(unittest.TestCase):
-    def test_runner_uses_dev_bundle_and_writes_review_artifacts(self) -> None:
+    def test_runner_uses_local_bundle_and_writes_review_artifacts(self) -> None:
         with TemporaryDirectory() as directory:
             output = Path(directory) / "validation"
             manifest = run_validation(
@@ -25,7 +26,7 @@ class ProjectValidationRunnerTests(unittest.TestCase):
                 FIXTURES / "project-pass",
                 output,
             )
-            self.assertIn("Academic-Paper-Skills-dev/paper-policy", manifest["policy_bundle"])
+            self.assertEqual(str(POLICY_DIR.resolve()), manifest["policy_bundle"])
             self.assertFalse(manifest["active_system_skills_modified"])
             for name in (
                 "resolved-policy.yaml",
