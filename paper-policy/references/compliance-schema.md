@@ -91,8 +91,8 @@ therefore point to a separate replication bundle; source data and scripts do
 not have to be copied into the LaTeX project.
 
 Supported artifact types are `paper_figure`, `data_figure`,
-`conceptual_figure`, `related_work_table`, `data_table`, `result_table`, and
-`paper_table`.
+`conceptual_figure`, `generated_conceptual_figure`, `related_work_table`,
+`data_table`, `result_table`, and `paper_table`.
 
 Use `artifact_refs` on figure/table hard results. PASS, WAIVED, or
 NOT_APPLICABLE must cover every artifact governed by that active rule. A missing
@@ -108,6 +108,17 @@ For `TABLE.PROPOSED_ROW_GROUNDED`, proposed-row marker support and uniqueness
 highlighting are semantic evidence. A color token, `\cellcolor`, dagger, or
 caption claim can identify what needs review, but none can establish that the
 comparison corpus is adequate or that the claimed distinction is supported.
+
+For `FIG.CONCEPT_TYPOGRAPHY`, naming Times New Roman or a mathematical font in
+the generation prompt is not compliance evidence. Inspect the accepted model
+output itself. If the font roles cannot be verified, leave the rule `UNVERIFIED`
+and regenerate or stop; post-generation text or formula repair is forbidden.
+
+For `FIG.CONCEPT_MODEL_NATIVE_OUTPUT`, retain the accepted model-generated
+source and identify every subsequent transformation. Cropping, resizing,
+compression, color-profile conversion, and format wrapping may be accepted only
+when they do not change semantic content. Any later text, formula, arrow, icon,
+component, boundary, redrawing, compositing, or replacement is a hard failure.
 
 The standalone artifact checker reports public-default rules unless
 `--strict-house-style` is passed. Context-driven assessment always filters its

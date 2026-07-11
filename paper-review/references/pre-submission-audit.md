@@ -129,6 +129,8 @@ Flag:
 - Up/down arrows in table headers when `TABLE.NO_DIRECTION_ARROWS` is enabled.
 - Unnecessary Notes blocks, long marker explanations, or captions that carry too much table metadata.
 - Conceptual figures that violate `FIG.CONCEPT_HOUSE_STYLE` when that optional rule is active.
+- Generated conceptual figures whose non-mathematical text is not Times New Roman, whose mathematics does not use a dedicated math font, or whose font roles cannot be verified when `FIG.CONCEPT_TYPOGRAPHY` is active.
+- Generated conceptual figures containing post-generation text, formula, arrow, icon, component, or boundary overlays, redraws, composites, or replacements when `FIG.CONCEPT_MODEL_NATIVE_OUTPUT` is active.
 
 ### Reproducibility
 

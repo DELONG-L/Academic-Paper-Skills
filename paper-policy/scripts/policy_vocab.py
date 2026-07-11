@@ -34,6 +34,7 @@ FEATURES = {
     "paper_figure",
     "data_figure",
     "conceptual_figure",
+    "generated_conceptual_figure",
     "threats_to_validity",
     "limitations_content",
 }

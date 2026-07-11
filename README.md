@@ -46,6 +46,7 @@ house formatting or structure.
 - For an explicitly justified wide Related Work matrix, use `table_profile: layered_capability_matrix` to group capabilities by semantic layer; coverage-delta highlights remain evidence-bound and color is never the sole cue.
 - Use source-data-driven Python plots for numeric figures.
 - Select conceptual-figure tooling from topology, editability, venue constraints, and enabled policy; generative rendering is an optional house default.
+- When `strict-house-style` is active, generated conceptual figures must contain all text, mathematics, arrows, components, and other semantic content directly in the accepted model output. Non-mathematical text uses Times New Roman and mathematics uses a dedicated manuscript- or venue-compatible math font; post-generation semantic overlays or redraws are forbidden. Public defaults do not impose these house rules.
 - Keep review work separate from writing and artifact creation: diagnose first, then route substantial rewrites to `paper-writing` or artifact changes to `paper-figures-tables`.
 
 ## Installation

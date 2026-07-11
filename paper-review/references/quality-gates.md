@@ -76,6 +76,8 @@ Check:
 - Table headers avoid ML-style up/down arrows unless explicitly requested.
 - Figure and table captions read like paper captions, not internal audit records.
 - Figure 1 and overview-style conceptual figures use pure white backgrounds unless the manuscript gives a reason otherwise.
+- When `FIG.CONCEPT_TYPOGRAPHY` is active, generated conceptual-figure prose labels use Times New Roman and mathematical content uses a dedicated manuscript- or venue-compatible math font directly in the accepted model output.
+- When `FIG.CONCEPT_MODEL_NATIVE_OUTPUT` is active, no semantic content is added, replaced, redrawn, composited, or overlaid after model generation.
 - Normal prose does not overuse `\textit{}`, `\texttt{}`, small caps, underlining, or other special typography.
 - Top-level section headings are traditional and concise.
 - Figure/table issues are routed to `paper-figures-tables`.

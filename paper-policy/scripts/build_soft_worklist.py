@@ -25,6 +25,7 @@ FEATURE_TARGETS = {
     "paper_figure": {"figures"},
     "data_figure": {"figures"},
     "conceptual_figure": {"figures"},
+    "generated_conceptual_figure": {"figures"},
     "latex_manuscript": {"whole_manuscript"},
     "paper_prose": {"whole_manuscript"},
 }

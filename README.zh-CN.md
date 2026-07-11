@@ -44,6 +44,7 @@ policy_sets: [strict-house-style]
 - 对经过明确论证的宽幅 Related Work 矩阵，可用 `table_profile: layered_capability_matrix` 按语义层分组；coverage delta 高亮必须有证据，且不能只靠颜色传义。
 - 数值实验图必须由源数据驱动，用 Python 绘制。
 - 概念图工具根据拓扑、可编辑性、venue 与启用规则选择；生成式渲染属于可选 house default。
+- 启用 `strict-house-style` 时，生成式概念图的文字、数学公式、箭头、组件等全部语义内容必须直接存在于模型最终输出中；非数学文字统一使用 Times New Roman，数学内容使用与论文或 venue 兼容的专门数学字体，禁止后期语义叠加或重绘。公开默认配置不强制这些 house 规则。
 - Review 与 Writing、Figures/Tables 分离：review 先诊断问题；大段正文改写交给 `paper-writing`，图表制作或重排交给 `paper-figures-tables`。
 
 ## 安装

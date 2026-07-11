@@ -745,6 +745,38 @@ rules:
     decision_refs: [I06, I09]
     source: {origin: user-decision, note: 'Conceptual-figure house hard rule.'}
 
+  - id: FIG.CONCEPT_TYPOGRAPHY
+    title: Conceptual figures separate text and mathematical typography
+    force: hard
+    scope: [figures, review]
+    artifacts: [figure]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: feature, when: [generated_conceptual_figure]}
+    requirement: Render all visible non-mathematical text in Times New Roman directly in the accepted model-generated output. Render variables, operators, Greek symbols, and equations directly in that output with a dedicated mathematical typesetting font compatible with the manuscript or venue, not as Times New Roman imitations. If either font role is wrong or cannot be verified, regenerate with the image model or stop; do not repair the figure with a later text or mathematics overlay.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Inspect the accepted model output to confirm Times New Roman for every non-mathematical label and a dedicated math font for mathematical content; a prompt-only claim or post-generation overlay is insufficient.'}
+    failure: {draft: block, final: block}
+    autofix: assisted
+    waiver: {allowed: true, authorities: [user, venue]}
+    decision_refs: [I21]
+    source: {origin: user-decision, note: 'Strict-house model-native conceptual-figure typography rule.'}
+
+  - id: FIG.CONCEPT_MODEL_NATIVE_OUTPUT
+    title: Generated conceptual figures remain model-native
+    force: hard
+    scope: [figures, review, workflow]
+    artifacts: [figure]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: feature, when: [generated_conceptual_figure]}
+    requirement: Keep every visible semantic element of a generated conceptual figure in the accepted output of the generative image model, including ordinary text, mathematical content, arrows, icons, components, and boundaries. Corrections must use another model generation or model-editing pass. Do not add, replace, redraw, composite, typeset, or overlay semantic content after generation. Permit only non-semantic technical packaging such as cropping, resizing, compression, color-profile conversion, or format wrapping when it does not alter the depicted meaning.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Compare the accepted model-generated source with the final paper artifact and inspect the transformation record for any post-generation semantic overlay, redrawing, compositing, or replacement.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [I22]
+    source: {origin: user-decision, note: 'Generated conceptual figures must remain model-native; only non-semantic technical packaging is permitted.'}
+
   - id: FIG.FINAL_EXPORT_ACCESSIBILITY
     title: Final figures use vector export and accessible color
     force: hard

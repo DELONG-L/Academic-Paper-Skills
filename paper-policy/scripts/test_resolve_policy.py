@@ -105,7 +105,41 @@ class ResolvePolicyTests(unittest.TestCase):
         hard = self.ids(self.resolve("conceptual-figure.yaml"), "active_hard")
         self.assertIn("FIG.NO_INVENTED_COMPONENTS", hard)
         self.assertIn("FIG.CONCEPT_HOUSE_STYLE", hard)
+        self.assertIn("FIG.CONCEPT_TYPOGRAPHY", hard)
+        self.assertIn("FIG.CONCEPT_MODEL_NATIVE_OUTPUT", hard)
         self.assertNotIn("FIG.SOURCE_DATA_REQUIRED", hard)
+
+    def test_public_conceptual_figure_disables_house_typography(self) -> None:
+        context = load_yaml(FIXTURES / "conceptual-figure.yaml")
+        context.pop("policy_sets")
+        result = resolve_policy(
+            context, self.hard, self.soft, self.profiles, self.policy_sets
+        )
+        hard = self.ids(result, "active_hard")
+        self.assertIn("FIG.NO_INVENTED_COMPONENTS", hard)
+        self.assertNotIn("FIG.CONCEPT_HOUSE_STYLE", hard)
+        self.assertNotIn("FIG.CONCEPT_TYPOGRAPHY", hard)
+        self.assertNotIn("FIG.CONCEPT_MODEL_NATIVE_OUTPUT", hard)
+
+    def test_non_generated_conceptual_figure_skips_model_native_rules(self) -> None:
+        context = load_yaml(FIXTURES / "conceptual-figure.yaml")
+        context["features"].remove("generated_conceptual_figure")
+        result = resolve_policy(
+            context, self.hard, self.soft, self.profiles, self.policy_sets
+        )
+        hard = self.ids(result, "active_hard")
+        self.assertIn("FIG.NO_INVENTED_COMPONENTS", hard)
+        self.assertIn("FIG.CONCEPT_HOUSE_STYLE", hard)
+        self.assertNotIn("FIG.CONCEPT_TYPOGRAPHY", hard)
+        self.assertNotIn("FIG.CONCEPT_MODEL_NATIVE_OUTPUT", hard)
+
+    def test_generated_conceptual_selector_requires_conceptual_selector(self) -> None:
+        context = load_yaml(FIXTURES / "conceptual-figure.yaml")
+        context["features"].remove("conceptual_figure")
+        with self.assertRaisesRegex(ValueError, "requires conceptual_figure"):
+            resolve_policy(
+                context, self.hard, self.soft, self.profiles, self.policy_sets
+            )
 
     def test_data_table_feature_activates_value_grounding(self) -> None:
         hard = self.ids(self.resolve("data-table.yaml"), "active_hard")

@@ -52,6 +52,8 @@ artifact feeding submission readiness, also load `policy-integration.md`.
 - Choose the renderer for non-data conceptual figures from topology, editability, venue constraints, and available tools. Use a generative image model by default only when `FIG.CONCEPT_HOUSE_STYLE` is active.
 - Apply the one-or-two conceptual-figure preference only when `FIG.CONCEPT_COUNT` is enabled.
 - Apply the pure-white, no-texture conceptual style only when `FIG.CONCEPT_HOUSE_STYLE` is active.
+- When `FIG.CONCEPT_TYPOGRAPHY` is active, require the image model itself to render Times New Roman for every non-mathematical label and a dedicated manuscript- or venue-compatible math font for variables, symbols, and equations. Regenerate or stop when those font roles are wrong or unverifiable; never repair them with a later overlay.
+- When `FIG.CONCEPT_MODEL_NATIVE_OUTPUT` is active, keep all visible text, mathematics, arrows, icons, components, and boundaries in the accepted model output. Corrections must use another model generation or model-editing pass; allow only non-semantic crop, resize, compression, color-profile, or format-packaging operations afterward.
 - Put interpretation in captions. Forbid in-figure titles only when `FIG.NO_IN_FIGURE_TITLE` is active or the venue requires that style.
 - Use a 3x source canvas with visible paper-figure text near or above 24pt by
   default. Smaller source text is an allowed soft adaptation only when the
@@ -88,9 +90,11 @@ For conceptual figures:
 1. Read enough manuscript context before designing.
 2. Produce a `brief.md`, `spec.json` or `figure_spec.yaml`, generation prompt, and caption draft.
 3. Use the renderer selected by active policy and artifact needs; a generative image model is an opt-in house default, not a universal requirement.
-4. When image generation is selected for a topology-sensitive overview, create or update a precise editable `structure.svg` wireframe and use it as the structural reference.
-5. Use Graphviz, Mermaid, TikZ, or final SVG only when strict topology, editable vector output, or venue constraints make them necessary.
-6. Preserve the manuscript's structure; do not invent components not supported by the paper.
+4. Add `generated_conceptual_figure` to context features and artifact types whenever an image model produces the final conceptual artifact.
+5. When image generation is selected for a topology-sensitive overview, create or update a precise editable `structure.svg` wireframe and use it only as a pre-generation structural reference.
+6. Use Graphviz, Mermaid, TikZ, or final SVG only for an explicitly non-generative conceptual artifact; never use them to repair or redraw an accepted generated figure when the model-native rule is active.
+7. Preserve the manuscript's structure; do not invent components not supported by the paper.
+8. Inspect typography and semantics in the accepted model output. If they cannot be verified, regenerate or stop rather than adding post-generation content.
 
 ## Reference Map
 

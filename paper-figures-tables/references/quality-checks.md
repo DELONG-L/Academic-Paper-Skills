@@ -57,6 +57,11 @@ Use this before finishing any figure or table task.
 - Direction of flow is correct.
 - Trust boundaries, attacker paths, or data transformations are visually clear.
 - Figure 1 and overview-like conceptual figures use a pure white background, with no gradient wash, texture, vignette, or gray canvas.
+- When `FIG.CONCEPT_TYPOGRAPHY` is active, every non-mathematical label and annotation is Times New Roman.
+- Mathematical variables, operators, Greek symbols, and equations use a dedicated manuscript- or venue-compatible math font rather than Times New Roman imitation.
+- Exact font roles are inspected in the accepted model output; prompt wording or silent font fallback is not treated as proof. Uncertain typography triggers regeneration or a stop, never a post-generation repair.
+- For `generated_conceptual_figure`, every visible semantic element is present in the accepted model output and the final artifact contains no later text, formula, arrow, icon, component, or boundary overlay.
+- Post-generation operations are limited to non-semantic crop, resize, compression, color-profile conversion, or format wrapping.
 - Labels are short and readable.
 - No title appears inside the generated image.
 - Caption explains semantics that are not obvious.
@@ -69,5 +74,6 @@ Stop and ask or emit a spec instead of final artifact when:
 - multiple incompatible artifact interpretations exist
 - the user asks for exact values but only prose is available
 - the artifact would require inventing methods, baselines, citations, components, or results
-- a generated conceptual figure has wrong/unreadable labels and cannot be corrected without changing renderer
-- the generative image model repeatedly corrupts the `structure.svg` topology or labels and no deterministic overlay or editable-renderer fallback is acceptable
+- a generated conceptual figure has wrong or unreadable labels, formulae, font roles, or topology after reasonable model regeneration attempts
+- Times New Roman or the required mathematical font is unavailable or cannot be verified and no user/venue waiver exists
+- the generative image model repeatedly corrupts the `structure.svg` topology or labels; post-generation semantic repair is not an allowed fallback

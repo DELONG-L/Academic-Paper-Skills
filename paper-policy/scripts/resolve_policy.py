@@ -143,6 +143,16 @@ def validate_context(context: dict[str, Any]) -> list[str]:
             if invalid:
                 errors.append(f"context.{field}: invalid values {invalid}")
 
+    features = context.get("features")
+    if (
+        isinstance(features, list)
+        and "generated_conceptual_figure" in features
+        and "conceptual_figure" not in features
+    ):
+        errors.append(
+            "context.features: generated_conceptual_figure requires conceptual_figure"
+        )
+
     for field in ("task_mode", "modes"):
         values = context.get(field, [])
         values = values if isinstance(values, list) else [values]

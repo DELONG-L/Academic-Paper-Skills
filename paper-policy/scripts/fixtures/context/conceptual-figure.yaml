@@ -7,6 +7,6 @@ policy_sets: [strict-house-style]
 artifact_mode: draft
 scopes: [figures]
 artifacts: [figure]
-features: [paper_figure, conceptual_figure]
+features: [paper_figure, conceptual_figure, generated_conceptual_figure]
 provenance:
   submission_stage: user

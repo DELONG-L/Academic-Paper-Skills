@@ -19,7 +19,7 @@ from validate_registry import load_yaml
 ARTIFACT_KINDS = {"figure", "table"}
 DISCOVERY_STATUSES = {"confirmed", "needs_confirmation"}
 ARTIFACT_TYPES = {
-    "paper_figure", "data_figure", "conceptual_figure",
+    "paper_figure", "data_figure", "conceptual_figure", "generated_conceptual_figure",
     "related_work_table", "data_table", "result_table", "paper_table",
 }
 FILE_FIELDS = {"outputs", "scripts", "source_data", "previews", "table_sources"}
@@ -47,6 +47,8 @@ PUBLIC_DEFAULT_ARTIFACT_RULE_IDS = {
 STRICT_HOUSE_ARTIFACT_RULE_IDS = {
     "FIG.NO_IN_FIGURE_TITLE",
     "FIG.CONCEPT_HOUSE_STYLE",
+    "FIG.CONCEPT_TYPOGRAPHY",
+    "FIG.CONCEPT_MODEL_NATIVE_OUTPUT",
     "TABLE.BOOKTABS_FINAL",
     "TABLE.FINAL_TARGET_WIDTH",
     "RELATED.COMPARISON_REQUIRED",
@@ -110,6 +112,13 @@ def validate_artifact_records(records: Any) -> list[str]:
             invalid = sorted(set(artifact_types) - ARTIFACT_TYPES)
             if invalid:
                 errors.append(f"{where}.artifact_types: invalid values {invalid}")
+            if (
+                "generated_conceptual_figure" in artifact_types
+                and "conceptual_figure" not in artifact_types
+            ):
+                errors.append(
+                    f"{where}.artifact_types: generated_conceptual_figure requires conceptual_figure"
+                )
         if not isinstance(record.get("claim"), str) or not record.get("claim", "").strip():
             errors.append(f"{where}.claim: required non-empty string")
         files = record.get("files")
@@ -261,6 +270,10 @@ def check_artifacts(
             if "conceptual_figure" in types:
                 candidate("FIG.NO_INVENTED_COMPONENTS", artifact_id)
                 candidate("FIG.CONCEPT_HOUSE_STYLE", artifact_id)
+
+            if "generated_conceptual_figure" in types:
+                candidate("FIG.CONCEPT_TYPOGRAPHY", artifact_id)
+                candidate("FIG.CONCEPT_MODEL_NATIVE_OUTPUT", artifact_id)
 
         if kind == "table":
             candidate("TABLE.BOOKTABS_FINAL", artifact_id)

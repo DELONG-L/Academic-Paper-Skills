@@ -72,6 +72,35 @@ class ArtifactPolicyTests(unittest.TestCase):
             "UNVERIFIED", self.by_id(result)["FIG.FINAL_WIDTH_READABLE"]["status"]
         )
 
+    def test_conceptual_typography_is_covered_but_requires_manual_evidence(self) -> None:
+        root = FIXTURES / "artifact-pass"
+        evidence = load_yaml(root / "figure-evidence.yaml")
+        evidence["artifacts"][0]["artifact_types"] = [
+            "paper_figure",
+            "conceptual_figure",
+            "generated_conceptual_figure",
+        ]
+        findings, assessed, coverage = check_artifacts(root, evidence["artifacts"])
+        self.assertEqual([], findings)
+        self.assertEqual(
+            {"main-results"}, coverage["FIG.CONCEPT_TYPOGRAPHY"]
+        )
+        self.assertNotIn("FIG.CONCEPT_TYPOGRAPHY", assessed)
+        self.assertEqual(
+            {"main-results"}, coverage["FIG.CONCEPT_MODEL_NATIVE_OUTPUT"]
+        )
+        self.assertNotIn("FIG.CONCEPT_MODEL_NATIVE_OUTPUT", assessed)
+
+    def test_generated_conceptual_artifact_requires_conceptual_type(self) -> None:
+        root = FIXTURES / "artifact-pass"
+        evidence = load_yaml(root / "figure-evidence.yaml")
+        evidence["artifacts"][0]["artifact_types"] = [
+            "paper_figure",
+            "generated_conceptual_figure",
+        ]
+        with self.assertRaisesRegex(ValueError, "requires conceptual_figure"):
+            check_artifacts(root, evidence["artifacts"])
+
     def test_human_final_width_evidence_can_complete_readability_rule(self) -> None:
         root = FIXTURES / "artifact-pass"
         evidence = load_yaml(root / "figure-evidence.yaml")

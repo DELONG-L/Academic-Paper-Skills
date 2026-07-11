@@ -88,7 +88,11 @@ Keep two inventories separate:
   `conclusion`, `contribution_list`, `evaluation_section`, `related_work`,
   `related_work_table`, `result_table`, `data_table`, `latex_manuscript`,
   `paper_prose`, `paper_figure`, `data_figure`, `conceptual_figure`,
-  `threats_to_validity`, or `limitations_content`.
+  `generated_conceptual_figure`, `threats_to_validity`, or
+  `limitations_content`. Add `generated_conceptual_figure` together with
+  `conceptual_figure` whenever a generative image model produces the final
+  conceptual artifact; omit it for Graphviz, Mermaid, TikZ, or manually authored
+  SVG figures.
 
 Use `measurement_bias_status: known_systematic` when the manuscript identifies
 a characterized systematic measurement, extraction, missingness, or labeling
