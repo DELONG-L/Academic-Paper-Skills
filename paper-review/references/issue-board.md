@@ -24,6 +24,8 @@ Merge issues when they share the same core objection and same response:
 - Source: <manuscript audit | R1 | R2 | R3 | AC | user>
 - Raw anchor: "<reviewer quote or manuscript quote>" | <section/table/figure> | MISSING
 - Paper hook: <section/table/figure/equation/appendix/global>
+- Policy rule: <active hard-rule ID | none>
+- Compliance status: <FAIL | UNVERIFIED | none>
 - Type: <logic | novelty | related-work | empirical-support | baseline | ablation | statistics | theory | clarity | reproducibility | ethics | formatting | citation | figure-table | other>
 - Severity: <critical | major | minor>
 - Nature: <substance | misread-risk | polish>

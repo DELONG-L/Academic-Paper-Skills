@@ -10,7 +10,7 @@ Pre-submission figure compliance audit.
 Usage
 -----
     from check_figure import check_figure, print_report
-    issues, info = check_figure("figs/fig1.pdf", min_dpi=300, target_inches=(3.5, 2.625))
+    issues, info = check_figure("figs/fig1.pdf", min_dpi=300, target_inches=(10.5, 7.875))
     print_report("figs/fig1.pdf", issues, info)
 
 CLI:
@@ -87,8 +87,8 @@ def _check_raster(path: str, ext: str, min_dpi: int,
                 issues.append((
                     "WARN",
                     f"实际尺寸 ≈ {actual_w_in:.2f}×{actual_h_in:.2f} in，"
-                    f"目标 {tw}×{th} in。请在画图时直接设 figsize=({tw}, {th})，"
-                    "不要在 Word/LaTeX 里二次缩放。"
+                            f"目标源画布 {tw}×{th} in。请使用声明的 source scale，"
+                            "并在实际 LaTeX 栏宽重新执行视觉 QA。"
                 ))
     return issues, info
 

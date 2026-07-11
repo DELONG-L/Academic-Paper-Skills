@@ -1,0 +1,50 @@
+version: 1
+paper_type: empirical
+domain: machine_learning
+venue: ExampleConf 2027
+submission_stage: submission
+language: en
+double_blind: true
+page_pressure: high
+evidence_maturity: complete
+manuscript_state: full_draft
+reader_risk: medium
+task_scope: submission
+task_mode: submission_readiness
+policy_sets: [strict-house-style]
+modes: [related_work_full, final_citation_check]
+artifact_mode: final
+structure_profile: standard_conference
+evaluation_structure: rq_driven
+experiment_type: stochastic
+scopes: [workflow, writing, review, citations, figures, tables]
+artifacts:
+  - policy
+  - prose
+  - tex
+  - bibtex
+  - paper_outline
+  - figure
+  - table
+features:
+  - latex_manuscript
+  - paper_prose
+  - introduction
+  - related_work
+  - contribution_list
+  - evaluation_section
+  - result_table
+  - data_table
+  - paper_figure
+  - data_figure
+  - conclusion
+  - limitations_content
+  - threats_to_validity
+approved_citation_sources: [local_bib, user_notes]
+venue_source:
+  url: https://example.org/cfp
+  as_of: 2026-07-11
+provenance:
+  venue: official
+  submission_stage: user
+  double_blind: template

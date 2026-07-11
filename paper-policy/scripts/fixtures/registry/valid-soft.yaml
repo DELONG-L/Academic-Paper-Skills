@@ -1,0 +1,15 @@
+version: 1
+rules:
+  - id: TEST.SOFT_RULE
+    title: Valid soft rule
+    force: soft
+    scope: [writing]
+    artifacts: [prose]
+    phases: [draft]
+    default: Use the default.
+    allowed_variants: [Use an allowed alternative.]
+    selection_factors: [paper_type]
+    avoid: [Invalid alternative.]
+    report_when: The default is adapted.
+    decision_refs: [A09]
+    source: {origin: local-house-policy, note: Test fixture.}

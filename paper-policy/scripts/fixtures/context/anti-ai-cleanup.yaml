@@ -1,0 +1,10 @@
+version: 1
+paper_type: empirical
+submission_stage: draft
+task_scope: section
+task_mode: anti_ai_cleanup
+scopes: [writing, review]
+artifacts: [prose]
+features: [paper_prose]
+provenance:
+  submission_stage: user

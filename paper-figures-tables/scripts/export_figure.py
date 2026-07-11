@@ -1,7 +1,7 @@
 """
 paper-figures-tables :: export_figure.py
 =========================================
-Unified figure export to multiple formats at exact final size.
+Unified figure export from a 3x source canvas for controlled final-width placement.
 
 - Vector preferred: PDF / SVG / EPS for line/bar/scatter (lossless, journal-friendly).
 - Raster for photos / micrographs: PNG / TIFF at >= 300 DPI; never JPEG for data figures.
@@ -20,7 +20,7 @@ Usage
         fig,
         basename="figs/fig1_main",
         formats=["pdf", "svg", "png"],
-        size_inches=(3.5, 2.625),   # 强制成 Nature 单栏尺寸
+        size_inches=(10.5, 7.875),  # 3x source canvas for a 3.5in final column
         dpi=600,
         grayscale_preview=True,
     )
@@ -62,7 +62,7 @@ def export_figure(
     transparent: bool = False,
 ) -> list[str]:
     """
-    Export a matplotlib Figure to one or more formats at exact final size.
+    Export a matplotlib Figure from the declared source canvas.
 
     Args:
         fig: matplotlib Figure object.
@@ -70,8 +70,9 @@ def export_figure(
         formats: list/tuple of extensions, e.g. ['pdf', 'svg', 'png'].
             Default: ['pdf', 'svg', 'png'].
         dpi: raster 格式分辨率；建议 300（普通）/ 600（IEEE 等）。
-        size_inches: (width, height) 英寸；指定后会 fig.set_size_inches() 强制
-            最终尺寸。强烈建议传入——保证导出后不必在 Word/LaTeX 里二次缩放。
+        size_inches: source-canvas (width, height) in inches. Use 3x the target
+            paper dimensions with source text near or above 24pt by default, then inspect the rendered
+            artifact at the actual LaTeX width.
         grayscale_preview: 额外生成一张 _grayscale.png 供色盲安全检查。
         tight: 是否走 bbox_inches='tight'（裁掉留白）。
         pad_inches: tight 模式下保留的边距（英寸）。
@@ -155,7 +156,7 @@ def _demo(out_basename: str) -> None:
     y1 = np.sin(x) + rng.normal(0, 0.1, x.size)
     y2 = np.cos(x) + rng.normal(0, 0.1, x.size)
 
-    fig, ax = plt.subplots(figsize=(3.5, 2.625))
+    fig, ax = plt.subplots(figsize=(10.5, 7.875))
     ax.plot(x, y1, label="sin", marker="o", markersize=3)
     ax.plot(x, y2, label="cos", marker="s", markersize=3, linestyle="--")
     ax.set_xlabel("x")
@@ -165,7 +166,7 @@ def _demo(out_basename: str) -> None:
     paths = export_figure(
         fig, out_basename,
         formats=["pdf", "svg", "png"],
-        size_inches=(3.5, 2.625),
+        size_inches=(10.5, 7.875),
         dpi=300,
         grayscale_preview=True,
     )

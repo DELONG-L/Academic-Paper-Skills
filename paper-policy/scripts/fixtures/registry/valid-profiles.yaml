@@ -1,0 +1,7 @@
+version: 1
+profiles:
+  - id: test-profile
+    match: {field: task_mode, any_of: [writing]}
+    activate_hard: [TEST.HARD_RULE]
+    prefer_soft: [TEST.SOFT_RULE]
+    source: {kind: local, url: null, as_of: null}

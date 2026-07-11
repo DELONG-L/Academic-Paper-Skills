@@ -1,4 +1,4 @@
 interface:
   display_name: "Paper Writing"
-  short_description: "House-style academic paper prose"
-  default_prompt: "Use $paper-writing to draft or revise this paper section in the house style, with scoped claims and academic prose cleanup."
+  short_description: "Policy-aware academic paper prose"
+  default_prompt: "Use $paper-writing to draft or revise this paper section with scoped claims, active policy rules, and academic prose cleanup."

@@ -1,0 +1,665 @@
+version: 1
+registry: paper-policy-soft
+rules:
+  - id: CLAIM.LADDER
+    title: Select claim verbs from evidence strength
+    force: soft
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    default: Use strong verbs only for directly measured or formally established contributions and medium verbs for interpretation.
+    allowed_variants:
+      - Use scoped framing verbs when defining the analysis boundary.
+      - Use weaker verbs when evidence is partial or indirect.
+    selection_factors: [evidence_maturity, experiment_design, threat_model, claim_type]
+    avoid: [unbounded guarantees, causal wording without causal evidence]
+    report_when: The selected verb materially changes the paper claim.
+    decision_refs: [B05, B07, B08, J15]
+    source: {origin: local-house-policy, note: 'Soft shell around CLAIM.EVIDENCE_BOUND.'}
+
+  - id: CONTRIB.COUNT
+    title: Keep contribution lists compact
+    force: soft
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [outline, draft, polish, submission, camera_ready]
+    features: [contribution_list]
+    default: Use three to five contribution items.
+    allowed_variants:
+      - Use two items for a short paper with two load-bearing artifacts.
+      - Use up to six when the paper type genuinely has distinct auditable artifacts.
+    selection_factors: [paper_type, page_pressure, artifact_count]
+    avoid: [splitting one artifact into several cosmetic bullets]
+    report_when: The list falls outside two to six items.
+    decision_refs: [B14]
+    source: {origin: local-house-policy, note: 'Contribution count preference.'}
+
+  - id: STRUCT.SECTION_COUNT
+    title: Adapt top-level section count
+    force: soft
+    scope: [writing, review]
+    artifacts: [paper_outline]
+    phases: [outline, draft, polish, submission, camera_ready]
+    default: Use five to seven top-level sections plus Abstract and References.
+    allowed_variants:
+      - Use four to six for short conference papers.
+      - Use seven to nine for journals, SoKs, or multi-part studies.
+    selection_factors: [paper_type, venue_template, page_pressure, manuscript_state]
+    avoid: [one-paragraph top-level sections, a universal six-section ceiling]
+    report_when: The structure falls outside four to nine sections or conflicts with a venue profile.
+    decision_refs: [E03, L08, X07]
+    source: {origin: user-decision, note: 'Adaptive replacement for a six-section hard limit.'}
+
+  - id: STRUCT.ARGUMENTATIVE_SPINE
+    title: Carry one argumentative spine through the paper
+    force: soft
+    scope: [writing, review]
+    artifacts: [prose, tex, policy]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    features: [latex_manuscript]
+    default: Choose one central distinction, mechanism, or inferential chain and reuse it to organize the Introduction, section order, Results, Discussion, and Conclusion; for dependent RQs, state their logical dependency near the start of Results.
+    allowed_variants:
+      - Use a problem-to-design-to-evidence spine when the paper is not RQ-driven.
+      - Present independent RQs as parallel branches under one contribution claim without inventing dependencies.
+      - Keep the dependency map in an outline or transition paragraph when a Results preamble would be redundant.
+    selection_factors: [paper_type, rq_count, evaluation_heterogeneity, argument_complexity, page_pressure]
+    avoid: [repeating a slogan without adding logic, ordering RQs only by execution chronology, forcing dependencies between independent claims]
+    report_when: No single spine explains the section order or an RQ is reordered for a reason other than argumentative dependency.
+    decision_refs: [N04]
+    source: {origin: user-decision, note: 'Soft through-line pattern informed by reference-paper analysis; no text reproduced.'}
+
+  - id: STRUCT.THIN_SUBSECTION
+    title: Avoid thin subsections
+    force: soft
+    scope: [writing, review]
+    artifacts: [tex, paper_outline]
+    phases: [outline, draft, polish, submission, camera_ready]
+    default: Use a subsection only when it carries at least two substantive paragraphs or a distinct formal artifact.
+    allowed_variants:
+      - Use an inline paragraph head for a short local distinction.
+      - Keep a short required subsection when the venue template mandates it.
+    selection_factors: [section_job, venue_template, navigation_cost]
+    avoid: [single-paragraph subsections, decorative hierarchy]
+    report_when: A heading adds more navigation cost than structure.
+    decision_refs: [E05, E06]
+    source: {origin: local-house-policy, note: 'Section hierarchy preference.'}
+
+  - id: STRUCT.INTRO_ROADMAP
+    title: Keep introduction roadmaps only when useful
+    force: soft
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [draft, polish, submission, camera_ready]
+    features: [introduction]
+    default: Omit a roadmap when gap, RQs, method overview, evidence preview, and contributions already provide navigation.
+    allowed_variants:
+      - Keep a short roadmap for a long or non-linear paper.
+    selection_factors: [paper_length, structural_complexity, reader_risk]
+    avoid: [section-by-section boilerplate]
+    report_when: Removing the roadmap may reduce navigation quality.
+    decision_refs: [E09]
+    source: {origin: local-house-policy, note: 'Introduction navigation preference.'}
+
+  - id: ABSTRACT.FIVE_MOVES
+    title: Use an adaptive five-move abstract
+    force: soft
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [draft, polish, submission, camera_ready]
+    features: [abstract]
+    default: Use pressure, gap, artifact, evidence, and bounded implication.
+    allowed_variants:
+      - Compress pressure and gap when the word limit is tight.
+      - Omit exact results when evidence is not final and use an explicit placeholder.
+    selection_factors: [word_limit, paper_type, evidence_maturity]
+    avoid: [generic importance openings, unsupported result previews]
+    report_when: A required move is omitted for reasons other than word limit or paper type.
+    decision_refs: [E10, E11]
+    source: {origin: local-house-policy, note: 'Abstract structure preference.'}
+
+  - id: INTRO.RQ_FRAMING
+    title: Use research questions when they improve evidence organization
+    force: soft
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [outline, draft, polish, submission, camera_ready]
+    features: [introduction]
+    default: Use explicit RQs for measurement, SoK, benchmark, and heterogeneous evaluation papers.
+    allowed_variants:
+      - Use a claims-to-experiments map without RQ labels for theory or homogeneous ML evaluation.
+    selection_factors: [paper_type, evaluation_heterogeneity, reviewer_scanability]
+    avoid: [forcing RQ labels onto a single homogeneous claim]
+    report_when: RQ use conflicts with the paper type or evaluation structure.
+    decision_refs: [E13, E14, X26]
+    source: {origin: user-decision, note: 'Paper-type adaptive RQ policy.'}
+
+  - id: INTRO.RQ_RESPONSE_MAP
+    title: Map RQs to paper response and evidence
+    force: soft
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [draft, polish, submission, camera_ready]
+    features: [introduction]
+    default: After RQs, state the artifact, comparison unit, evidence organization, and compact RQ-to-evidence map.
+    allowed_variants:
+      - Split the response and map when the introduction would otherwise become too dense.
+    selection_factors: [rq_count, page_pressure, evidence_complexity]
+    avoid: [restating contributions without locating evidence]
+    report_when: An RQ has no visible evidence home.
+    decision_refs: [E15, E16]
+    source: {origin: local-house-policy, note: 'RQ navigation preference.'}
+
+  - id: PARAGRAPH.ONE_JOB
+    title: Give each paragraph one primary job
+    force: soft
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    default: Organize each paragraph as topic, mechanism or evidence, consequence, and boundary or transition.
+    allowed_variants:
+      - Use a compact definition paragraph.
+      - Combine formula setup and explanation when the equation is short.
+    selection_factors: [section_job, equation_density, page_pressure]
+    avoid: [unrelated claims in one paragraph, paragraph fragmentation]
+    report_when: A paragraph requires splitting or relocation to remain auditable.
+    decision_refs: [F01, F02]
+    source: {origin: local-house-policy, note: 'Paragraph architecture preference.'}
+
+  - id: RESULTS.FOUR_MOVE
+    title: Interpret results with scope and boundary
+    force: soft
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [draft, polish, submission, camera_ready]
+    features: [evaluation_section]
+    default: Use scope, observation, interpretation, and boundary.
+    allowed_variants:
+      - Combine observation and interpretation for a short result.
+      - Expand the boundary when an exception is load-bearing.
+    selection_factors: [artifact_density, result_complexity, exception_risk]
+    avoid: [ending on an isolated number, repeating every table value]
+    report_when: The interpretation lacks either scope or a bounded meaning.
+    decision_refs: [F03, F04, J02, J06, J07, J13]
+    source: {origin: local-house-policy, note: 'Result prose preference.'}
+
+  - id: RESULTS.RQ_ANSWER_BOX
+    title: Present RQ closure as a compact answer box when useful
+    force: soft
+    scope: [writing, review]
+    artifacts: [prose, tex]
+    phases: [draft, polish, submission, camera_ready]
+    features: [evaluation_section]
+    default: End each RQ result block with one compact box titled Answer to RQn, optionally followed by a short thesis in parentheses; use two sentences and roughly 40 to 60 English words or an equivalently concise form in another language.
+    allowed_variants:
+      - Use a bold labeled closing paragraph instead of a box when page pressure, venue style, or template constraints make a box unsuitable.
+      - Omit the parenthetical thesis when the direct answer is already unmistakable.
+      - Use three short sentences when the evidence boundary needs its own sentence.
+    selection_factors: [page_pressure, venue_style, rq_count, evidence_density, language]
+    avoid: [one box per experiment subsection, more than one closure per RQ, new evidence, new claims, citation dumps, repeating the findings table, bright decorative styling, bolding the entire body]
+    report_when: The visual box is replaced, the closure exceeds roughly 80 English words, or its claim strength exceeds the preceding RQ evidence.
+    decision_refs: [J16]
+    source: {origin: user-decision, note: 'Advisor-reference two-sentence Answer to RQ pattern retained as adaptive presentation rather than hard visual syntax.'}
+
+  - id: METHOD.EVIDENCE_ROLE_LEDGER
+    title: Present multi-role evidence in a compact ledger
+    force: soft
+    scope: [writing, review, tables]
+    artifacts: [prose, table, policy]
+    phases: [outline, draft, polish, submission, camera_ready]
+    features: [evaluation_section]
+    default: Summarize each evidence source or tier by source, scale, selection, role, supported claim or RQ, and prohibited extrapolation before interpreting results.
+    allowed_variants:
+      - Use a compact prose ledger when there are at most two simple evidence roles.
+      - Move the exhaustive inventory to an appendix while keeping the role boundary and load-bearing sources in the main text.
+      - Combine scale and selection when the distinction is already explicit in a nearby data-description table.
+    selection_factors: [evidence_source_count, role_count, page_pressure, auditability, table_density]
+    avoid: [listing sample sizes without claim roles, using validation-only evidence as substantive support, duplicating a full artifact manifest in the paper body]
+    report_when: The ledger is omitted for three or more evidence roles or an evidence source changes role across sections.
+    decision_refs: [N03]
+    source: {origin: user-decision, note: 'Soft presentation shell for the evidence-role hard boundary.'}
+
+  - id: THREATS.ADAPTIVE_TAXONOMY
+    title: Organize threats with a paper-appropriate taxonomy
+    force: soft
+    scope: [writing, review]
+    artifacts: [prose, tex]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    features: [threats_to_validity, limitations_content]
+    default: Group threats by the failure mechanisms most useful for the paper while writing each item as threat, affected inference, mitigation, and residual boundary.
+    allowed_variants:
+      - Use construct, internal, external, and statistical validity for empirical software-engineering or measurement studies.
+      - Use data, model, evaluation, and deployment boundaries for ML studies.
+      - Use threat model, implementation, measurement, and generalization boundaries for security or systems studies.
+      - Integrate the taxonomy compactly into Discussion and the mandatory Conclusion limitation statement when a dedicated section is unnecessary or disallowed.
+    selection_factors: [paper_type, domain, venue_requirements, threat_count, page_pressure]
+    avoid: [hard-coding one taxonomy across all papers, generic limitation lists, claiming a mitigation removes all residual risk]
+    report_when: The chosen taxonomy hides a load-bearing threat or a dedicated Threats section is added despite page pressure or venue constraints.
+    decision_refs: [N06]
+    source: {origin: user-decision, note: 'Soft taxonomy shell around the hard threat-to-claim mapping.'}
+
+  - id: OUTPUT.CONCRETE_REWRITE
+    title: Writing tasks return concrete text
+    force: soft
+    scope: [writing, workflow]
+    artifacts: [prose]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    default: Return concrete rewritten prose rather than only advice or a plan.
+    allowed_variants:
+      - Return a plan when the user explicitly asks for planning or required facts are missing.
+    selection_factors: [user_request, evidence_maturity, task_scope]
+    avoid: [replacing a requested rewrite with generic guidance]
+    report_when: The task cannot safely produce prose.
+    decision_refs: [A09]
+    source: {origin: local-house-policy, note: 'Writing output preference.'}
+
+  - id: CITE.PLACEMENT_AND_GROUPING
+    title: Keep citations close and semantically grouped
+    force: soft
+    scope: [writing, review, citations]
+    artifacts: [prose, bibtex]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    default: Place citations near the supported claim and group papers only when they support the same sentence.
+    allowed_variants:
+      - Use a local bibliography entry for broad positioning when title and context are sufficient and no specific factual claim is attached.
+      - Preserve existing citation-key format unless the user requests a migration.
+    selection_factors: [claim_specificity, source_evidence, existing_key_style]
+    avoid: [citation dumps, silent key renaming, title-only support for specific claims]
+    report_when: Citation grouping or placement changes claim attachment.
+    decision_refs: [C10, C11, C12, C17]
+    source: {origin: local-house-policy, note: 'Citation integration preference.'}
+
+  - id: CITE.UNUSED_KEY_REPORTING
+    title: Report unused bibliography keys when useful
+    force: soft
+    scope: [citations, review]
+    artifacts: [bibtex]
+    phases: [polish, submission, camera_ready]
+    default: Report unused keys during full-project or final citation checks without deleting them automatically.
+    allowed_variants:
+      - Skip the report for a shared laboratory bibliography.
+    selection_factors: [bibliography_scope, task_mode, submission_stage]
+    avoid: [automatic deletion of user-maintained entries]
+    report_when: Unused entries appear to be project-local clutter rather than shared references.
+    decision_refs: [C16]
+    source: {origin: user-decision, note: 'Conditional bibliography hygiene.'}
+
+  - id: LATEX.MATH_AND_REFERENCE_STYLE
+    title: Explain equations and weave references into prose
+    force: soft
+    scope: [writing, review]
+    artifacts: [prose, tex]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    default: Introduce the left-hand concept, show the equation, explain right-hand terms, and weave cross-references into complete sentences.
+    allowed_variants:
+      - Use text in math mode for long descriptive tokens.
+      - Compress explanation for a conventional equation whose symbols are already defined.
+    selection_factors: [equation_complexity, notation_familiarity, page_pressure]
+    avoid: [isolated equations, standalone See Table sentences, multi-letter prose tokens as variables]
+    report_when: Compression makes notation or reference attachment ambiguous.
+    decision_refs: [D06, D07, D13]
+    source: {origin: local-house-policy, note: 'Math and cross-reference style.'}
+
+  - id: PROFILE.COMPOSITION
+    title: Compose profiles from paper state
+    force: soft
+    scope: [workflow]
+    artifacts: [policy]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    default: Compose paper type, domain, venue, submission stage, and artifact mode without silently activating unverified venue rules.
+    allowed_variants:
+      - Use only task-local context for short rewrites.
+      - Use a persistent paper context for complex work.
+    selection_factors: [task_scope, paper_type, domain, venue, submission_stage]
+    avoid: [one monolithic profile, venue inference without provenance]
+    report_when: Two active profiles prefer conflicting soft variants.
+    decision_refs: [L06, L07]
+    source: {origin: user-decision, note: 'Composable policy architecture.'}
+
+  - id: PROSE.AUTHOR_VOICE
+    title: Use measured author voice
+    force: soft
+    scope: [writing]
+    artifacts: [prose]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    default: Express author judgment through explicit choices, trade-offs, and boundary explanations.
+    allowed_variants:
+      - Use stronger first-person positioning in Introduction, Discussion, or Limitations content.
+      - Use neutral technical voice in Methods and Results.
+    selection_factors: [section_job, author_profile, venue_tone]
+    avoid: [humor by default, emotional reaction, opinion replacing evidence]
+    report_when: Voice changes the apparent strength or objectivity of a claim.
+    decision_refs: [F20, X14, X15, X16]
+    source: {origin: user-decision, note: 'Positive soft shell around the academic voice hard boundary.'}
+
+  - id: PROSE.FILLER_AND_PROMOTION
+    title: Remove filler and promotional prose
+    force: soft
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    default: Remove filler openers, unsupported promotional language, and decorative significance claims.
+    allowed_variants:
+      - Preserve a field-level importance statement when a citation or concrete pressure supports it.
+    selection_factors: [evidence_support, section_job, author_voice]
+    avoid: [it is important to note, groundbreaking, pivotal, vibrant landscape]
+    report_when: Removing the phrase would alter a supported scientific claim.
+    decision_refs: [F05, F06]
+    source: {origin: local-house-policy, note: 'Academic anti-AI cleanup.'}
+
+  - id: PROSE.FORMULAIC_PATTERNS
+    title: Avoid formulaic AI sentence patterns
+    force: soft
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    default: Treat decorative negative parallelism, superficial sentence-final ing clauses, rhetorical self-answers, punchy fragments, repeated openings, and gerund-fragment litanies as revision candidates rather than automatic violations.
+    allowed_variants:
+      - Preserve a contrast when ruling out the alternative carries real technical information.
+      - Preserve a participial clause when it has a clear grammatical subject and analytic role.
+    selection_factors: [semantic_contrast, grammar, author_voice, pattern_frequency, section_job]
+    avoid: [not just X but Y, the result question-answer fragment, empty highlighting clause]
+    report_when: A pattern repeats, weakens technical precision, or cannot be changed without removing real technical meaning.
+    decision_refs: [F09, F10, F15, F16, F17, F18]
+    source: {origin: user-decision, note: 'Independently authored soft diagnostics informed by comparative review of public warning-level guidance.'}
+
+  - id: PROSE.LIST_AND_RHYTHM
+    title: Keep lists and rhythm natural
+    force: soft
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    default: Avoid generic colon-led inline lists and forced rule-of-three structures.
+    allowed_variants:
+      - Use the number of items required by the argument.
+      - Use a displayed list when distinctions are genuinely parallel.
+    selection_factors: [item_count, parallelism, page_pressure]
+    avoid: [decorative three-item lists, long inline enumerations]
+    report_when: Restructuring as prose would reduce scanability.
+    decision_refs: [F12, F13]
+    source: {origin: local-house-policy, note: 'Academic rhythm guidance.'}
+
+  - id: PROSE.ROMAN_TEXT_DEFAULT
+    title: Prefer ordinary roman text
+    force: soft
+    scope: [writing, review]
+    artifacts: [prose, tex]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    default: Use ordinary roman text and reserve bold for short navigation anchors.
+    allowed_variants:
+      - Use monospace for code literals and italics for venue-required notation.
+    selection_factors: [notation, code_literal, navigation_need]
+    avoid: [decorative emphasis, typography replacing paragraph structure]
+    report_when: Special typography is frequent or semantically ambiguous.
+    decision_refs: [F23, F24, F25, F26]
+    source: {origin: local-house-policy, note: 'Typography preference.'}
+
+  - id: PROSE.SENTENCE_LENGTH_WARNING
+    title: Warn on sentences longer than 35 words
+    force: soft
+    scope: [writing, review]
+    artifacts: [prose, tex]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    default: Treat 35 words as a review warning, not a hard ceiling.
+    allowed_variants:
+      - Keep a longer sentence when splitting would detach a qualifier or equation condition.
+    selection_factors: [syntax, qualifier_attachment, mathematical_content]
+    avoid: [mechanical splitting that changes meaning]
+    report_when: A sentence exceeds 35 words and has more than one independent job.
+    decision_refs: [F19, X09]
+    source: {origin: user-decision, note: 'Soft lint warning.'}
+
+  - id: RELATED.AXIS_ORGANIZATION
+    title: Organize Related Work by intellectual axis
+    force: soft
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [outline, draft, polish, submission, camera_ready]
+    features: [related_work]
+    default: Organize by assumption, threat model, interface, evaluation unit, dataset, or deployment constraint.
+    allowed_variants:
+      - Use a short chronological transition when it explains an intellectual shift.
+    selection_factors: [paper_gap, literature_shape, comparison_unit]
+    avoid: [paper-by-paper catalogues]
+    report_when: No axis exposes the paper's positioning.
+    decision_refs: [G01, G02]
+    source: {origin: local-house-policy, note: 'Related Work narrative preference.'}
+
+  - id: RELATED.DIMENSION_BUDGET
+    title: Keep comparison dimensions high-signal
+    force: soft
+    scope: [writing, review, tables]
+    artifacts: [table]
+    phases: [outline, draft, polish, submission, camera_ready]
+    features: [related_work_table]
+    default: Use three to four high-signal dimensions.
+    allowed_variants:
+      - Use a fifth dimension when it is essential to the stated gap.
+      - Use more only with an explicit readability and argument justification.
+    selection_factors: [paper_gap, column_width, row_count, page_pressure]
+    avoid: [six-plus dimensions by default, dimensions chosen only to favor the proposed method]
+    report_when: The table requires full width or aggressive scaling.
+    decision_refs: [G05, G06, G07, G08, G12]
+    source: {origin: local-house-policy, note: 'Originated in Academic-Paper-Skills.'}
+
+  - id: TABLE.RELATED_ROW_GRANULARITY
+    title: Keep related-work rows conservatively comparable
+    force: soft
+    scope: [review, tables]
+    artifacts: [table]
+    phases: [draft, polish, submission, camera_ready]
+    features: [related_work_table]
+    default: Use one work, system, benchmark, method, or approach per row so every marker remains directly defensible.
+    allowed_variants:
+      - Group an explicitly named literature family when membership is coherent and every marker is assigned conservatively across the entire family.
+      - Use a partial marker when support is mixed or incomplete within an approved family row.
+    selection_factors: [comparison_unit, family_coherence, evidence_granularity, row_count]
+    avoid: [unlabeled citation piles, optimistic family-level markers, grouping papers that differ on a displayed axis]
+    report_when: A row represents more than one cited work or system.
+    decision_refs: [G10, G11, G12]
+    source: {origin: user-decision, note: 'Atomic rows were demoted from hard; named conservative literature families are an allowed variant.'}
+
+  - id: TABLE.SINGLE_COLUMN_FIRST
+    title: Prefer single-column tables after pruning
+    force: soft
+    scope: [tables]
+    artifacts: [table]
+    phases: [draft, polish, submission, camera_ready]
+    default: Use a single-column table after pruning to the dimensions that carry the argument.
+    allowed_variants:
+      - Use table* when pruning would make the comparison misleading or unreadable.
+    selection_factors: [dimension_count, row_count, target_width, argument_integrity]
+    avoid: [wide tables retained only from first-draft inertia]
+    report_when: Full width is selected.
+    decision_refs: [H04, H05]
+    source: {origin: local-house-policy, note: 'Table placement preference.'}
+
+  - id: TABLE.TARGET_WIDTH
+    title: Align tables to the target width
+    force: soft
+    scope: [tables]
+    artifacts: [table, tex]
+    phases: [draft, polish, submission, camera_ready]
+    default: Resize to column or text width.
+    allowed_variants:
+      - Keep natural width when it fits cleanly and remains more readable.
+    selection_factors: [natural_width, font_readability, target_width]
+    avoid: [unconditional scaling, overfull tables]
+    report_when: A natural-width exemption is used.
+    decision_refs: [H02, H03, X28]
+    source: {origin: local-house-policy, note: 'Explicit natural-fit exemption.'}
+
+  - id: TABLE.NO_DIRECTION_ARROWS
+    title: Explain metric direction outside headers
+    force: soft
+    scope: [tables, writing]
+    artifacts: [table, prose]
+    phases: [draft, polish, submission, camera_ready]
+    features: [related_work_table, data_table, result_table]
+    default: Do not use up or down arrows in table headers; state metric direction in the caption or prose.
+    allowed_variants:
+      - Use arrows when an active venue or table profile explicitly requires them.
+    selection_factors: [venue_profile, header_density, metric_familiarity]
+    avoid: [mixed arrow conventions]
+    report_when: Arrows are introduced.
+    decision_refs: [F27, H06, X04]
+    source: {origin: user-decision, note: 'Local header-arrow preference.'}
+
+  - id: TABLE.CAPTION_AND_HIGHLIGHT
+    title: Keep table captions explanatory and highlighting restrained
+    force: soft
+    scope: [tables, writing]
+    artifacts: [table, prose]
+    phases: [draft, polish, submission, camera_ready]
+    features: [related_work_table, data_table, result_table]
+    default: Explain scope, abbreviations, and marker semantics; use a light proposed-row highlight only when it improves scanning.
+    allowed_variants:
+      - Omit highlighting when the venue forbids color or the row is already clear.
+    selection_factors: [marker_complexity, grayscale, venue_style]
+    avoid: [captions that restate the title, coloring every cell]
+    report_when: Highlighting carries argumentative weight.
+    decision_refs: [H10, H13, H14, H15]
+    source: {origin: local-house-policy, note: 'Table presentation guidance.'}
+
+  - id: TABLE.DENSE_EMPIRICAL_STYLE
+    title: Use a restrained dense-table hierarchy when evidence is load-bearing
+    force: soft
+    scope: [tables, writing, review]
+    artifacts: [table, tex, prose]
+    phases: [outline, draft, polish, submission, camera_ready]
+    features: [related_work_table, data_table, result_table]
+    default: Use booktabs, a subtle grayscale-safe header band, compact but readable spacing, right-aligned numeric columns, and typographic grouping instead of a full grid.
+    allowed_variants:
+      - Use footnotesize or scriptsize, tabcolsep near 3.5 to 4.5pt, and arraystretch near 1.05 to 1.15 when final-width rendering remains readable.
+      - Use multicolumn with cmidrule, multirow, makecell, and italic multicolumn group labels to expose a real hierarchy.
+      - Use table*, a mirrored two-up summary, or one sparse vertical separator when the table is load-bearing and whitespace alone does not preserve the grouping.
+      - Omit the header tint when venue, grayscale, or accessibility constraints make rules and weight sufficient.
+    selection_factors: [table_job, information_density, group_structure, target_width, page_pressure, grayscale]
+    avoid: [full cell grids, decorative color, repeated row shading, cramped scaling, bolding every number, long captions that duplicate the body]
+    report_when: The design uses scriptsize, table*, a mirrored two-up layout, or any vertical separator.
+    decision_refs: [H18]
+    source: {origin: user-decision, note: 'Optional table profile informed by reference-paper analysis; no text, values, or data reproduced.'}
+
+  - id: TABLE.MISSING_VALUE_LABELS
+    title: Label missing table values explicitly
+    force: soft
+    scope: [tables, writing]
+    artifacts: [table, prose]
+    phases: [draft, polish, submission, camera_ready]
+    features: [related_work_table, data_table, result_table]
+    default: Use an explicit label such as N/A, Not reported, or Not applicable and define any abbreviation in the caption or table note.
+    allowed_variants:
+      - Use a venue-required symbol when its meaning is defined locally and cannot be confused with punctuation or a numerical value.
+    selection_factors: [missingness_semantics, table_density, venue_style]
+    avoid: [triple-hyphen placeholders, unexplained dash glyphs, using one token for both not reported and not applicable]
+    report_when: A symbolic missing-value marker is retained.
+    decision_refs: [F11, H14]
+    source: {origin: user-decision, note: 'Triple hyphen remains a prose hard violation but table missingness is governed as explicit soft labeling.'}
+
+  - id: FIG.CONCEPT_COUNT
+    title: Limit generated conceptual figures
+    force: soft
+    scope: [figures, writing]
+    artifacts: [figure]
+    phases: [outline, draft, polish, submission, camera_ready]
+    features: [conceptual_figure]
+    default: Use zero to two generated conceptual figures.
+    allowed_variants:
+      - Add another only when overview and mechanism cannot remain readable together.
+    selection_factors: [method_complexity, reader_risk, existing_artifacts]
+    avoid: [mandatory Figure 1, decorative conceptual figures]
+    report_when: More than two generated conceptual figures are proposed.
+    decision_refs: [I07, X05]
+    source: {origin: user-decision, note: 'Figure 1 is not mandatory.'}
+
+  - id: FIG.SYSTEM_ASPECT_RATIO
+    title: Prefer wide system overviews when useful
+    force: soft
+    scope: [figures]
+    artifacts: [figure]
+    phases: [outline, draft, polish, submission, camera_ready]
+    features: [conceptual_figure]
+    default: Prefer an aspect ratio near or above two-to-one for horizontal system flows.
+    allowed_variants:
+      - Use square or vertical layout when topology and target width require it.
+    selection_factors: [flow_direction, topology, target_width]
+    avoid: [forcing a wide ratio that compresses labels or creates empty space]
+    report_when: Aspect ratio drives a major layout change.
+    decision_refs: [I11, X06]
+    source: {origin: user-decision, note: 'Soft preference, not a universal minimum.'}
+
+  - id: FIG.EXPORT_AND_ACCESSIBILITY
+    title: Prefer vector export and accessible color
+    force: soft
+    scope: [figures]
+    artifacts: [figure]
+    phases: [draft, polish, submission, camera_ready]
+    default: Export precise plots as PDF or SVG and keep colorblind and grayscale readability.
+    allowed_variants:
+      - Use PNG for generated conceptual figures or review packets.
+    selection_factors: [figure_type, venue_format, grayscale_requirement]
+    avoid: [raster-only numeric plots, color-only distinctions]
+    report_when: A precise plot cannot be exported as vector or fails grayscale reading.
+    decision_refs: [I05, I14]
+    source: {origin: local-house-policy, note: 'Figure export and accessibility preference.'}
+
+  - id: FIG.SOURCE_FONT_SCALE
+    title: Use a readable figure source-font scale
+    force: soft
+    scope: [figures, review]
+    artifacts: [figure]
+    phases: [draft, polish, submission, camera_ready]
+    default: Use a 3x source canvas with visible text near or above 24pt, then judge readability at the actual final paper width.
+    allowed_variants:
+      - Use smaller source text when the source canvas scale, target width, and final-width visual QA demonstrate comfortable readability.
+      - Use a venue-supplied effective font-size requirement when it is stricter or more directly applicable.
+    selection_factors: [source_scale, target_width, figure_density, venue_requirement, rendered_readability]
+    avoid: [treating source points as a substitute for final-width inspection, unreadably dense labels]
+    report_when: Any visible source text is below 24pt or the source scale differs materially from 3x.
+    decision_refs: [I12, I13, I19, X11]
+    source: {origin: user-decision, note: 'The former hard 24pt minimum is now an adaptive source-level preference.'}
+
+  - id: FIG.ONE_SCRIPT_PER_SEMANTIC_FIGURE
+    title: Keep figure-generation units traceable
+    force: soft
+    scope: [figures, workflow]
+    artifacts: [figure]
+    phases: [draft, polish, submission, camera_ready]
+    default: Use one generation script per semantic figure and assemble composite panels in LaTeX.
+    allowed_variants:
+      - Use a single script for tightly coupled panels that share data and axes.
+    selection_factors: [panel_coupling, data_source, reproducibility]
+    avoid: [one monolithic script for unrelated figures]
+    report_when: Multiple semantic figures share one script.
+    decision_refs: [I15, I16]
+    source: {origin: user-decision, note: 'Artifact traceability preference.'}
+
+  - id: FIG.CAPTION_SELF_CONTAINED
+    title: Make figure captions independently readable
+    force: soft
+    scope: [figures, writing]
+    artifacts: [figure, prose]
+    phases: [draft, polish, submission, camera_ready]
+    features: [paper_figure]
+    default: Explain object, scope, encoding, and intended reading without repeating a title inside the figure.
+    allowed_variants:
+      - Keep the caption compact when encoding and scope are conventional.
+    selection_factors: [figure_complexity, notation, reader_risk]
+    avoid: [captions that merely name the figure]
+    report_when: The figure cannot be interpreted without searching the body.
+    decision_refs: [I17, I18, I19, I20]
+    source: {origin: local-house-policy, note: 'Caption guidance.'}
+
+  - id: REVIEW.SUBSTANCE_VS_MISREAD
+    title: Separate substantive flaws from misread risk
+    force: soft
+    scope: [review]
+    artifacts: [prose, policy]
+    phases: [polish, submission, rebuttal]
+    default: Classify whether an issue requires new evidence or only narrower, clearer wording.
+    allowed_variants:
+      - Escalate when the manuscript cannot distinguish the two.
+    selection_factors: [evidence_gap, claim_scope, reviewer_quote]
+    avoid: [recommending new experiments for a wording-only problem]
+    report_when: The proposed fix changes experimental scope or author commitments.
+    decision_refs: [K01, K02, K03]
+    source: {origin: local-house-policy, note: 'Review triage preference.'}

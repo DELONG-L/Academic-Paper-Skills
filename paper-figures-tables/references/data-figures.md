@@ -17,9 +17,11 @@ Use this only for precise, reproducible plots from CSV, JSON, logs, TensorBoard 
 5. Write or update `figure_spec.yaml` next to outputs; use `figure-contract.md`.
 6. Write a deterministic plotting script near the paper or experiment output.
 7. Use `scripts/paperfig_style.py` for house plot helpers when it fits the plot.
-8. Use data-visualization scripts for final-size setup, export, layout, and visual QA when the task needs venue-ready output.
+8. Use a 3x source canvas with explicit source fonts near or above 24pt by
+   default; scale strokes and markers consistently and record smaller choices.
 9. Export `figure.pdf`; also export `figure.svg` or `figure.png` when useful.
-10. Validate readability at final paper width and update the caption.
+10. Render or place the result at final paper width, complete human visual QA,
+    record artifact evidence, and update the caption.
 
 ## Source Data Rule
 
@@ -53,12 +55,15 @@ Actively warn before producing a chart that hides distribution, sample size, unc
 ## Implementation Rules
 
 - Do not use in-figure titles. Captions carry titles and interpretation.
-- Set figure size to the intended paper width before plotting; avoid post-scaling as the primary layout mechanism.
+- Preserve the intended final aspect ratio on a 3x source canvas. Use one
+  controlled placement scale to the target paper width.
 - Keep axis labels short and readable.
 - Use semantic color roles: proposed method, baseline, boundary or negative result, neutral reference.
 - Use hatching, marker shape, or line style when the distinction must survive grayscale print.
 - Use a colorblind-safe palette for categorical distinctions. Do not encode the key comparison with color alone.
-- Keep final-size text readable. As a default, exported plots should remain legible when placed at `\columnwidth` or `\textwidth`; revise labels or layout before shrinking fonts aggressively.
+- Prefer every explicit source text size at or above 24pt. At final placement,
+  revise labels or layout first; if smaller source text is retained, record why
+  the rendered result remains comfortably readable.
 - Include error bars or confidence intervals when the result is averaged over runs and the data supports it.
 - Explain error type in the caption: SD, SEM, 95% CI, IQR, or other.
 - Keep interpretation out of the plot canvas.

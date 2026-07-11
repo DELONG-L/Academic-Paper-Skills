@@ -4,30 +4,72 @@ Use this for prose cleanup, AI-pattern removal, and section-level rewriting.
 
 ## Goal
 
-Remove formulaic AI writing while preserving academic density, technical precision, and the house style. Do not make paper prose casual, chatty, or personal unless the target venue and section already support that voice.
+Improve academic clarity, density, rhythm, and author voice. Do not optimize for
+whether text appears human-generated, and do not make prose casual, chatty, or
+personal merely to avoid an AI-associated pattern.
 
-## High-Priority Patterns To Remove
+## Hard Boundaries
 
-- Inflated significance: `plays a crucial role`, `serves as a testament`, `pivotal`, `groundbreaking`.
-- Promotional wording: `vibrant`, `rich landscape`, `showcase`, `breathtaking`, `must-visit`.
-- Vague attribution: `experts argue`, `observers note`, `industry reports suggest` without a specific source.
-- Negative parallelism: `not just X, but Y`.
-- Superficial `-ing` endings: `highlighting`, `underscoring`, `ensuring` when they append weak analysis.
-- Overused em-dash parentheticals in prose.
-- Colon-led inline lists with three or more generic items.
-- Elegant variation that changes technical terms only to avoid repetition.
-- Rhetorical self-answer forms such as `The result? X.`
-- Standalone punchy fragments.
-- Filler openers: `It is important to note that`, `In order to`, `Due to the fact that`, `This paper aims to`.
-- Empty intensifiers: `very`, `significantly`, `substantially`, `remarkably`, unless backed by a reported value.
-- Anaphora overuse: three or more consecutive sentences or bullets with the same opening phrase.
-- Gerund-fragment litanies: sentence fragments that stack `enabling`, `ensuring`, `highlighting`, or `providing` without a clear subject.
+- Preserve scientific meaning. Do not change claim strength, causal status,
+  evidence scope, limitations, terminology, citation attachment, quantitative
+  facts, or the author's evidence-bound position to improve style.
+- Do not use detector, perplexity, authenticity, or human-likeness scores as a
+  compliance, readiness, or authorship gate. Do not rewrite to evade a detector
+  or claim that prose is AI-authored from style alone.
+- Keep intensifiers and attributions evidence-bound. Delete or ground
+  `significantly`, `research shows`, `experts argue`, and equivalent language.
+- When `PROSE.EM_DASH_FORBIDDEN` is active, use no em dash in paper prose,
+  including Unicode em dash and LaTeX triple hyphen used as an em dash.
+  Otherwise treat em-dash frequency as ordinary style judgment. Preserve
+  hyphens, numeric ranges, mathematical minus signs, and non-prose table tokens.
+- Keep technical terms stable. Do not introduce elegant variation that changes
+  the identity of a method, variable, class, threat, or artifact.
+- Keep author voice academic. Allow measured judgment tied to evidence or a
+  design choice; do not inject casual humanizer language, decorative humor, or
+  evidence-free opinion.
+
+## Soft Diagnostics
+
+Treat these as revision candidates, not automatic violations:
+
+- Filler or inflated phrasing such as `It is important to note that`, `plays a
+  crucial role`, `pivotal`, or `groundbreaking`.
+- Promotional wording such as `vibrant`, `rich landscape`, `showcase`, or
+  `breathtaking`.
+- Decorative negative parallelism such as `not just X, but Y`.
+- Sentence-final `highlighting`, `underscoring`, `ensuring`, or similar clauses
+  that append weak analysis.
+- Generic colon-led inline lists and repeated rule-of-three structures.
+- Rhetorical self-answer forms such as `The result? X.` and dramatic standalone
+  fragments.
+- Three or more consecutive sentences or bullets with the same opening.
+- Gerund-fragment litanies that lack a clear grammatical subject.
+- Repeated conjunctive openers or metronomic sentence lengths.
+
+Revise a soft pattern when it repeats, reduces precision, adds no information,
+or conflicts with the target section's academic register. Record it as adapted
+or skipped when preserving it is the better choice.
+
+## Allowed Exceptions
+
+- Preserve a negative contrast when ruling out the alternative is technically
+  important.
+- Preserve a participial clause when its grammatical attachment and analytic
+  role are clear.
+- Preserve parallel list structure when the items are genuinely parallel and
+  the list improves auditability.
+- Preserve deliberate terminology repetition when synonym substitution would
+  blur identity.
+- Allow stronger first-person positioning in Introduction, Discussion, and
+  Limitations content when it expresses an evidence-bound choice or boundary.
+- Allow neutral repetition in Methods and Results when consistency matters more
+  than surface variation.
 
 ## Replacement Principles
 
 - Replace inflated verbs with precise verbs: `shows`, `measures`, `defines`, `compares`, `evaluates`, `limits`.
 - Replace vague attribution with a specific citation or delete it.
-- Replace negative parallelism with a direct claim.
+- Replace decorative negative parallelism with a direct claim; retain it when the excluded alternative matters.
 - Replace decorative examples with scoped technical examples.
 - Keep the same technical term throughout the paper.
 - Prefer one clear transition over a stack of conjunctive phrases.
@@ -90,10 +132,13 @@ If prose sounds like an internal validation report, move that content out of the
 
 ## Cleanup Workflow
 
-1. Identify the paragraph's job.
-2. Delete filler and inflated phrases.
-3. Restore direct subject-verb-object claims.
-4. Add scope or evidence where a claim is too broad.
-5. Preserve house-style boundaries and claim calibration.
+1. Preserve a source copy and identify the paragraph's job.
+2. Mark hard-boundary risks separately from soft style candidates.
+3. Delete filler and replace inflated phrases with precise language.
+4. Restore direct subject-verb-object claims without forcing surface variation.
+5. Add scope or evidence where a claim is too broad.
+6. Compare source and revision for claim strength, causality, scope, values,
+   citations, terminology, and caveats.
+7. Report any soft pattern intentionally preserved and why.
 
 Return rewritten text, not a long diagnosis, unless the user asks for explanation.

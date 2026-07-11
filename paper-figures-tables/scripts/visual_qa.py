@@ -5,7 +5,7 @@ paper-figures-tables :: visual_qa.py
 
 设计分工：
 - **程序（本脚本）** 抓**确定性**问题：缺字乱码、文字越界裁切、刻度标签重叠。
-- **AI 读图**（见 references/visual_review.md）抓**感知性**问题：图例压数据、
+- **读图复核**（见 references/visual-qa.md）抓**感知性**问题：图例压数据、
   子图标签是否对齐、配色灰度可分、整体观感。
 
 两层串起来才是完整的「出图 → 渲 PNG → 程序自检 + AI 读图 → 回改 → 再看」闭环。
@@ -286,7 +286,7 @@ def print_report(issues: list[tuple[str, str]]) -> str:
     """打印 audit_layout 的结果，返回 verdict（PASS/WARN/FAIL）。"""
     if not issues:
         print("  [PASS] 程序自检未发现缺字 / 裁切 / 刻度重叠。")
-        print("  >>> 仍需 AI 读图复核感知性问题（见 visual_review.md）。")
+        print("  >>> 仍需读图复核感知性问题（见 visual-qa.md）。")
         return "PASS"
     max_sev = max(SEVERITY[s] for s, _ in issues)
     verdict = {2: "FAIL", 1: "WARN", 0: "INFO"}[max_sev]
@@ -301,7 +301,7 @@ def _demo() -> int:
     import numpy as np
     rng = np.random.default_rng(1)
 
-    fig, ax = plt.subplots(figsize=(3.0, 2.2))
+    fig, ax = plt.subplots(figsize=(9.0, 6.6))
     cats = [f"very_long_condition_name_{i}" for i in range(12)]
     ax.bar(range(12), rng.random(12))
     ax.set_xticks(range(12))

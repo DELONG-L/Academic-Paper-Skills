@@ -1,0 +1,11 @@
+version: 1
+paper_type: empirical
+submission_stage: draft
+task_scope: artifact
+task_mode: writing
+artifact_mode: draft
+scopes: [tables]
+artifacts: [table]
+features: [data_table]
+provenance:
+  submission_stage: user

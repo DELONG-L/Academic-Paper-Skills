@@ -1,4 +1,4 @@
 interface:
   display_name: "Paper Figures & Tables"
-  short_description: "Paper-ready tables, data plots, and SVG-guided concept figures"
-  default_prompt: "Use $paper-figures-tables to create or polish this paper artifact: axis-based LaTeX tables, precise source-data-driven plots, SVG-guided conceptual figures, captions, and publication-ready exports."
+  short_description: "Paper-ready tables, plots, and concept figures"
+  default_prompt: "Use $paper-figures-tables to create or polish this paper artifact with source traceability, active policy rules, and publication-ready output."

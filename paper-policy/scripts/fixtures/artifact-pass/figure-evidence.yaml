@@ -1,0 +1,14 @@
+version: 1
+artifacts:
+  - id: main-results
+    kind: figure
+    artifact_types: [paper_figure, data_figure]
+    claim: The proposed method improves the supplied metric over the baseline.
+    files:
+      outputs: [figures/main/figure.svg]
+      scripts: [figures/main/plot.py]
+      source_data: [figures/main/source.csv]
+      previews: [figures/main/figure.svg]
+      table_sources: []
+hard_results: []
+soft_results: []

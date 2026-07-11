@@ -8,6 +8,8 @@ figure:
   manuscript_target: paper/sections/05_experiments.tex
   placement: main-text
   target_width: double-column
+  source_scale: 3.0
+  source_font_min_pt: 24
   claim: MethodA preserves more allowed task flow than cost-only cover at matched full privacy cover.
   reader_takeaway: Privacy coverage is matched; the difference is semantic utility preservation.
   structural_reference: figures/semantic-utility-main/structure.svg
@@ -42,6 +44,7 @@ caption:
     MethodA preserves more task-required and overall allowed flow than cost-only cover.
 
 validation:
+  - Source font scale is recorded; below-24pt text includes an adaptation rationale.
   - Values match source files.
   - Labels are readable at target width.
   - Caption does not claim deployable online protection unless the data supports it.
@@ -55,6 +58,10 @@ validation:
 - **Structural reference:** for Figure 1, system overview, pipeline, architecture, and threat-model figures, path to `structure.svg` or a reason it is unnecessary.
 - **Boundary:** what the figure does not prove.
 - **Caption boundary:** what belongs in the paper caption versus artifact audit notes.
+- **Source scale:** use 3x by default so 24pt source text maps to approximately
+  8pt at final placement; record any smaller-source or venue-specific adaptation.
+- **Final-width evidence:** name the rendered preview and human evaluator in the
+  shared compliance evidence.
 
 ## Conceptual Figure Structure Policy
 

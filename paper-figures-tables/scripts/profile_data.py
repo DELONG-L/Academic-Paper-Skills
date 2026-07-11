@@ -10,7 +10,7 @@ Exploratory data analysis for figure planning.
 工作流位置:
     用户给数据
         → profile_data.py      ← 你在这里
-        → chart_selection.md   按数据形态查图型
+        → chart-selection.md   按数据形态查图型
         → setup_style.py
         → plot
         → check_figure.py
@@ -226,7 +226,7 @@ def _group_summary(df: pd.DataFrame, group_cols: list[str]) -> dict | None:
 
 
 def _suggest_charts(info: dict) -> list[str]:
-    """把数据特征翻译成"建议图型"提示。粗粒度——精细决策仍要查 chart_selection.md。"""
+    """把数据特征翻译成"建议图型"提示。粗粒度——精细决策仍要查 chart-selection.md。"""
     cols = info["columns"]
     cont = [c for c, m in cols.items() if m["type"] == TYPE_CONTINUOUS]
     cats = [c for c, m in cols.items()
@@ -289,7 +289,7 @@ def _suggest_charts(info: dict) -> list[str]:
                 "考虑对数变换或小提琴图代替均值柱图")
 
     if not suggestions:
-        suggestions.append("数据特征不足以给出特定建议；查 chart_selection.md 的决策框架。")
+        suggestions.append("数据特征不足以给出特定建议；查 chart-selection.md 的决策框架。")
     return suggestions
 
 
@@ -446,7 +446,7 @@ def render_report(info: dict) -> str:
         lines.append(f"- {s}")
     lines.append("")
     lines.append("> 这是基于数据形态的**初步建议**。最终图型选择必须结合"
-                 "**论证目标**（你想说什么）—— 详见 `references/chart_selection.md`。")
+                 "**论证目标**（你想说什么）—— 详见 `references/chart-selection.md`。")
     return "\n".join(lines)
 
 

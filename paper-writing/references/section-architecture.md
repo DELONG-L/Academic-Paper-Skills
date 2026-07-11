@@ -4,7 +4,8 @@ Use this for outlines, section naming, and paper structure.
 
 ## Top-Level Section Names
 
-Top-level section names must be traditional and concise. Prefer:
+When `STRUCT.TRADITIONAL_HEADINGS` is active, top-level section names must be
+traditional and concise. Otherwise use the following names as safe defaults:
 
 - Introduction
 - Background
@@ -36,7 +37,8 @@ Avoid rhetorical or decorative top-level titles:
 - long colon titles
 - metaphorical titles
 
-These phrases may appear in prose if they carry real meaning, but not as top-level section names.
+When the strict heading rule is disabled, use these phrases only when they
+improve navigation rather than as automatic novelty signals.
 
 ## Default Structure
 
@@ -78,17 +80,28 @@ For measurement papers:
 ## Section Discipline
 
 - Keep top-level sections few and predictable.
-- Do not exceed the venue's sectioning convention. If no venue-specific convention is supplied, keep the main paper around 5--7 top-level sections plus Abstract and References.
+- Do not exceed the venue's sectioning convention. Apply the 5--7 section range only when `STRUCT.SECTION_COUNT_PROFILE` or `STRUCT.SECTION_COUNT` is enabled.
 - Merge thin `Preliminaries` into `Background and Related Work`.
 - Do not create a subsection for one paragraph.
 - Use inline bold paragraph heads for short local distinctions.
-- Put limitations in `Discussion` or a dedicated `Limitations` section, not as a vague ending to the conclusion.
+- Place limitation analysis where the venue and argument support it. Require the key boundary in Conclusion only when `STRUCT.CONCLUSION_INTEGRATES_LIMITATIONS` is active, and require one paragraph only when `STRUCT.CONCLUSION_SINGLE_PARAGRAPH` is active.
 - Keep section numbering consistent with the template. Do not mix numbered and unnumbered main sections unless the venue template requires it.
 - For venues requiring Ethics, Broader Impact, Limitations, or Reproducibility statements, include them with traditional concise headings.
 
 ## Roadmaps
 
 Keep end-of-introduction roadmaps short. Remove them when the Introduction already contains the gap, RQs, method overview, contribution list, and a clear section order.
+
+## Argumentative Spine
+
+Choose one central distinction, mechanism, or inferential chain that explains
+why the sections appear in their order. Carry it from the Introduction through
+the method and evidence organization into Results, Discussion, and Conclusion.
+
+For dependent RQs, order them by what each RQ establishes for the next and
+state that dependency in a short Results transition. For independent RQs, keep
+them as parallel branches under one contribution claim; do not invent a causal
+or logical dependency merely to make the outline look linear.
 
 ## Special Paper Types
 

@@ -7,7 +7,10 @@ Use restrained, high-contrast scientific plotting. The default target is a two-c
 - Single column: about 3.25 inches wide.
 - Double column: about 6.9 inches wide.
 - Main multi-panel figure: double column unless the manuscript clearly needs a compact single-column plot.
-- Use 7-9 pt text for figures exported at final size. Use 10-12 pt only for slides or review packets.
+- Prefer at least 24pt text on the 3x source canvas. After controlled placement
+  at final width, verify the venue's effective 7-9pt target visually and through
+  the rendered manuscript. Smaller source text needs an explicit readability
+  rationale rather than an automatic hard failure.
 
 ## Exports
 

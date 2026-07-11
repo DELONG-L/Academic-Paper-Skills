@@ -4,14 +4,22 @@ Use this for LaTeX tables, related-work comparison tables, result tables, notati
 
 ## Core Style
 
-Use `booktabs` by default. Prefer clean grouped headers, compact captions, and semantic emphasis over plain grid tables. Tables should make one comparison easy to scan; they should not store every dimension that happened to be available.
+Prefer clean grouped headers, compact captions, and semantic emphasis over plain
+grid tables. Require `booktabs` only when `TABLE.BOOKTABS_FINAL` is active;
+otherwise use it as a compatible option. Tables should make one comparison easy
+to scan rather than store every available dimension.
 
-Do not use vertical rules or dense grid lines unless the venue template requires them. Prefer spacing, grouped headers, and row order to communicate structure.
+Do not use dense grid lines. Prefer spacing, grouped headers, and row order to communicate structure. In a load-bearing high-density matrix, one or two sparse vertical separators may mark true column groups when whitespace and `\cmidrule` are insufficient; do not box individual cells.
+
+Use the compact patterns in this file when compatible with active policy. Load
+`dense-empirical-tables.md` only when `TABLE.DENSE_EMPIRICAL_STYLE` is enabled
+or the user explicitly requests that profile.
 
 Common packages and macros:
 
 ```latex
 \usepackage{booktabs}
+\usepackage{array}
 \usepackage{multirow}
 \usepackage{makecell}
 \usepackage{graphicx}
@@ -19,16 +27,25 @@ Common packages and macros:
 \usepackage{pifont}
 \usepackage{threeparttable}
 
-\newcommand{\cmark}{\textcolor{green!60!black}{\ding{51}}}
-\newcommand{\xmark}{\textcolor{red!70!black}{\ding{55}}}
-\newcommand{\pmark}{\textcolor{orange!80!black}{$\circ$}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\definecolor{MethodBlue}{RGB}{232,241,250}
+\definecolor{TableSage}{RGB}{165,165,141}
+\colorlet{TableHeaderShade}{TableSage!22}
+\definecolor{okgreen}{RGB}{31,138,76}
+\definecolor{nored}{RGB}{198,55,45}
+\definecolor{okamber}{RGB}{214,148,18}
+\newcommand{\cmark}{\textcolor{okgreen}{\ding{51}}}
+\newcommand{\pmark}{\textcolor{okamber}{\footnotesize\ding{108}}}
+\newcommand{\xmark}{\textcolor{nored}{\ding{55}}}
 ```
 
 Only include package or macro definitions if the target paper does not already define them.
 
 ## Resizebox Rule
 
-LaTeX tables must use `\resizebox` to align with the target column width unless the natural table already fits cleanly and looks better without resizing.
+When `TABLE.FINAL_TARGET_WIDTH` is active, align the table with the target width.
+Use `\resizebox` only when scaling is needed and the natural table does not fit
+cleanly; prefer structural pruning over unreadable shrinkage.
 
 Use:
 
@@ -59,7 +76,7 @@ Only omit `resizebox` when all of these hold:
 
 ## Placement And Dimension Budget
 
-Default to the smallest readable placement.
+When the strict placement preferences are enabled, default to the smallest readable placement.
 
 - Prefer single-column `table` for compact comparison tables, notation tables, and most Related Work comparison tables.
 - Before using `table*`, prune columns to the minimum set that supports the table's claim.
@@ -71,24 +88,41 @@ Default to the smallest readable placement.
 
 Rows should be paper families, systems, datasets, mechanisms, or approaches. Columns should expose the missing comparison axis from the paper.
 
-When finalizing Related Work artifacts, produce or preserve an axis-based comparison table unless the user explicitly asks for prose-only output or the venue forbids tables. If `paper-writing` provides only a handoff spec, convert it into compile-ready LaTeX rather than re-deciding the rhetorical gap from scratch.
+When `RELATED.COMPARISON_REQUIRED` is active, produce or preserve an axis-based
+comparison table unless an authorized waiver or venue requirement applies. If
+the rule is disabled, create one only when requested or argumentatively useful.
 
-Use `\cmark`, `\pmark`, and `\xmark` for qualitative support when they make the missing axis easier to scan. Keep marker explanations short and local to the caption when necessary.
+When `TABLE.CANONICAL_RELATED_MARKERS` is active, use `\cmark` as a green
+check for full support, `\pmark` as an amber filled pifont circle
+(`\ding{108}`) for partial support, and `\xmark` as a red cross for absence.
+When disabled, choose accessible symbols or text that fit the venue and define
+their semantics locally.
+
+Prefer rows that are atomic enough for every marker to be directly defensible. A clearly named literature family is an allowed soft adaptation when its membership is coherent and every marker is assigned conservatively across the entire family. Do not use a naked merged citation row such as `\citep{a,b,c}`. Cite representative works in prose or in the row label, and use `\pmark` whenever support is mixed or only partial across the group.
+
+Represent missing values explicitly. Prefer `N/A`, `Not reported`, or `Not applicable`, and define shortened forms locally. Avoid `---` and unexplained dash glyphs because they obscure whether a value is absent, inapplicable, or merely unreported.
+
+### Table-1-Style Related Work Matrix
+
+Use this compact single-column pattern for paper-positioning tables that compare prior work against the paper's claimed gap. Use 3--4 dimensions by default; use 5 only when the fifth dimension is essential to the argument.
 
 ```latex
 \begin{table}[t]
 \centering
-\caption{Comparison of related approaches by boundary mechanism.}
-\label{tab:related-comparison}
+\scriptsize
+\setlength{\tabcolsep}{2.2pt}
+\renewcommand{\arraystretch}{1.03}
+\caption{Positioning against related work. A = ..., B = ..., C = ...; \cmark{} full, \pmark{} partial, \xmark{} absent.}
+\label{tab:related-work-positioning}
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{lccc}
+\begin{tabular}{@{}L{0.40\columnwidth}ccccc@{}}
 \toprule
-\textbf{Approach} & \textbf{Boundary} & \textbf{Scoped Memory} & \textbf{Leakage Metric} \\
+\textbf{Work} & \textbf{A} & \textbf{B} & \textbf{C} & \textbf{D} & \textbf{E} \\
 \midrule
-Prior A & \pmark & \xmark & \xmark \\
-Prior B & \cmark & \pmark & \xmark \\
-\rowcolor{blue!8}
-\textbf{Ours} & \cmark & \cmark & \cmark \\
+\citep{prior1} & \pmark & \xmark & \xmark & \xmark & \xmark \\
+\citep{prior2} & \cmark & \pmark & \xmark & \xmark & \pmark \\
+\rowcolor{MethodBlue}
+\textbf{Ours} & \cmark & \cmark & \cmark & \cmark & \cmark \\
 \bottomrule
 \end{tabular}%
 }
@@ -105,10 +139,12 @@ Use result tables when exact comparisons matter.
 
 Rules:
 
-- Do not use up/down arrows in metric headers by default. State directions in the caption or prose when needed.
+- When `TABLE.NO_DIRECTION_ARROWS` is enabled, state metric directions in the caption or prose instead of using header arrows.
 - If a table has mixed metric directions, put the direction sentence in the caption instead of repeating symbols in every header.
 - Bold best values or intended operating points, not every good-looking number.
 - Use `\multicolumn` and `\cmidrule(lr){i-j}` for grouped metrics.
+- Use a subtle `\rowcolor{TableHeaderShade}` header band when it improves hierarchy and survives grayscale rendering.
+- Use `\multirow`, `\makecell`, or italic `\multicolumn` group labels when repeated row labels obscure the table's structure.
 - Use `\rowcolor{blue!8}` or a local method macro sparingly for the proposed method.
 - Use `threeparttable` when definitions or caveats would make the caption too long.
 
@@ -122,6 +158,8 @@ Notation tables should define only symbols used later. Dataset tables should inc
 
 - Do not use plain `\hline` grid tables by default.
 - Do not color every result cell.
+- Do not replace the canonical marker scheme when `TABLE.CANONICAL_RELATED_MARKERS` is active.
+- Do not merge multiple unrelated papers into one citation-only row; split rows unless the row is an explicitly named family and the marker values are conservative.
 - Do not force a wide matrix into a single-column table with unreadable text.
 - Do not write captions that merely restate the table label.
 - Do not keep a wide table only because the first draft had many dimensions.

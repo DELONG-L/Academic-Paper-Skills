@@ -233,7 +233,7 @@ profile_data.py 输出报告
         ↓
 7. 看 Chart suggestions：作为起点，但**最终决定要结合论证目标**
         ↓
-查 chart_selection.md 把"数据形态"和"想表达什么"对上，定最终图型。
+查 chart-selection.md 把"数据形态"和"想表达什么"对上，定最终图型。
 ```
 
-记住：**`profile_data.py` 给的是数据的事实，`chart_selection.md` 把事实和论点结合起来选图，二者缺一不可**。
+记住：**`profile_data.py` 给的是数据的事实，`chart-selection.md` 把事实和论点结合起来选图，二者缺一不可**。

@@ -23,7 +23,7 @@
 - [P17. 文字裁切与图例遮盖](#p17-文字裁切与图例遮盖)
 - [P18. 多面板子图编号不对齐](#p18-多面板子图编号不对齐)
 
-> P16–P18 是 v2.1 新增的「排版/渲染」类坑——和前 15 条不同，它们往往**画的时候看不出来、导出后才暴露**。配套的兜底手段：`setup_style`（字体+constrained_layout）、`layout_tools.py`（对齐+理版）、`visual_qa.py`（程序自检）、`visual_review.md`（AI 读图自检闭环）。
+> P16–P18 是 v2.1 新增的「排版/渲染」类坑——和前 15 条不同，它们往往**画的时候看不出来、导出后才暴露**。配套的兜底手段：`setup_style`（字体+constrained_layout）、`layout_tools.py`（对齐+理版）、`visual_qa.py`（程序自检）、`visual-qa.md`（读图自检闭环）。
 
 ---
 
@@ -328,7 +328,7 @@ ax.legend(loc='upper left', bbox_to_anchor=(1.02, 1.0), frameon=False)
 ```
 
 4. **长刻度标签**：`ax.tick_params(axis='x', rotation=30)` + `ha='right'`；或缩短标签。
-5. **终检**：`visual_qa.audit_layout(fig)` 检测文字越界（WARN），再 AI 读图确认图例是否压住数据（程序难判的感知问题，见 `visual_review.md`）。
+5. **终检**：`visual_qa.audit_layout(fig)` 检测文字越界（WARN），再读图确认图例是否压住数据（程序难判的感知问题，见 `visual-qa.md`）。
 
 ---
 

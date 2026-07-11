@@ -1,10 +1,11 @@
 # Style Profile
 
-Use this as the default academic writing profile.
+Use this as the public academic writing profile plus documented opt-in variants.
 
 ## Core Identity
 
-The house style is precise, scoped, evidence-forward, and table-aware. It overrides generic ML writing style when the two conflict.
+The public default is precise, scoped, and evidence-forward. Optional table,
+structure, and typography preferences apply only when their policy set is enabled.
 
 Default story arc:
 
@@ -50,9 +51,9 @@ Use this pattern for related work, method prose, result interpretation, discussi
 
 ## Contribution Lists
 
-Use 3 to 5 contribution bullets unless the paper type genuinely requires more.
+When `CONTRIB.COUNT` is enabled, use 3 to 5 contribution bullets unless the paper type genuinely requires more.
 
-Each contribution must name an artifact:
+When `CONTRIB.ARTIFACT_REQUIRED` is active, each contribution must name an artifact:
 
 - dataset or benchmark
 - formalization, taxonomy, lifecycle, threat model, or specification
@@ -112,3 +113,7 @@ Use a four-sentence micro-structure:
 4. Boundary sentence: mention the trade-off, exception, remaining risk, or scope limit.
 
 Do not end an experiment subsection with a raw number. End with the bounded meaning of the result.
+
+When `RESULTS.RQ_EXPLICIT_ANSWER` is active, close each load-bearing RQ block
+with exactly one direct answer grounded in evidence already presented in that
+block. Use a visual box only when `RESULTS.RQ_ANSWER_BOX` is also enabled.

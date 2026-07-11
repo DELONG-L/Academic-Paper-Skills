@@ -1,0 +1,8 @@
+matplotlib>=3.7
+numpy>=1.24
+pandas>=2.0
+seaborn>=0.13
+Pillow>=10
+pypdf>=4
+PyMuPDF>=1.24
+SciencePlots>=2.1

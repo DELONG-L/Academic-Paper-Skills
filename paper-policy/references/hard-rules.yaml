@@ -1,0 +1,1068 @@
+version: 1
+registry: paper-policy-hard
+rules:
+  - id: AUTH.INTEGRITY_PRECEDENCE
+    title: Integrity outranks style
+    force: hard
+    scope: [workflow, writing, review, figures, tables, citations]
+    artifacts: [policy, prose, tex, bibtex, figure, table, paper_outline]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: always, when: []}
+    requirement: Never relax an academic-integrity rule to satisfy house style, venue rhetoric, or user preference.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Confirm every conflict resolution preserves truth and evidence boundaries.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [A01, A02, A03, A11, A12, A13, A14, A15]
+    source: {origin: user-decision, note: 'Core authority rule.'}
+
+  - id: ROUTE.SKILL_BOUNDARY
+    title: Preserve skill ownership boundaries
+    force: hard
+    scope: [workflow]
+    artifacts: [policy]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: always, when: []}
+    requirement: Route prose, review, artifacts, and evidence work to their owning skills and never claim an unperformed handoff is complete.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Compare the requested deliverable with the owning skill contract.'}
+    failure: {draft: report, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [A05, A06, A07, A08, G14]
+    source: {origin: local-house-policy, note: 'Modular architecture boundary.'}
+
+  - id: FACT.NO_FABRICATION
+    title: No fabricated facts or results
+    force: hard
+    scope: [writing, review, figures, tables, citations]
+    artifacts: [prose, figure, table, bibtex]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: always, when: []}
+    requirement: Do not invent facts, experiments, baselines, metrics, p-values, years, venues, trends, error bars, sample sizes, or system components.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Trace each factual assertion and artifact value to user-provided or approved evidence.'}
+    failure: {draft: placeholder, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [B01, B09, I02, J03]
+    source: {origin: local-house-policy, note: 'Non-waivable integrity rule.'}
+
+  - id: CLAIM.EVIDENCE_BOUND
+    title: Claims stay within evidence
+    force: hard
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: always, when: []}
+    requirement: Keep every claim within the supplied evidence, experiment scope, threat model, dataset, and workload boundary.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Compare the claim verb and scope with its evidence anchor.'}
+    failure: {draft: narrow, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [B02, B05, B07, B10, J15]
+    source: {origin: local-house-policy, note: 'Claim calibration hard core.'}
+
+  - id: CLAIM.CAUSALITY_DISCIPLINE
+    title: Separate observation, association, and causation
+    force: hard
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: always, when: []}
+    requirement: Do not express descriptive observations or correlations as causal findings without a causal design.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Match causal verbs to the study design and supplied evidence.'}
+    failure: {draft: narrow, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [B03]
+    source: {origin: local-house-policy, note: 'Evidence-language integrity.'}
+
+  - id: CLAIM.SECURITY_SCOPE
+    title: Do not imply unsupported cryptographic guarantees
+    force: hard
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: paper_type, when: [security, systems, protocol]}
+    requirement: Do not describe empirical, interface-level, or systems mechanisms as cryptographic guarantees unless formally supported.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Compare security wording with the threat model, construction, and proof evidence.'}
+    failure: {draft: narrow, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [B04]
+    source: {origin: local-house-policy, note: 'Security claim boundary.'}
+
+  - id: CLAIM.NOVELTY_SUPPORT
+    title: Novelty and SOTA claims require comparison evidence
+    force: hard
+    scope: [writing, review, citations]
+    artifacts: [prose]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: always, when: []}
+    requirement: Use first, novel, state-of-the-art, or equivalent claims only with an approved comparison or sufficient evidence.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Locate the curated comparison or user confirmation supporting the novelty scope.'}
+    failure: {draft: narrow, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [B11]
+    source: {origin: local-house-policy, note: 'Novelty integrity.'}
+
+  - id: CLAIM.CAVEAT_PRESERVED
+    title: Preserve required caveats
+    force: hard
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: always, when: []}
+    requirement: Do not delete a required limitation, scope condition, threat boundary, or overclaim defense during compression or structural editing.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Trace every removed caveat to a surviving home and confirm it remains visible.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [B06, B15, K06, K07]
+    source: {origin: user-decision, note: 'Limitations and structural safety.'}
+
+  - id: PROSE.ANTI_AI_MEANING_PRESERVATION
+    title: Anti-AI cleanup preserves scientific meaning
+    force: hard
+    scope: [writing, review, workflow]
+    artifacts: [prose, tex, policy]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: mode, when: [anti_ai_cleanup, prose_cleanup, writing_anti_ai]}
+    requirement: During Anti-AI cleanup, preserve claim strength, causal status, evidence scope, limitations, technical terminology, citation attachment, quantitative facts, and the author's explicit evidence-bound position; do not trade scientific meaning for stylistic variation.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Compare the source and revision claim by claim, including modality, causal verbs, qualifiers, terminology, citation attachment, values, and required caveats.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [N07]
+    source: {origin: user-decision, note: 'Independently authored integrity boundary informed by comparative review of public Anti-AI guidance.'}
+
+  - id: WORKFLOW.NO_AI_DETECTOR_GATE
+    title: Do not use AI-detector or authorship scores as a gate
+    force: hard
+    scope: [workflow, writing, review]
+    artifacts: [policy, prose]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: mode, when: [anti_ai_cleanup, prose_cleanup, writing_anti_ai, authorship_review, detector_review]}
+    requirement: Do not use AI-detector, perplexity, authenticity, human-likeness, or equivalent scores to assign manuscript compliance, submission readiness, or authorship; do not alter prose to evade such detectors. Diagnose concrete textual defects without claiming AI authorship from style alone.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Inspect the audit rationale and rewrite objective for detector-based gating, evasion tactics, or unsupported authorship inference.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [N08]
+    source: {origin: user-decision, note: 'Independently authored detector-safety rule; no external implementation or text is incorporated.'}
+
+  - id: CLAIM.KNOWN_BIAS_DIRECTION
+    title: Disclose the direction of known measurement bias
+    force: hard
+    scope: [writing, review]
+    artifacts: [prose, figure, table]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: profile, when: [known-measurement-bias]}
+    requirement: For each characterized systematic measurement, extraction, missingness, or labeling error, state the evidence for its direction, identify the affected claims or metrics, and say whether it makes each conclusion conservative, anti-conservative, or directionally indeterminate; do not assert a direction without support.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Trace the error mechanism to an affected claim or metric and verify the stated direction or explicit indeterminacy against supplied evidence.'}
+    failure: {draft: narrow, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [N01]
+    source: {origin: user-decision, note: 'Conditional hard rule informed by reference-paper evidence architecture; no text or data reproduced.'}
+
+  - id: CONTRIB.ARTIFACT_REQUIRED
+    title: Contributions name concrete artifacts
+    force: hard
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: feature, when: [contribution_list]}
+    requirement: Each contribution item must name a concrete artifact and must not consist only of proposing a method or running experiments.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Identify the dataset, benchmark, taxonomy, mechanism, protocol, evaluation, or release in each item.'}
+    failure: {draft: narrow, final: block}
+    autofix: assisted
+    waiver: {allowed: true, authorities: [user, venue]}
+    decision_refs: [B12, B13]
+    source: {origin: local-house-policy, note: 'House-default contribution contract.'}
+
+  - id: CITE.NO_MEMORY_BIBTEX
+    title: Never generate citations from memory
+    force: hard
+    scope: [writing, review, citations]
+    artifacts: [prose, bibtex]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: always, when: []}
+    requirement: Never invent a paper, author, year, DOI, BibTeX entry, or citation key from memory.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Require an approved local source or explicit citation-audit result.'}
+    failure: {draft: placeholder, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [C01, C03, C13]
+    source: {origin: local-house-policy, note: 'Citation integrity.'}
+
+  - id: CITE.APPROVED_SOURCE_ONLY
+    title: Use approved citation sources by default
+    force: hard
+    scope: [writing, review, citations]
+    artifacts: [prose, bibtex]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: always, when: []}
+    requirement: Use only sources declared in approved_citation_sources, existing manuscript keys, user-provided materials, or evidence verified through an explicitly activated citation-audit workflow.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Compare manuscript keys with approved bibliography sources.'}
+      - {kind: manual, evidence_required: true, description: 'Confirm any non-local source was explicitly authorized.'}
+    failure: {draft: placeholder, final: block}
+    autofix: none
+    waiver: {allowed: true, authorities: [user]}
+    decision_refs: [C02, C04, X01, X02]
+    source: {origin: user-decision, note: 'Local-BibTeX-first default.'}
+
+  - id: CITE.NO_INVENTED_SUPPORT
+    title: Do not infer support from metadata
+    force: hard
+    scope: [writing, review, citations]
+    artifacts: [prose, bibtex]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: always, when: []}
+    requirement: Do not claim that a paper supports a specific statement merely because its title, DOI, URL, or metadata matches.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Require user-provided material, a source span, manuscript context, or an approved evidence record for specific claims.'}
+    failure: {draft: narrow, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [C05, C08, C09]
+    source: {origin: local-house-policy, note: 'Metadata is not claim support.'}
+
+  - id: CITE.SOURCE_LOCATOR_REQUIRED
+    title: Specific quotations and paraphrases require locators
+    force: hard
+    scope: [citations, review, writing]
+    artifacts: [prose]
+    phases: [polish, submission, rebuttal, camera_ready]
+    activation: {type: profile, when: [citation-audit, final-citation-check]}
+    requirement: Record a verbatim span and locator for direct quotations and a semantically matching source span and locator for specific paraphrases.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Inspect the source span, page or section locator, claim type, and status.'}
+    failure: {draft: placeholder, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [C06, C07, C19, M08]
+    source: {origin: imported-design, note: 'Claim-span ledger compatible with user-selected evidence workflows.'}
+
+  - id: CITE.UNUSED_KEYS_REPORTED
+    title: Final citation checks report unused keys
+    force: hard
+    scope: [citations, review]
+    artifacts: [bibtex]
+    phases: [submission, camera_ready]
+    activation: {type: profile, when: [final-citation-check]}
+    requirement: Report unused bibliography keys during a final citation check without deleting or renaming them automatically.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Compare local bibliography keys with manuscript citation keys.'}
+    failure: {draft: report, final: report}
+    autofix: none
+    waiver: {allowed: true, authorities: [user]}
+    decision_refs: [C16]
+    source: {origin: user-decision, note: 'Final citation hygiene.'}
+
+  - id: LATEX.PRESERVE_STRUCTURE
+    title: Preserve LaTeX structure during rewriting
+    force: hard
+    scope: [writing, review]
+    artifacts: [tex]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: feature, when: [latex_manuscript]}
+    requirement: Preserve citations, labels, references, equations, math, and macros unless the user explicitly requests a coordinated refactor.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Compare protected LaTeX tokens in the before/after diff and inspect every coordinated change.'}
+      - {kind: semantic, evidence_required: true, description: 'Confirm citation attachment and mathematical meaning are unchanged.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: true, authorities: [user]}
+    decision_refs: [D01, D02]
+    source: {origin: local-house-policy, note: 'LaTeX preservation contract.'}
+
+  - id: LATEX.REFERENCEABLE_DISPLAY
+    title: Referenceable displays use structured environments
+    force: hard
+    scope: [writing, review]
+    artifacts: [tex]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: feature, when: [latex_manuscript]}
+    requirement: Use a numbered equation or align environment with a label for every displayed expression referenced elsewhere in the manuscript.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Check referenced display environments for labels and numbered equation or align forms.'}
+    failure: {draft: block, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [D03]
+    source: {origin: user-decision, note: 'Referenceable display contract.'}
+
+  - id: PROSE.ABBREVIATION_FIRST_USE
+    title: Expand abbreviations on first use
+    force: hard
+    scope: [writing, review]
+    artifacts: [prose, tex]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: always, when: []}
+    requirement: Expand each non-standard abbreviation at first use and use it consistently afterward.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Locate the first use and later occurrences of each abbreviation.'}
+    failure: {draft: block, final: block}
+    autofix: assisted
+    waiver: {allowed: true, authorities: [user, venue]}
+    decision_refs: [D12]
+    source: {origin: user-decision, note: 'Abbreviation hygiene.'}
+
+  - id: LATEX.NO_DOLLAR_DISPLAY
+    title: Ban double-dollar display math
+    force: hard
+    scope: [writing, review]
+    artifacts: [tex]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: feature, when: [latex_manuscript]}
+    requirement: Do not use double-dollar display math; use equation or align families.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Search uncommented TeX for double-dollar delimiters.'}
+    failure: {draft: block, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [D04, X24]
+    source: {origin: user-decision, note: 'Global LaTeX style rule.'}
+
+  - id: LATEX.NO_BRACKET_DISPLAY
+    title: Ban bracket display math
+    force: hard
+    scope: [writing, review]
+    artifacts: [tex]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: always, when: []}
+    requirement: Do not use bracket display math; use equation, equation*, align, or align*.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Search uncommented TeX for bracket display delimiters.'}
+    failure: {draft: block, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [D05, X24]
+    source: {origin: user-decision, note: 'Global LaTeX style rule.'}
+
+  - id: PROSE.NO_INTERNAL_PROVENANCE
+    title: Keep internal provenance out of paper prose
+    force: hard
+    scope: [writing, review, figures, tables]
+    artifacts: [prose, tex, figure, table]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: always, when: []}
+    requirement: Keep local paths, script names, renderer names, DPI checks, placeholder status, and workflow notes out of paper prose and captions.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Search paper-facing text for common path, script, renderer, and workflow markers.'}
+      - {kind: semantic, evidence_required: true, description: 'Distinguish internal workflow details from scientifically necessary provenance.'}
+    failure: {draft: report, final: block}
+    autofix: assisted
+    waiver: {allowed: true, authorities: [user, venue]}
+    decision_refs: [D08, D10, F22]
+    source: {origin: local-house-policy, note: 'Originated in Academic-Paper-Skills.'}
+
+  - id: PROSE.EM_DASH_FORBIDDEN
+    title: Ban em dashes in paper prose
+    force: hard
+    scope: [writing, review]
+    artifacts: [prose, tex]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: always, when: []}
+    requirement: Do not use Unicode em dash or LaTeX triple hyphen as an em dash in paper prose; table cells and code-like literals are outside this prose-only rule.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Search prose for Unicode em dash and LaTeX triple hyphen outside commands and numeric ranges.'}
+    failure: {draft: block, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [F11, X10]
+    source: {origin: user-decision, note: 'Ordinary hyphens, numeric ranges, mathematical minus signs, and non-prose table cells are excluded.'}
+
+  - id: PROSE.EVIDENCE_BOUND_LANGUAGE
+    title: Evidence-bound intensifiers and attributions
+    force: hard
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: always, when: []}
+    requirement: Use significant, substantial, remarkable, research shows, experts argue, and equivalent language only with a specific value, statistical meaning, or source.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Inspect the nearby value, statistical definition, or citation evidence.'}
+    failure: {draft: narrow, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [F07, F08]
+    source: {origin: local-house-policy, note: 'Evidence-language guardrail.'}
+
+  - id: PROSE.NO_UNICODE_ARROWS
+    title: Ban Unicode arrows in paper prose
+    force: hard
+    scope: [writing, review]
+    artifacts: [prose, tex]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: feature, when: [paper_prose]}
+    requirement: Do not use Unicode arrow characters in paper prose; use words or LaTeX notation when direction is scientifically required.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Search paper prose for Unicode arrow characters.'}
+    failure: {draft: block, final: block}
+    autofix: assisted
+    waiver: {allowed: true, authorities: [user, venue]}
+    decision_refs: [F27]
+    source: {origin: user-decision, note: 'Table header direction remains governed by the soft no-arrow rule.'}
+
+  - id: PROSE.ACADEMIC_VOICE_BOUNDARY
+    title: Keep author voice academic and evidence-bound
+    force: hard
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: always, when: []}
+    requirement: Allow measured author judgment without casual humanizer language, evidence-free opinion, or humor substituting for analysis.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Confirm judgment is tied to a design choice, evidence boundary, or explicit author position.'}
+    failure: {draft: narrow, final: block}
+    autofix: assisted
+    waiver: {allowed: true, authorities: [user, venue]}
+    decision_refs: [F20, X16]
+    source: {origin: user-decision, note: 'Measured voice allowed; casual humanization is not.'}
+
+  - id: PROSE.TERMINOLOGY_AND_FORMATTING
+    title: Preserve technical terminology and formatting restraint
+    force: hard
+    scope: [writing, review]
+    artifacts: [prose, tex]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: always, when: []}
+    requirement: Do not vary technical terms merely for style, and do not use frequent italics or monospace text as a substitute for structure.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Check term identity and whether special typography carries a necessary semantic role.'}
+    failure: {draft: report, final: block}
+    autofix: assisted
+    waiver: {allowed: true, authorities: [user, venue]}
+    decision_refs: [F14, F25, F26]
+    source: {origin: local-house-policy, note: 'Terminology and typography discipline.'}
+
+  - id: STRUCT.TRADITIONAL_HEADINGS
+    title: Use traditional concise top-level headings
+    force: hard
+    scope: [writing, review]
+    artifacts: [tex, paper_outline]
+    phases: [outline, draft, polish, submission, camera_ready]
+    activation: {type: always, when: []}
+    requirement: Use traditional concise top-level section names and avoid rhetorical, metaphorical, question, or long colon titles.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Compare headings with paper function and activated venue requirements.'}
+    failure: {draft: narrow, final: block}
+    autofix: assisted
+    waiver: {allowed: true, authorities: [user, venue]}
+    decision_refs: [E01, E02]
+    source: {origin: user-decision, note: 'House hard structure rule.'}
+
+  - id: STRUCT.INTRO_CONCRETE_GAP
+    title: Introduction states a concrete gap
+    force: hard
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: feature, when: [introduction]}
+    requirement: State what prior work can support and what it cannot interpret, measure, enforce, or compare; do not use a generic limitations sentence as the gap.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Identify the explicit missing boundary or comparison axis.'}
+    failure: {draft: narrow, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [E12]
+    source: {origin: local-house-policy, note: 'Gap standard.'}
+
+  - id: STRUCT.SECTION_COUNT_PROFILE
+    title: Standard conference profile uses five to seven sections
+    force: hard
+    scope: [writing, review]
+    artifacts: [paper_outline, tex]
+    phases: [outline, draft, polish, submission]
+    activation: {type: profile, when: [standard-conference-structure]}
+    requirement: Keep the main paper between five and seven top-level sections unless a reliable venue template requires another structure.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Count top-level numbered sections and compare with the active venue profile.'}
+    failure: {draft: report, final: block}
+    autofix: none
+    waiver: {allowed: true, authorities: [user, venue]}
+    decision_refs: [E03]
+    source: {origin: user-decision, note: 'Conditional hard profile with a soft general default.'}
+
+  - id: STRUCT.CONCLUSION_SINGLE_PARAGRAPH
+    title: Conclusion is one paragraph
+    force: hard
+    scope: [writing, review]
+    artifacts: [prose, tex]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: feature, when: [conclusion]}
+    requirement: Write the Conclusion as exactly one substantive paragraph.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Count non-empty paragraphs inside the Conclusion section.'}
+    failure: {draft: block, final: block}
+    autofix: assisted
+    waiver: {allowed: true, authorities: [venue]}
+    decision_refs: [E18, E19, X08]
+    source: {origin: user-decision, note: 'Global house hard rule; reliable venue requirements may override.'}
+
+  - id: STRUCT.CONCLUSION_INTEGRATES_LIMITATIONS
+    title: Conclusion integrates limitations
+    force: hard
+    scope: [writing, review]
+    artifacts: [prose, tex]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: feature, when: [conclusion]}
+    requirement: Do not create a standalone top-level Limitations section; integrate the key limitations or scope boundary into the single-paragraph Conclusion.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Search the main manuscript for a standalone top-level Limitations section.'}
+      - {kind: semantic, evidence_required: true, description: 'Locate the concise limitation statement and trace it to the manuscript evidence boundary.'}
+    failure: {draft: block, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [B06, E07, E19, X25]
+    source: {origin: user-decision, note: 'Reverse-hard Limitations placement.'}
+
+  - id: STRUCT.CONCLUSION_NO_NEW_CLAIMS
+    title: Conclusion introduces no new claims or evidence
+    force: hard
+    scope: [writing, review]
+    artifacts: [prose]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: feature, when: [conclusion]}
+    requirement: Do not introduce a new claim, citation, experiment, or result number in the Conclusion.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Trace each Conclusion statement to an earlier manuscript home.'}
+    failure: {draft: block, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [E17]
+    source: {origin: local-house-policy, note: 'Conclusion closure rule.'}
+
+  - id: THREATS.CLAIM_MITIGATION_RESIDUAL
+    title: Threats map to claims, mitigations, and residual boundaries
+    force: hard
+    scope: [writing, review]
+    artifacts: [prose, tex]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: feature, when: [threats_to_validity, limitations_content]}
+    requirement: For every load-bearing threat or limitation, identify the affected claim, research question, or inference; state the mitigation or existing check; and preserve the residual risk after mitigation. If no mitigation exists, say so explicitly rather than implying resolution.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Map each load-bearing threat or limitation to an affected claim or RQ, a supported mitigation or explicit absence, and a surviving residual boundary.'}
+    failure: {draft: block, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [N05]
+    source: {origin: user-decision, note: 'Hard threat-analysis core informed by reference-paper analysis; no text or data reproduced.'}
+
+  - id: RELATED.COMPARISON_REQUIRED
+    title: Full Related Work includes a comparison plan
+    force: hard
+    scope: [writing, review, tables]
+    artifacts: [prose, table]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: profile, when: [related-work-full, sok]}
+    requirement: Include an argumentative axis-based comparison-table plan that makes the paper gap visible, uses three to four fair high-signal dimensions, and prefers single-column placement after pruning.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Inspect table purpose, axes, row evidence, and the gap exposed.'}
+    failure: {draft: report, final: block}
+    autofix: none
+    waiver: {allowed: true, authorities: [user, venue]}
+    decision_refs: [G03, G04, G05, G08, H04, H05, X27]
+    source: {origin: local-house-policy, note: 'Full Related Work contract.'}
+
+  - id: TABLE.PROPOSED_ROW_GROUNDED
+    title: Proposed rows require a real manuscript artifact
+    force: hard
+    scope: [review, tables]
+    artifacts: [table]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: feature, when: [related_work_table]}
+    requirement: Include a proposed, ours, or this-work row only when the manuscript actually contains the named artifact and every marker is supported by that artifact.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Trace the proposed row label and every marker to an existing manuscript artifact.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [G09]
+    source: {origin: local-house-policy, note: 'Separated from soft row granularity because proposed-row grounding remains a factual hard constraint.'}
+
+  - id: TABLE.VALUES_GROUNDED
+    title: Table values are grounded
+    force: hard
+    scope: [tables, review]
+    artifacts: [table]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: feature, when: [data_table, result_table]}
+    requirement: Use only supplied data, manuscript values, or user-confirmed values and never hide variance or redefine the best value through visual emphasis.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Confirm every declared source-data path exists.'}
+      - {kind: semantic, evidence_required: true, description: 'Trace every value, direction, best-value emphasis, and variance representation to source data.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [H08, H09, H10, H17]
+    source: {origin: local-house-policy, note: 'Data and presentation integrity.'}
+
+  - id: TABLE.CANONICAL_RELATED_MARKERS
+    title: Use the canonical related-work marker scheme
+    force: hard
+    scope: [tables]
+    artifacts: [table]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: feature, when: [related_work_table]}
+    requirement: Use a green check for full support, an amber filled pifont circle (\ding{108}) for partial support, and a red cross for absence instead of ad hoc marker systems; when a proposed row exists, use the house light-background highlight.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Check marker macro definitions and table usage.'}
+      - {kind: manual, evidence_required: true, description: 'Confirm venue, grayscale, and accessibility constraints do not require an authorized alternative.'}
+    failure: {draft: block, final: block}
+    autofix: assisted
+    waiver: {allowed: true, authorities: [venue]}
+    decision_refs: [H11, H12, H13]
+    source: {origin: user-decision, note: 'Optional strict-house marker scheme using an amber filled pifont circle for partial support.'}
+
+  - id: TABLE.BOOKTABS_FINAL
+    title: Final LaTeX tables use booktabs
+    force: hard
+    scope: [tables]
+    artifacts: [table, tex]
+    phases: [submission, camera_ready]
+    activation: {type: profile, when: [final-table]}
+    requirement: Use booktabs for final LaTeX tables unless the active venue template requires another format.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Check package and table-rule usage.'}
+    failure: {draft: report, final: block}
+    autofix: assisted
+    waiver: {allowed: true, authorities: [venue]}
+    decision_refs: [H01, H16]
+    source: {origin: local-house-policy, note: 'Final table house style.'}
+
+  - id: TABLE.FINAL_TARGET_WIDTH
+    title: Final tables align to target width
+    force: hard
+    scope: [tables]
+    artifacts: [table, tex]
+    phases: [submission, camera_ready]
+    activation: {type: profile, when: [final-table]}
+    requirement: Align the final table to its target column or text width, using an explicit natural-fit exemption when scaling would reduce readability.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Inspect the rendered table at target width and record any natural-fit exemption.'}
+    failure: {draft: report, final: block}
+    autofix: assisted
+    waiver: {allowed: true, authorities: [user, venue]}
+    decision_refs: [H02]
+    source: {origin: user-decision, note: 'Conditional hard target-width rule.'}
+
+  - id: FIG.SOURCE_DATA_REQUIRED
+    title: Data figures require source data
+    force: hard
+    scope: [figures, review]
+    artifacts: [figure]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: feature, when: [data_figure]}
+    requirement: Generate numeric figures from supplied source data and never use image generation for precise plots.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Confirm every declared source-data path and plotting script exists.'}
+      - {kind: manual, evidence_required: true, description: 'Identify the source file, plotted fields, and generation script.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [I01, I02, J01]
+    source: {origin: local-house-policy, note: 'Data-figure integrity.'}
+
+  - id: FIG.NO_INVENTED_COMPONENTS
+    title: Conceptual figures preserve manuscript structure
+    force: hard
+    scope: [figures, review]
+    artifacts: [figure]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: feature, when: [conceptual_figure]}
+    requirement: Do not add actors, flows, mechanisms, boundaries, or relationships not supported by the manuscript.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Map each visual component and edge to manuscript text.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [I03]
+    source: {origin: local-house-policy, note: 'Conceptual-figure fidelity.'}
+
+  - id: FIG.NO_IN_FIGURE_TITLE
+    title: Figures contain no in-figure title
+    force: hard
+    scope: [figures]
+    artifacts: [figure]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: feature, when: [paper_figure]}
+    requirement: Put title and interpretation in the caption, not inside the figure.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Inspect the rendered figure for title-like text.'}
+    failure: {draft: block, final: block}
+    autofix: assisted
+    waiver: {allowed: true, authorities: [venue]}
+    decision_refs: [I04]
+    source: {origin: local-house-policy, note: 'Figure title policy.'}
+
+  - id: FIG.FINAL_WIDTH_READABLE
+    title: Final figures are readable at target width
+    force: hard
+    scope: [figures, review]
+    artifacts: [figure]
+    phases: [submission, camera_ready]
+    activation: {type: profile, when: [final-figure]}
+    requirement: Render each final paper figure at its actual LaTeX column or text width and confirm that labels, annotations, legends, and panel identifiers remain readable without clipping or overlap.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Inspect the rendered figure at target column width.'}
+    failure: {draft: block, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [I13, I19]
+    source: {origin: user-decision, note: 'Perceptual final-width gate retained after the 24pt source minimum became soft.'}
+
+  - id: FIG.CONCEPT_HOUSE_STYLE
+    title: Conceptual figures use the house rendering style
+    force: hard
+    scope: [figures]
+    artifacts: [figure]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: feature, when: [conceptual_figure]}
+    requirement: Use a generative image model by default with a pure white background and no gradient, texture, or atmospheric canvas.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Inspect the generation method and rendered background.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: true, authorities: [user, venue]}
+    decision_refs: [I06, I09]
+    source: {origin: user-decision, note: 'Conceptual-figure house hard rule.'}
+
+  - id: FIG.FINAL_EXPORT_ACCESSIBILITY
+    title: Final figures use vector export and accessible color
+    force: hard
+    scope: [figures, review]
+    artifacts: [figure]
+    phases: [submission, camera_ready]
+    activation: {type: profile, when: [final-figure]}
+    requirement: Export precise plots as PDF or SVG and preserve colorblind and grayscale readability in the final artifact.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Confirm declared final outputs exist and use an allowed paper format.'}
+      - {kind: manual, evidence_required: true, description: 'Inspect export format, grayscale rendering, and color distinctions.'}
+    failure: {draft: report, final: block}
+    autofix: assisted
+    waiver: {allowed: true, authorities: [venue]}
+    decision_refs: [I05, I14]
+    source: {origin: user-decision, note: 'Final-figure profile hard core.'}
+
+  - id: FIG.TRACEABLE_SCRIPT
+    title: Final semantic figures have traceable generation units
+    force: hard
+    scope: [figures, workflow]
+    artifacts: [figure]
+    phases: [submission, camera_ready]
+    activation: {type: profile, when: [final-figure]}
+    requirement: Keep each semantic data figure traceable to a focused generation script or an explicitly justified tightly coupled panel script.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Confirm each declared data-figure generation script exists.'}
+      - {kind: manual, evidence_required: true, description: 'Inspect figure-to-script and source-data mapping.'}
+    failure: {draft: report, final: block}
+    autofix: none
+    waiver: {allowed: true, authorities: [user]}
+    decision_refs: [I15]
+    source: {origin: user-decision, note: 'Final artifact traceability.'}
+
+  - id: RESULTS.FABRICATED_DISCLOSURE
+    title: Disclose synthetic or placeholder results
+    force: hard
+    scope: [writing, review, figures, tables]
+    artifacts: [prose, figure, table]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: mode, when: [synthetic_results, placeholder_results]}
+    requirement: Clearly disclose fabricated, simulated, synthetic, or placeholder result status wherever it affects a scientific claim.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Compare provenance state with prose, captions, and artifact labels.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [D09, J10]
+    source: {origin: local-house-policy, note: 'Result-provenance integrity.'}
+
+  - id: RESULTS.CLAIM_MAPPING
+    title: Experiments map to claims or research questions
+    force: hard
+    scope: [writing, review, workflow]
+    artifacts: [prose, figure, table]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: feature, when: [evaluation_section]}
+    requirement: Map every load-bearing experiment to a claim or research question and narrow claims when evaluation is incomplete.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Trace claim or RQ to experiment, result artifact, and interpretation.'}
+    failure: {draft: narrow, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [J14, J15]
+    source: {origin: local-house-policy, note: 'Claim-evidence closure.'}
+
+  - id: FINAL.NO_UNRESOLVED_MARKERS
+    title: Final manuscripts contain no unresolved markers
+    force: hard
+    scope: [writing, review, citations, workflow]
+    artifacts: [prose, tex, bibtex]
+    phases: [submission, camera_ready]
+    activation: {type: profile, when: [final-manuscript, final-citation-check, paper-run-final]}
+    requirement: Remove or resolve all citation, claim, quote, fact, result, and TODO placeholders before final readiness passes.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Search paper-facing files for unresolved markers and placeholder citation keys.'}
+    failure: {draft: report, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [C14, C15]
+    source: {origin: user-decision, note: 'Final-stage gate.'}
+
+  - id: VENUE.CONSTRAINT_PROVENANCE
+    title: Venue constraints require fresh official provenance
+    force: hard
+    scope: [workflow, review]
+    artifacts: [policy]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: venue, when: [specified]}
+    requirement: Apply page limits, anonymity, mandatory statements, section numbering, and appendix rules only from user-provided or current official sources with an as-of date.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Inspect source URL, venue identity, track, year, and freshness date.'}
+    failure: {draft: report, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [A04, D11, E08, L01, L02, L03, L05, L07, L09]
+    source: {origin: local-house-policy, note: 'No permanent venue hardcoding.'}
+
+  - id: ANON.DOUBLE_BLIND
+    title: Enforce double-blind anonymity
+    force: hard
+    scope: [writing, review, workflow]
+    artifacts: [prose, tex]
+    phases: [submission]
+    activation: {type: profile, when: [double-blind]}
+    requirement: Remove authors, acknowledgments, identifying repository URLs, and identifying self-reference when double-blind review is active.
+    checks:
+      - {kind: deterministic, evidence_required: false, description: 'Search manuscript source for known identity fields and repository URLs.'}
+      - {kind: manual, evidence_required: true, description: 'Inspect indirect identity leakage and venue policy.'}
+    failure: {draft: report, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [L04]
+    source: {origin: local-house-policy, note: 'Activated only by a reliable double-blind profile.'}
+
+  - id: SOK.REQUIRED_CONTENT
+    title: SoK papers include taxonomy, methodology, and agenda
+    force: hard
+    scope: [writing, review, tables]
+    artifacts: [prose, table]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: profile, when: [sok]}
+    requirement: Include an explicit taxonomy, corpus/search/screening boundary, and concrete research agenda in a SoK paper.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Locate and assess the taxonomy, methodology, and agenda artifacts.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [E20, E21, E22]
+    source: {origin: user-decision, note: 'SoK profile hard content.'}
+
+  - id: EXPERIMENT.STOCHASTIC_UNCERTAINTY
+    title: Stochastic experiments report uncertainty
+    force: hard
+    scope: [writing, review, figures, tables]
+    artifacts: [prose, figure, table]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: profile, when: [stochastic-experiment]}
+    requirement: Report run count and an appropriate uncertainty measure for stochastic or multi-run experiments.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Inspect experiment design, run count, aggregation, and uncertainty representation.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: true, authorities: [user, venue]}
+    decision_refs: [J05, J06, J07, X12]
+    source: {origin: user-decision, note: 'Conditional replacement for universal error bars.'}
+
+  - id: METHOD.EVIDENCE_ROLE_BOUNDARY
+    title: Evidence sources stay within declared claim roles
+    force: hard
+    scope: [writing, review, workflow]
+    artifacts: [prose, policy]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: profile, when: [multi-role-evidence]}
+    requirement: Declare the role and claim boundary of each substantive, validation, calibration, control, case-study, or exploratory evidence source, and do not use an evidence source to support a stronger or different claim role without an explicit justified reclassification.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Trace each evidence source to its declared role, supported claims, prohibited extrapolations, and every place it is used in the manuscript.'}
+    failure: {draft: block, final: block}
+    autofix: assisted
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [N02]
+    source: {origin: user-decision, note: 'Conditional evidence-role integrity rule informed by reference-paper analysis; no text or data reproduced.'}
+
+  - id: EXPERIMENT.REPRODUCIBILITY
+    title: Activated reproducibility profile records seeds and compute
+    force: hard
+    scope: [writing, review, workflow]
+    artifacts: [prose, policy]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: profile, when: [reproducibility]}
+    requirement: Record random seeds where applicable and document compute resources required by the active profile.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Inspect experiment configuration, seed policy, and compute description.'}
+    failure: {draft: report, final: block}
+    autofix: none
+    waiver: {allowed: true, authorities: [venue]}
+    decision_refs: [J08, J09]
+    source: {origin: imported-design, note: 'Profile-scoped reproducibility requirements.'}
+
+  - id: EXPERIMENT.ACTUAL_RUN_CONFIRMATION
+    title: Final paper-run results require provenance confirmation
+    force: hard
+    scope: [workflow, review]
+    artifacts: [policy, figure, table]
+    phases: [submission, camera_ready]
+    activation: {type: profile, when: [paper-run-final]}
+    requirement: Confirm that load-bearing experiment artifacts come from an actual run before the final gate passes.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Inspect source path, fingerprint, and user provenance confirmation.'}
+    failure: {draft: report, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [J11, M04, M05]
+    source: {origin: imported-design, note: 'Lightweight paper-run provenance gate.'}
+
+  - id: RESULTS.RQ_EXPLICIT_ANSWER
+    title: Each RQ result block closes with an explicit answer
+    force: hard
+    scope: [writing, review]
+    artifacts: [prose, tex]
+    phases: [draft, polish, submission, camera_ready]
+    activation: {type: profile, when: [rq-driven-evaluation]}
+    requirement: Close each load-bearing RQ result block with exactly one direct, evidence-traceable answer that states the bounded interpretation without introducing a new claim or new evidence.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Map each explicit RQ to one closing answer and trace every answer statement to evidence already presented in that RQ block.'}
+    failure: {draft: report, final: block}
+    autofix: assisted
+    waiver: {allowed: true, authorities: [user, venue]}
+    decision_refs: [J12]
+    source: {origin: user-decision, note: 'Conditional RQ-closure content rule; visual box presentation is governed separately as soft.'}
+
+  - id: REVIEW.ARCHITECTURE_SAFETY
+    title: Structural deletion is conservative and traceable
+    force: hard
+    scope: [review, workflow]
+    artifacts: [prose, policy]
+    phases: [polish, submission]
+    activation: {type: profile, when: [architecture-review]}
+    requirement: Delete only non-unique, non-caveat content; name the surviving home for every move, merge, or delete; escalate low-confidence judgments.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Inspect paragraph audit, information ledger, confidence, and relocation map.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [K04, K05, K06, K07, K08, M01]
+    source: {origin: imported-design, note: 'Claim Architecture Review safety contract.'}
+
+  - id: REVIEW.NO_UNNECESSARY_EXPERIMENTS
+    title: Do not prescribe experiments for wording-only problems
+    force: hard
+    scope: [review]
+    artifacts: [prose, policy]
+    phases: [polish, submission, rebuttal]
+    activation: {type: mode, when: [self_review, formal_review, external_review_analysis, rebuttal]}
+    requirement: Do not recommend new experiments when narrowing or clarifying wording resolves the identified misread risk.
+    checks:
+      - {kind: semantic, evidence_required: true, description: 'Classify the issue as substance or misread risk before proposing an experiment.'}
+    failure: {draft: block, final: report}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [K03]
+    source: {origin: user-decision, note: 'Review proportionality.'}
+
+  - id: WORKFLOW.COMPLEX_TASK_STATE
+    title: Complex paper tasks use persistent state and briefs
+    force: hard
+    scope: [workflow, writing, review]
+    artifacts: [policy]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: profile, when: [full-paper-workflow]}
+    requirement: Create a writing brief and claim-evidence ledger for full-paper or multi-section work, track paper-run state, and invalidate only dependent stages after source changes.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Inspect the brief, ledger, stage state, fingerprints, and stale propagation.'}
+    failure: {draft: report, final: block}
+    autofix: none
+    waiver: {allowed: true, authorities: [user]}
+    decision_refs: [A10, K09, K10, K11, M03, M04, M05]
+    source: {origin: imported-design, note: 'Lightweight paper-run contract.'}
+
+  - id: WORKFLOW.COLD_READER_AUTHORIZATION
+    title: Cold-reader mode isolates context and requires agent authorization
+    force: hard
+    scope: [review, workflow]
+    artifacts: [policy, prose]
+    phases: [polish, submission]
+    activation: {type: profile, when: [cold-reader]}
+    requirement: Test comprehension using only the manuscript; obtain explicit user authorization before invoking a fresh agent.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Inspect the reader context and any user authorization for fresh-agent use.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [K13, K14, M09]
+    source: {origin: imported-design, note: 'Cold-reader boundary.'}
+
+  - id: AUTOFIX.SEMANTIC_APPROVAL
+    title: Semantic changes require approval
+    force: hard
+    scope: [writing, review, workflow]
+    artifacts: [prose, tex, bibtex]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: mode, when: [semantic_mutation, architecture_review, citation_audit, bibliography_rewrite]}
+    requirement: Show a diff and obtain approval before applying semantic prose changes, structural moves, citation changes, or bibliography rewrites.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Confirm a diff and explicit approval exist for the mutation.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [C18, K12, K15, X23]
+    source: {origin: user-decision, note: 'Human gate for semantic mutation.'}
+
+  - id: AUTOFIX.SAFE_LOSSLESS
+    title: Unattended autofix is deterministic and lossless
+    force: hard
+    scope: [workflow]
+    artifacts: [policy, prose, tex]
+    phases: [draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: mode, when: [autofix]}
+    requirement: Use unattended autofix only for closed, deterministic, meaning-preserving replacements with a reversible diff.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Inspect the autofix declaration, reversible diff, and pass/fail/idempotency fixture results before unattended use.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [K16, X23]
+    source: {origin: user-decision, note: 'Autofix integrity.'}
+
+  - id: STYLE.MINING_APPROVAL
+    title: Style mining cannot silently change house style
+    force: hard
+    scope: [writing, workflow]
+    artifacts: [policy, prose]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    activation: {type: mode, when: [style_mining]}
+    requirement: Emit a style-profile diff and require user approval before changing house style from external papers.
+    checks:
+      - {kind: manual, evidence_required: true, description: 'Inspect source papers, proposed diff, conflicts, and approval.'}
+    failure: {draft: block, final: block}
+    autofix: none
+    waiver: {allowed: false, authorities: []}
+    decision_refs: [K17, X22, M13]
+    source: {origin: local-house-policy, note: 'Controlled style learning.'}

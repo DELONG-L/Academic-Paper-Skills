@@ -1,0 +1,13 @@
+version: 1
+paper_type: empirical
+submission_stage: camera_ready
+language: en
+task_scope: artifact
+task_mode: figure_creation
+policy_sets: [strict-house-style]
+artifact_mode: final_figure
+scopes: [figures]
+artifacts: [figure]
+features: [paper_figure, data_figure]
+provenance:
+  submission_stage: user
