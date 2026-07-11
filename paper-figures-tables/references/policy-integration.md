@@ -9,7 +9,9 @@ figure or table. Keep creation in this skill and compliance aggregation in
 Declare `figure` or `table` in `artifacts`, then declare semantic types in
 `features`:
 
-- figures: `paper_figure`, plus `data_figure` or `conceptual_figure`;
+- figures: `paper_figure`, plus `data_figure` or `conceptual_figure`; add
+  `generated_conceptual_figure` whenever an image model produces the final
+  conceptual artifact;
 - tables: `related_work_table`, `data_table`, or
   `result_table`;
 - use `artifact_mode: final_figure` or `final_table` for a single final QA
@@ -97,6 +99,13 @@ final-width rule.
 - Canonical marker tokens do not prove that related-work rows are defensible.
 - A cell tint or dagger does not prove that a capability is absent from the
   comparison corpus; record the corpus boundary and row-wise evidence.
+- A prompt that requests Times New Roman or mathematical typesetting does not
+  prove `FIG.CONCEPT_TYPOGRAPHY`; inspect the accepted model output and leave the
+  rule `UNVERIFIED` if the font roles cannot be confirmed.
+- Preserve the accepted model-generated source and a record of subsequent
+  transformations for `FIG.CONCEPT_MODEL_NATIVE_OUTPUT`. Any later semantic
+  overlay, redrawing, compositing, or replacement is a hard failure; only
+  non-semantic technical packaging is allowed.
 - Vector export does not prove color accessibility.
 - A declared script does not prove that it produced the inspected output.
 

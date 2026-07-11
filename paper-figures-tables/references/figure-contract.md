@@ -56,6 +56,8 @@ validation:
 - **Source data:** exact local paths or generated `source_data.csv`.
 - **Panel map:** panel IDs, plot type, metric, method/condition order, and message.
 - **Structural reference:** for Figure 1, system overview, pipeline, architecture, and threat-model figures, path to `structure.svg` or a reason it is unnecessary.
+- **Conceptual-figure typography:** when `FIG.CONCEPT_TYPOGRAPHY` is active, identify every text role as non-mathematical or mathematical; require the model output itself to use Times New Roman for the former and a dedicated manuscript- or venue-compatible math font for the latter.
+- **Model-native output:** for `generated_conceptual_figure`, preserve the accepted model output as the complete semantic artifact. Record the original generated file and only non-semantic packaging transformations.
 - **Boundary:** what the figure does not prove.
 - **Caption boundary:** what belongs in the paper caption versus artifact audit notes.
 - **Source scale:** use 3x by default so 24pt source text maps to approximately
@@ -73,7 +75,26 @@ For overview-like conceptual figures, use `structure.svg` as the editable struct
 - trust, phase, or module boundaries
 - short visible labels that match the paper text
 
-Use the final generated output for visual polish, not for inventing or changing structure. If the generative image model cannot preserve the SVG's topology or labels, regenerate with a stricter prompt, apply deterministic label overlay, or keep an editable SVG/TikZ artifact as the final figure.
+Record the conceptual-figure font contract in its spec:
+
+```yaml
+typography:
+  non_math_font: Times New Roman
+  math_font: manuscript_or_venue_math_font
+  math_rendering: model_native_only
+generation:
+  artifact_type: generated_conceptual_figure
+  semantic_content_source: model_output_only
+  allowed_postprocess: [crop, resize, compression, color_profile, format_wrap]
+```
+
+Use the final generated output for visual polish, not for inventing or changing structure. If the generative image model cannot preserve the SVG's topology, labels, or formulae, regenerate with a stricter prompt or stop. Do not apply a deterministic label/formula overlay or redraw the generated figure in SVG/TikZ.
+
+Do not infer font compliance from prompt wording alone. Under
+`FIG.CONCEPT_TYPOGRAPHY`, inspect the accepted model output for Times New Roman
+non-mathematical text and manuscript- or venue-compatible mathematical
+typography. If either role is wrong or cannot be verified, regenerate or leave
+the rule `UNVERIFIED`; post-generation text or formula repair is forbidden.
 
 For Figure 1 and overview-like conceptual figures, the final paper image should have a pure white background. Avoid background gradients, gray washes, paper textures, vignettes, and atmospheric effects. Use color only for components, arrows, boundaries, and semantic highlights.
 

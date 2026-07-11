@@ -112,6 +112,8 @@ For full-paper, multi-section, polish, submission, rebuttal, or camera-ready wor
 - `scopes` and generic `artifacts` for applicability
 - `features` for semantic selectors such as `conclusion`, `data_figure`, or
   `limitations_content`
+- add `generated_conceptual_figure` alongside `conceptual_figure` when the final
+  conceptual artifact is produced by a generative image model
 
 Read `references/context-schema.md` for the complete mapping and provenance rules.
 Do not require a persistent context file for a short paragraph rewrite.
