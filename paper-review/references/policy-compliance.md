@@ -1,19 +1,21 @@
 # Policy Compliance Review
 
-Use this reference for the user's own pre-submission audit, submission readiness,
-camera-ready audit, and post-revision verification. Do not impose local house
-rules as rejection criteria when formally reviewing someone else's paper.
+Use this reference for an explicitly requested compliance audit or submission-
+readiness judgment, including when final validation is part of the requested
+delivery. Ordinary self-review and checking a specific revision promise do not
+require a global readiness assessment. Scope the context to the actual judgment.
 
 ## Inputs
 
 - `paper_context.yaml` with provenance for venue, anonymity, and submission stage.
-- Current manuscript project and local `.bib`.
-- Optional `compliance-evidence.yaml` containing human, user, or venue judgments.
+- Current manuscript project and local `.bib` when source checks are requested.
+  A PDF or excerpt permits only the checks its contents support; report missing
+  source/render coverage rather than treating an empty project as verified.
+- Optional `compliance-evidence.yaml` containing agent, human, user, or venue judgments with their evidence.
 - Active policy registries in the sibling `paper-policy` skill.
 
-Omit `policy_sets` for public defaults. Use `policy_sets: [strict-house-style]`
-only for an explicitly configured own-paper workflow; never import that set as
-a rejection criterion for another author's paper.
+Omit `policy_sets` or select `[integrity-core, academic-defaults]` for the
+shared defaults. Never use author preferences as rejection criteria for another author.
 
 For a full manuscript, put generic kinds such as `prose`, `tex`, `bibtex`,
 `figure`, and `table` in `artifacts`. Put semantic selectors such as
@@ -82,7 +84,7 @@ When the evidence file contains figure/table artifact records, the assessor also
 runs the artifact checker. Inspect `artifact_coverage`; a PASS, WAIVED, or
 NOT_APPLICABLE artifact result must name every governed ID in `artifact_refs`.
 
-4. Confirm `active_policy_sets` before interpreting any house-style finding.
+4. Confirm `active_policy_sets` and distinguish hard findings from soft recommendations.
    Treat `policy_set_notes` and `inactive_profiles` as explanatory rather than
    readiness blockers.
 5. Inspect every `FAIL` and `UNVERIFIED` hard result. Add an atomic issue card
@@ -102,9 +104,12 @@ NOT_APPLICABLE artifact result must name every governed ID in `artifact_refs`.
   NOT_APPLICABLE.
 - Keep semantic/manual rules UNVERIFIED until a concrete artifact, locator,
   evidence statement, and evaluator are recorded.
-- An agent may record an anchored semantic/manual FAIL when the manuscript
-  itself contains the contradictory evidence. Agent PASS is prohibited; use
-  human, user, or venue evidence to clear a semantic/manual readiness gate.
+- An agent may record semantic PASS with concrete supporting reasoning and
+  current file snapshots, or an anchored semantic/manual FAIL. Follow the
+  `paper-policy` compliance schema for `source_snapshots`; changed or missing
+  sources invalidate that evidence. A rule containing any manual check still
+  requires human, user, or venue evidence to pass. Agent PASS cannot replace
+  required deterministic checks or imply human sign-off.
 - Accept WAIVED only when the registry allows the stated user or venue
   authority and the record includes reason and date.
 - Treat NOT_APPLICABLE as an evidenced exclusion, not a convenient pass.
@@ -130,5 +135,4 @@ Include:
 4. Authorized waivers and justified NOT_APPLICABLE exclusions.
 5. Soft adaptations, residual risks, and owning-skill handoffs.
 
-Assessment is read-only. Do not rewrite prose, repair figures/tables, or mutate
-`.bib` files unless the user separately authorizes the owning workflow.
+Assessment itself is read-only. When the current task already authorizes prose, figure/table, or bibliography fixes, continue through the owning skill internally and show the scoped changes; a separate user invocation or repeat approval is unnecessary. Preserve audit-only instructions.

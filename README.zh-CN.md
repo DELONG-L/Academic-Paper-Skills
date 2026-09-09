@@ -2,118 +2,111 @@
 
 [English](README.md) | 简体中文
 
-Academic Paper Skills 是一组面向学术论文工作流的 Codex skills。仓库包含四个必须保持版本一致的同级 skill：
+面向严谨学术写作的四个协作技能：
 
-- `paper-policy`：负责共享 hard/soft 规则解析、确定性 lint、证据支持的合规评估与 readiness 报告。
-- `paper-writing`：负责论文正文写作与改写，包括摘要、Introduction、RQ framing、Related Work、方法描述、结果叙事、Discussion、Limitations、Conclusion、贡献列表、claim calibration、引用整合和 academic prose cleanup。
-- `paper-figures-tables`：负责论文图表，包括 LaTeX 表格、Related Work 对比表、实验结果表、由源数据驱动的数值图、概念图、caption、artifact spec 和视觉 QA。
-- `paper-review`：负责论文审查，包括投稿前 audit、模拟审稿人、red-team review、rebuttal planning、rebuttal drafting、revision verification 和 submission readiness check。
+| 技能 | 职责 |
+|---|---|
+| `paper-writing` | 修改正文、整合已核实引文、校准论断，减少模板化与过度防御性写作，制作审阅节选，迁移 LaTeX 模板。 |
+| `paper-review` | 审查作者论文的论证与段落结构，模拟审稿疑问，撰写作者回复，核验修改是否完成。 |
+| `paper-figures-tables` | 制作有来源的表格、可复现的数值图和忠实的概念图，检查最终尺寸下的实际输出。 |
+| `paper-policy` | 解析适用规则，以真实证据进行正式合规评估。 |
 
-这套 bundle 有意保持窄边界：不包含文献搜索、参考文献自动验证、实验执行或项目管理工作流。
+受邀承担的正式同行评审、实验执行和项目管理由独立工作流负责。
+本套技能支持写作或审阅任务授权范围内的引文核验与补全，不承担文献库管理。
 
-公开默认配置强调可移植性，而不是强制个人写作偏好。默认启用
-`integrity-core` 与 `academic-defaults`；格式和结构方面的严格偏好位于
-默认关闭的 `strict-house-style` 中。
+## 统一工作流
 
-## 规则集
-
-`paper_context.yaml` 不填写 `policy_sets` 时使用公开默认：
+本地与公开安装使用相同的两个策略集：
 
 ```yaml
 policy_sets: [integrity-core, academic-defaults]
 ```
 
-需要严格格式和结构规范时显式启用：
+省略 `policy_sets` 即使用上述默认值，不再设置独立的
+`strict-house-style` 模式。注册表包含 50 条硬规则与 49 条软偏好。
+硬规则按声明的范围和条件生效，约束学术诚信、证据与适用要求。
+标题、段落形状、比较表、字体、源画布比例和绘图工具等偏好可随论文调整；
+调整偏好不会阻断提交准备状态。
 
-```yaml
-policy_sets: [strict-house-style]
-```
-
-严格规则集会自动包含两个公开默认规则集。启用后，其中的 hard 规则仍然
-是 hard；可靠的 venue 强制要求仍可覆盖冲突的 house 格式或结构偏好。
-
-## 设计原则
-
-- 论文 claim 必须克制、可追溯、以证据为先。
-- 只有启用严格规则集时才强制传统、简洁的大章节命名；公开默认按论文和 venue 调整。
-- 用户声明的引用和证据来源是事实依据。
-- 不虚构 citation、论文 claim、venue、年份、baseline、metric、p-value 或实验结果。
-- 如果系统认为需要某篇文献，但本地 `.bib` 中没有对应条目，只提示用户手动更新 BibTeX。
-- 只有启用严格规则时才强制 Related Work 规划对比表；公开默认在确实改善论证时提出。
-- 表格应该紧凑、服务论点；`booktabs`、marker、placement 和 resize 规范仅在对应规则启用时强制。
-- 对经过明确论证的宽幅 Related Work 矩阵，可用 `table_profile: layered_capability_matrix` 按语义层分组；coverage delta 高亮必须有证据，且不能只靠颜色传义。
-- 数值实验图必须由源数据驱动，用 Python 绘制。
-- 概念图工具根据拓扑、可编辑性、venue 与启用规则选择；生成式渲染属于可选 house default。
-- 启用 `strict-house-style` 时，生成式概念图的文字、数学公式、箭头、组件等全部语义内容必须直接存在于模型最终输出中；非数学文字统一使用 Times New Roman，数学内容使用与论文或 venue 兼容的专门数学字体，禁止后期语义叠加或重绘。公开默认配置不强制这些 house 规则。
-- Review 与 Writing、Figures/Tables 分离：review 先诊断问题；大段正文改写交给 `paper-writing`，图表制作或重排交给 `paper-figures-tables`。
+- 直接陈述有证据支持的结论。保留实质负面结果与必要条件，删除重复的预先辩护。
+- 需要结构修改时，先检查论证顺序和段落功能，再润色句子；不强制统一段落模板。
+- 诊断具体文字问题，不通过文风判断 AI 作者身份，不优化检测器分数。
+- 遵守封闭语料与保密约束。公开引文补全请求允许必要的一手来源核验和有依据的
+  参考文献更新；无法获取的来源保持待核实。
+- 跨技能继续完成已授权修改。普通文字和图表任务不需要完整合规运行或空白台账。
+- 数值图来自已有数据或明确提供的数值，并具有可复现的生成过程。
+  工具和导出格式服从内容与实际交付要求，最终导出须按论文放置尺寸检查。
 
 ## 安装
 
-克隆仓库，并把四个 skill 文件夹作为同一版本 bundle 复制到 Codex skills 目录：
+四个同级目录须保持同一版本。首次安装：
 
 ```bash
 git clone https://github.com/DELONG-L/Academic-Paper-Skills.git
 mkdir -p ~/.codex/skills
 cp -R Academic-Paper-Skills/paper-policy ~/.codex/skills/
 cp -R Academic-Paper-Skills/paper-writing ~/.codex/skills/
-cp -R Academic-Paper-Skills/paper-figures-tables ~/.codex/skills/
 cp -R Academic-Paper-Skills/paper-review ~/.codex/skills/
+cp -R Academic-Paper-Skills/paper-figures-tables ~/.codex/skills/
 ```
 
-安装后建议开启一个新的 Codex thread，让 skills 列表刷新。
+升级时先备份并完整替换已有的四个目录，再复制新版本；直接合并目录可能留下已退役的
+规则或参考文件。如有自行定制内容，保存在备份中供检查。安装后新建 Codex 任务，
+使技能列表刷新。
+
+建议 Python 3.10+。策略工具依赖 PyYAML，图表工具使用可选绘图依赖。
+源码编译与视觉检查需要 LaTeX、PDF 渲染工具；纯文字写作不需要。
+
+```bash
+python3 -m pip install -r requirements-policy.txt
+python3 -m pip install -r requirements-figures.txt
+```
 
 ## 使用示例
 
 ```text
-Use $paper-writing to rewrite this introduction with clearer RQs and scoped claims.
+使用 $paper-writing 根据给定数值修改 Results 段落，保持结论直接，删除重复的预先辩护。
 ```
 
 ```text
-Use $paper-figures-tables to turn this related-work table spec into compact LaTeX.
-```
-
-需要宽幅分层 capability matrix 时，可加入受控 context 值：
-
-```yaml
-table_profile: layered_capability_matrix
+使用 $paper-review 检查段落必要性、论证顺序和跨段重复。
+说明需要修改和可以保留的部分，并给出具体替换文本。
 ```
 
 ```text
-Use $paper-review to audit this manuscript before submission and produce a prioritized issue board.
+使用 $paper-figures-tables 将这些测量值绘成图，并检查最终导出。
 ```
-
-## 目录结构
 
 ```text
-Academic-Paper-Skills/
-├── paper-policy/
-├── paper-writing/
-├── paper-figures-tables/
-├── paper-review/
-├── README.md
-├── README.zh-CN.md
-├── requirements-policy.txt
-├── requirements-figures.txt
-├── LICENSE
-└── THIRD_PARTY_NOTICES.md
+使用 $paper-review 回复这些审稿意见，并逐条核验承诺的修改。
 ```
 
-每个 skill 文件夹都是自包含的，包含自己的 `SKILL.md`、按需加载的 `references/`、可选 `scripts/`，以及 `agents/` 下的 UI metadata。
+明确的提交准备评估使用项目上下文和证据记录。缺少语义或人工检查证据时保持
+`UNVERIFIED`。Agent 的语义 PASS 必须绑定当前来源快照，Agent 检查不能替代规则
+要求的人工评估。确定性失败具有优先级。`review_hint` 表示需要检查的线索，既不等于
+违规，也不构成通过证据。
 
-## 依赖
+命令和权限模型见 [策略入口](paper-policy/SKILL.md) 与
+[证据契约](paper-policy/references/compliance-schema.md)。
+编辑完成和论文达到提交要求是两种不同判断。
 
-- 支持本地 skills 的 Codex。
-- Python 3.10 或更高版本。
-- `paper-policy` 需要 `PyYAML`：`python3 -m pip install -r requirements-policy.txt`。
-- 图表辅助脚本的可选依赖：`python3 -m pip install -r requirements-figures.txt`。
-- 只有在需要编译或视觉检查论文项目时，才需要 LaTeX 工具链。
+## 维护与验证
 
-## 引用策略
+```bash
+python3 paper-policy/scripts/validate_registry.py
+python3 paper-policy/scripts/audit_skill_integration.py .
+python3 -m unittest discover -s paper-policy/scripts -p 'test_*.py'
+python3 -m unittest discover -s paper-figures-tables/scripts -p 'test_*.py'
+```
 
-这套 bundle 不做自动文献验证。引用用户或项目声明的 citation/evidence
-来源；本地 `.bib` 与用户 notes 是默认来源。如果缺少支持材料，工作流应
-输出人工更新提示，而不是伪造参考文献。
+CI 执行这些检查并编译 Python 辅助脚本。整合检查覆盖明确引用与规则 ID，不能证明
+语义一致性或论文质量。维护时应同时检查注册表措辞、任务指南、示例和检查器的实际行为。
+参见 [规则维护](paper-policy/references/rule-maintenance.md) 和 [更新说明](CHANGELOG.md)。
 
-## License
+## 来源与许可
 
-MIT。见 [LICENSE](LICENSE) 和 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+工作流参考了 [OniReimu/claude-scholar](https://github.com/OniReimu/claude-scholar)
+中的论证架构、段落审查、引文核验、修改收尾和文字诊断等思路，并独立编写适配指南。
+相关参考文件标注了具体来源。图表工具保留 `Haojae/scipilot-figure-skill` 的来源说明。
+
+MIT，详见 [LICENSE](LICENSE) 和 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

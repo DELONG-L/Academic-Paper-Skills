@@ -37,6 +37,19 @@ class ResolvePolicyTests(unittest.TestCase):
     def ids(result: dict, field: str) -> set[str]:
         return {item["id"] for item in result[field]}
 
+    def test_contributions_and_punctuation_are_shared_soft_preferences(self):
+        context = load_yaml(FIXTURES / "introduction.yaml")
+        context["features"].append("contribution_list")
+        result = resolve_policy(context, self.hard, self.soft, self.profiles, self.policy_sets)
+        self.assertTrue({"CONTRIB.CONCRETE", "CONTRIB.COUNT", "PROSE.PUNCTUATION"}.issubset(self.ids(result, "active_soft")))
+        self.assertNotIn("CONTRIB.ARTIFACT_REQUIRED", self.ids(result, "active_hard"))
+        self.assertIn("CLAIM.EVIDENCE_BOUND", self.ids(result, "active_hard"))
+
+    def test_conceptual_renderer_guidance_is_soft_with_content_integrity(self):
+        result = self.resolve("conceptual-figure.yaml")
+        self.assertIn("FIG.CONCEPT_PRESENTATION", self.ids(result, "active_soft"))
+        self.assertIn("FIG.NO_INVENTED_COMPONENTS", self.ids(result, "active_hard"))
+
     def test_abstract_selects_abstract_soft_rule(self) -> None:
         result = self.resolve("abstract.yaml")
         soft = self.ids(result, "active_soft")
@@ -75,12 +88,13 @@ class ResolvePolicyTests(unittest.TestCase):
         hard = self.ids(result, "active_hard")
         self.assertTrue(
             {
-                "RELATED.COMPARISON_REQUIRED",
                 "TABLE.PROPOSED_ROW_GROUNDED",
-                "TABLE.CANONICAL_RELATED_MARKERS",
+
             }.issubset(hard)
         )
         self.assertIn("TABLE.RELATED_ROW_GRANULARITY", self.ids(result, "active_soft"))
+        self.assertIn("RELATED.COMPARISON_REQUIRED", self.ids(result, "active_soft"))
+        self.assertNotIn("RELATED.COMPARISON_REQUIRED", hard)
 
     def test_results_activates_rq_and_stochastic_profiles(self) -> None:
         result = self.resolve("results.yaml")
@@ -93,7 +107,7 @@ class ResolvePolicyTests(unittest.TestCase):
         self.assertTrue(
             {
                 "RESULTS.CLAIM_MAPPING",
-                "RESULTS.RQ_EXPLICIT_ANSWER",
+
                 "EXPERIMENT.STOCHASTIC_UNCERTAINTY",
                 "TABLE.VALUES_GROUNDED",
             }.issubset(hard)
@@ -104,9 +118,9 @@ class ResolvePolicyTests(unittest.TestCase):
     def test_conceptual_figure_feature_activates_only_supported_component_rules(self) -> None:
         hard = self.ids(self.resolve("conceptual-figure.yaml"), "active_hard")
         self.assertIn("FIG.NO_INVENTED_COMPONENTS", hard)
-        self.assertIn("FIG.CONCEPT_HOUSE_STYLE", hard)
-        self.assertIn("FIG.CONCEPT_TYPOGRAPHY", hard)
-        self.assertIn("FIG.CONCEPT_MODEL_NATIVE_OUTPUT", hard)
+        self.assertNotIn("FIG.CONCEPT_HOUSE_STYLE", hard)
+        self.assertNotIn("FIG.CONCEPT_TYPOGRAPHY", hard)
+        self.assertNotIn("FIG.CONCEPT_MODEL_NATIVE_OUTPUT", hard)
         self.assertNotIn("FIG.SOURCE_DATA_REQUIRED", hard)
 
     def test_public_conceptual_figure_disables_house_typography(self) -> None:
@@ -129,7 +143,7 @@ class ResolvePolicyTests(unittest.TestCase):
         )
         hard = self.ids(result, "active_hard")
         self.assertIn("FIG.NO_INVENTED_COMPONENTS", hard)
-        self.assertIn("FIG.CONCEPT_HOUSE_STYLE", hard)
+        self.assertNotIn("FIG.CONCEPT_HOUSE_STYLE", hard)
         self.assertNotIn("FIG.CONCEPT_TYPOGRAPHY", hard)
         self.assertNotIn("FIG.CONCEPT_MODEL_NATIVE_OUTPUT", hard)
 
@@ -151,11 +165,8 @@ class ResolvePolicyTests(unittest.TestCase):
         hard = self.ids(result, "active_hard")
         self.assertTrue(
             {
-                "STRUCT.CONCLUSION_SINGLE_PARAGRAPH",
-                "STRUCT.CONCLUSION_INTEGRATES_LIMITATIONS",
                 "STRUCT.CONCLUSION_NO_NEW_CLAIMS",
-                "PROSE.EM_DASH_FORBIDDEN",
-                "PROSE.NO_UNICODE_ARROWS",
+
                 "THREATS.CLAIM_MITIGATION_RESIDUAL",
             }.issubset(hard)
         )
@@ -174,26 +185,18 @@ class ResolvePolicyTests(unittest.TestCase):
         self.assertNotIn("STRUCT.CONCLUSION_SINGLE_PARAGRAPH", hard)
         self.assertNotIn("STRUCT.CONCLUSION_INTEGRATES_LIMITATIONS", hard)
         self.assertNotIn("PROSE.EM_DASH_FORBIDDEN", hard)
-        self.assertTrue(any("public default" in item for item in result["policy_set_notes"]))
+        self.assertTrue(any("default policy sets" in item for item in result["policy_set_notes"]))
 
-    def test_strict_house_style_expands_public_policy_sets(self) -> None:
-        result = self.resolve("conclusion.yaml")
-        self.assertEqual(
-            ["integrity-core", "academic-defaults", "strict-house-style"],
-            result["active_policy_sets"],
-        )
-        hard = self.ids(result, "active_hard")
-        self.assertIn("FACT.NO_FABRICATION", hard)
-        self.assertIn("STRUCT.CONCLUSION_SINGLE_PARAGRAPH", hard)
+    def test_removed_house_set_is_not_accepted(self):
+        context = load_yaml(FIXTURES / "conclusion.yaml")
+        context["policy_sets"] = ["strict-house-style"]
+        with self.assertRaisesRegex(ValueError, "unknown policy set"):
+            resolve_policy(context, self.hard, self.soft, self.profiles, self.policy_sets)
 
-    def test_house_only_profile_is_inert_under_public_defaults(self) -> None:
-        context = load_yaml(FIXTURES / "submission.yaml")
-        context.pop("policy_sets")
-        result = resolve_policy(
-            context, self.hard, self.soft, self.profiles, self.policy_sets
-        )
+    def test_submission_has_no_generic_conference_structure_gate(self):
+        result = self.resolve("submission.yaml")
         self.assertNotIn("standard-conference-structure", result["active_profiles"])
-        self.assertIn("standard-conference-structure", result["inactive_profiles"])
+        self.assertNotIn("STRUCT.SECTION_COUNT_PROFILE", self.ids(result, "active_hard"))
 
     def test_unknown_policy_set_is_rejected(self) -> None:
         context = load_yaml(FIXTURES / "abstract.yaml")
@@ -218,7 +221,7 @@ class ResolvePolicyTests(unittest.TestCase):
         self.assertTrue(
             {
                 "FIG.SOURCE_DATA_REQUIRED",
-                "FIG.NO_IN_FIGURE_TITLE",
+
                 "FIG.FINAL_WIDTH_READABLE",
                 "FIG.FINAL_EXPORT_ACCESSIBILITY",
                 "FIG.TRACEABLE_SCRIPT",
@@ -235,7 +238,6 @@ class ResolvePolicyTests(unittest.TestCase):
                 "full-paper-workflow",
                 "related-work-full",
                 "reproducibility",
-                "standard-conference-structure",
             }.issubset(set(result["active_profiles"]))
         )
         hard = self.ids(result, "active_hard")
@@ -244,8 +246,6 @@ class ResolvePolicyTests(unittest.TestCase):
                 "VENUE.CONSTRAINT_PROVENANCE",
                 "ANON.DOUBLE_BLIND",
                 "FINAL.NO_UNRESOLVED_MARKERS",
-                "RELATED.COMPARISON_REQUIRED",
-                "STRUCT.CONCLUSION_INTEGRATES_LIMITATIONS",
             }.issubset(hard)
         )
         self.assertEqual([], result["unverified_context"])
@@ -391,7 +391,7 @@ class ResolvePolicyTests(unittest.TestCase):
         )
         hard = self.ids(result, "active_hard")
         self.assertIn("FIG.FINAL_EXPORT_ACCESSIBILITY", hard)
-        self.assertIn("TABLE.BOOKTABS_FINAL", hard)
+        self.assertIn("TABLE.FINAL_READABLE", hard)
         self.assertIn("TABLE.VALUES_GROUNDED", hard)
 
     def test_artifact_mode_list_rejects_unknown_entry(self) -> None:
@@ -433,11 +433,9 @@ class ResolvePolicyTests(unittest.TestCase):
             self.assertNotIn(rule_id, self.ids(result, "active_hard"))
 
         hard = {item["id"]: item for item in result["active_hard"]}
-        self.assertIn("RELATED.COMPARISON_REQUIRED", hard)
-        self.assertIn(
-            "does not turn the profile's dimension or layout guidance into a hard requirement",
-            hard["RELATED.COMPARISON_REQUIRED"]["requirement"],
-        )
+        self.assertNotIn("RELATED.COMPARISON_REQUIRED", hard)
+        self.assertIn("RELATED.COMPARISON_REQUIRED", rules)
+        self.assertTrue(rules["RELATED.COMPARISON_REQUIRED"]["allowed_variants"])
 
     def test_public_layered_profile_exposes_its_complete_soft_contract(self) -> None:
         context = load_yaml(FIXTURES / "related-work.yaml")

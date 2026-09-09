@@ -3,7 +3,7 @@ paper_type: empirical
 submission_stage: draft
 task_scope: artifact
 task_mode: figure_creation
-policy_sets: [strict-house-style]
+policy_sets: [integrity-core, academic-defaults]
 artifact_mode: draft
 scopes: [figures]
 artifacts: [figure]

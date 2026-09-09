@@ -14,24 +14,11 @@ from project_files import select_project_files
 
 
 FINAL_STAGES = {"submission", "camera_ready"}
-TEXT_RULE_IDS = {
-    "PROSE.EM_DASH_FORBIDDEN",
-    "LATEX.NO_DOLLAR_DISPLAY",
-    "LATEX.NO_BRACKET_DISPLAY",
-    "PROSE.NO_INTERNAL_PROVENANCE",
-    "PROSE.NO_UNICODE_ARROWS",
-}
+TEXT_RULE_IDS = {"PROSE.NO_INTERNAL_PROVENANCE"}
 DEFAULT_RULE_IDS = {
     "CITE.APPROVED_SOURCE_ONLY",
     "FINAL.NO_UNRESOLVED_MARKERS",
     "PROSE.NO_INTERNAL_PROVENANCE",
-}
-STRICT_HOUSE_LINT_RULE_IDS = {
-    "PROSE.EM_DASH_FORBIDDEN",
-    "LATEX.NO_DOLLAR_DISPLAY",
-    "LATEX.NO_BRACKET_DISPLAY",
-    "PROSE.NO_UNICODE_ARROWS",
-    "STRUCT.CONCLUSION_SINGLE_PARAGRAPH",
 }
 MARKER_PATTERNS = [
     re.compile(r"\[(?:citation needed|claim not verified|quote not verified)[^\]]*\]", re.I),
@@ -46,11 +33,6 @@ PROVENANCE_PATTERNS = [
 NON_PROSE_ENV_PATTERN = re.compile(
     r"\\(?P<action>begin|end)\{(?:tabular\*?|tabularx|longtable|verbatim\*?|lstlisting|minted)\}"
 )
-BRACKET_DISPLAY_PATTERN = re.compile(r"(?<!\\)\\[\[\]]")
-UNICODE_ARROW_PATTERN = re.compile(r"[←→↔↕↖↗↘↙⇐⇒⇔⟵⟶⟷]")
-CONCLUSION_TITLE_PATTERN = (
-    r"Conclusion|Conclusions|Concluding\s+Remarks|Summary\s+and\s+Conclusions"
-)
 BIBTEX_ENTRY_PATTERN = re.compile(
     r"@(?P<entry_type>[A-Za-z]+)\s*\{\s*(?P<key>[^,\s]+)\s*,",
     re.I,
@@ -64,6 +46,11 @@ class Finding:
     path: str
     line: int
     message: str
+    kind: str = "deterministic"
+
+    def __post_init__(self):
+        if self.kind not in {"deterministic", "review_hint"}:
+            raise ValueError(f"unknown finding kind: {self.kind}")
 
 
 def strip_tex_comment(line: str) -> str:
@@ -116,29 +103,10 @@ def prose_projection(paper_text: str) -> str:
     return prose
 
 
-def has_double_dollar_display(line: str, in_inline_math: bool) -> tuple[bool, bool]:
-    """Detect $$ only when TeX is outside an existing inline-math span."""
-    index = 0
-    while index < len(line):
-        if line[index] != "$" or (index and line[index - 1] == "\\"):
-            index += 1
-            continue
-        if in_inline_math:
-            in_inline_math = False
-            index += 1
-            continue
-        if index + 1 < len(line) and line[index + 1] == "$":
-            return True, in_inline_math
-        in_inline_math = True
-        index += 1
-    return False, in_inline_math
-
-
 def lint_tex_file(
     path: Path,
     root: Path,
     stage: str,
-    enforce_standard_section_count: bool = False,
     enabled_rule_ids: set[str] | None = None,
 ) -> list[Finding]:
     findings: list[Finding] = []
@@ -147,23 +115,13 @@ def lint_tex_file(
 
     enabled = DEFAULT_RULE_IDS if enabled_rule_ids is None else enabled_rule_ids
     excluded_depth = 0
-    in_inline_math = False
     for number, line in lines:
         paper_text, excluded_depth = paper_text_outside_nonprose(line, excluded_depth)
         prose = prose_projection(paper_text)
-        if "PROSE.EM_DASH_FORBIDDEN" in enabled and ("—" in prose or "---" in prose):
-            findings.append(Finding("PROSE.EM_DASH_FORBIDDEN", relative, number, "em dash detected"))
-        if "PROSE.NO_UNICODE_ARROWS" in enabled and UNICODE_ARROW_PATTERN.search(prose):
-            findings.append(Finding("PROSE.NO_UNICODE_ARROWS", relative, number, "Unicode arrow detected in paper prose"))
-        dollar_display, in_inline_math = has_double_dollar_display(paper_text, in_inline_math)
-        if "LATEX.NO_DOLLAR_DISPLAY" in enabled and dollar_display:
-            findings.append(Finding("LATEX.NO_DOLLAR_DISPLAY", relative, number, "double-dollar display math detected"))
-        if "LATEX.NO_BRACKET_DISPLAY" in enabled and BRACKET_DISPLAY_PATTERN.search(paper_text):
-            findings.append(Finding("LATEX.NO_BRACKET_DISPLAY", relative, number, "bracket display math detected"))
         if "PROSE.NO_INTERNAL_PROVENANCE" in enabled:
             for pattern in PROVENANCE_PATTERNS:
                 if pattern.search(prose):
-                    findings.append(Finding("PROSE.NO_INTERNAL_PROVENANCE", relative, number, "possible internal provenance in paper-facing text"))
+                    findings.append(Finding("PROSE.NO_INTERNAL_PROVENANCE", relative, number, "possible workflow detail; inspect scientific relevance in context", kind="review_hint"))
                     break
         if stage in FINAL_STAGES and "FINAL.NO_UNRESOLVED_MARKERS" in enabled:
             for pattern in MARKER_PATTERNS:
@@ -179,49 +137,8 @@ def lint_tex_file(
             elif re.search(r"\\(?:section\*?\{acknowledg|acknowledg\w*)", paper_text, re.I):
                 findings.append(Finding("ANON.DOUBLE_BLIND", relative, number, "acknowledgment content detected"))
             elif re.search(r"https?://(?:www\.)?(?:github|gitlab)\.com/[^\s{}]+", paper_text, re.I):
-                findings.append(Finding("ANON.DOUBLE_BLIND", relative, number, "repository URL requires anonymity review"))
+                findings.append(Finding("ANON.DOUBLE_BLIND", relative, number, "repository URL requires ownership and anonymity review; third-party links can be valid", kind="review_hint"))
 
-    text = "\n".join(line for _, line in lines)
-    conclusion = re.search(
-        rf"\\section\*?\{{(?:{CONCLUSION_TITLE_PATTERN})\}}(.*?)(?=\\section\*?\{{|\\bibliography|\\printbibliography|\\end\{{document\}})",
-        text,
-        re.S | re.I,
-    )
-    if conclusion and "STRUCT.CONCLUSION_SINGLE_PARAGRAPH" in enabled:
-        body = conclusion.group(1).strip()
-        prose_blocks = [
-            block.strip()
-            for block in re.split(r"\n\s*\n", body)
-            if re.search(r"[A-Za-z]", block)
-            and not re.fullmatch(r"\\(?:label|vspace|smallskip|medskip|bigskip)\{?[^\n]*", block)
-        ]
-        if len(prose_blocks) != 1:
-            section_line = text[: conclusion.start()].count("\n") + 1
-            findings.append(
-                Finding(
-                    "STRUCT.CONCLUSION_SINGLE_PARAGRAPH",
-                    relative,
-                    section_line,
-                    f"Conclusion contains {len(prose_blocks)} substantive paragraphs; expected exactly 1",
-                )
-            )
-    if enforce_standard_section_count:
-        section_matches = list(re.finditer(r"\\section\s*\{", text))
-        section_count = len(section_matches)
-        if not 5 <= section_count <= 7:
-            section_line = (
-                text[: section_matches[0].start()].count("\n") + 1
-                if section_matches
-                else 1
-            )
-            findings.append(
-                Finding(
-                    "STRUCT.SECTION_COUNT_PROFILE",
-                    relative,
-                    section_line,
-                    f"standard conference profile has {section_count} top-level sections; expected 5 to 7",
-                )
-            )
     return findings
 
 
@@ -311,12 +228,13 @@ def unused_bibtex_entries(
 
 
 def lint_referenceable_displays(root: Path, tex_paths: list[Path]) -> list[Finding]:
-    """Check that every eqref target is a labelled numbered equation/align block."""
+    """Check common display forms; unknown/custom forms require inspection."""
     referenced: set[str] = set()
     numbered_labels: set[str] = set()
+    unnumbered_labels: set[str] = set()
     label_locations: dict[str, tuple[str, int]] = {}
     env_pattern = re.compile(
-        r"\\begin\{(?P<env>equation|align)\}(?P<body>.*?)\\end\{(?P=env)\}",
+        r"\\begin\{(?P<env>(?:equation|align|gather|multline|flalign|alignat)\*?)\}(?P<body>.*?)\\end\{(?P=env)\}",
         re.S,
     )
     for path in tex_paths:
@@ -328,7 +246,19 @@ def lint_referenceable_displays(root: Path, tex_paths: list[Path]) -> list[Findi
                 (str(path.relative_to(root)), cleaned[: label.start()].count("\n") + 1),
             )
         for block in env_pattern.finditer(cleaned):
-            numbered_labels.update(re.findall(r"\\label\{([^}]+)\}", block.group("body")))
+            env=block.group("env")
+            body=block.group("body")
+            # Multline has one equation number across its lines. Other supported
+            # AMS environments attach labels and numbering to individual rows.
+            rows=[body] if env.rstrip("*") in {"equation","multline"} else re.split(r"\\\\(?:\[[^\]]*\])?",body)
+            for row in rows:
+                labels=set(re.findall(r"\\label\{([^}]+)\}",row))
+                tagged=bool(re.search(r"\\tag\*?\s*\{",row))
+                suppressed=bool(re.search(r"\\(?:notag|nonumber)\b",row))
+                if tagged or (not env.endswith("*") and not suppressed):
+                    numbered_labels.update(labels)
+                else:
+                    unnumbered_labels.update(labels)
     findings: list[Finding] = []
     for key in sorted(referenced - numbered_labels):
         path, line = label_locations.get(key, ("<manuscript>", 0))
@@ -337,7 +267,10 @@ def lint_referenceable_displays(root: Path, tex_paths: list[Path]) -> list[Findi
                 "LATEX.REFERENCEABLE_DISPLAY",
                 path,
                 line,
-                f"eqref target {key!r} is missing or is not in a numbered equation/align environment",
+                (f"eqref target {key!r} is in an explicitly unnumbered display without a tag"
+                 if key in unnumbered_labels else
+                 f"eqref target {key!r} was not resolved by the source scanner; inspect custom/external labels and the compiled output"),
+                kind="deterministic" if key in unnumbered_labels else "review_hint",
             )
         )
     return findings
@@ -390,61 +323,11 @@ def primary_manuscript_tex_paths(
     return sorted(selected)
 
 
-def lint_standalone_limitations(
-    root: Path, tex_paths: list[Path], primary_tex_path: Path | None = None
-) -> list[Finding]:
-    """Reject top-level Limitations headings in the primary manuscript tree."""
-    root = root.resolve()
-    findings: list[Finding] = []
-    pattern = re.compile(r"\\section\*?\{[^}]*\bLimitations?\b[^}]*\}", re.I)
-    for path in primary_manuscript_tex_paths(root, tex_paths, primary_tex_path):
-        for number, line in iter_tex_lines(path):
-            if pattern.search(line):
-                findings.append(
-                    Finding(
-                        "STRUCT.CONCLUSION_INTEGRATES_LIMITATIONS",
-                        str(path.relative_to(root)),
-                        number,
-                        "standalone top-level Limitations section detected; integrate it into Conclusion",
-                    )
-                )
-    return findings
-
-
-def lint_standard_section_count(
-    root: Path, tex_paths: list[Path], primary_tex_path: Path | None = None
-) -> list[Finding]:
-    tex_paths = primary_manuscript_tex_paths(root, tex_paths, primary_tex_path)
-    section_locations: list[tuple[Path, int]] = []
-    for path in tex_paths:
-        for number, line in iter_tex_lines(path):
-            section_locations.extend(
-                (path, number) for _ in re.finditer(r"\\section\s*\{", line)
-            )
-    count = len(section_locations)
-    if 5 <= count <= 7:
-        return []
-    if section_locations:
-        path, line = section_locations[0]
-        relative = str(path.relative_to(root))
-    else:
-        relative, line = "<manuscript>", 0
-    return [
-        Finding(
-            "STRUCT.SECTION_COUNT_PROFILE",
-            relative,
-            line,
-            f"standard conference profile has {count} top-level sections; expected 5 to 7",
-        )
-    ]
-
-
 def assessed_rule_ids(
     root: Path,
     tex_paths: list[Path],
     bib_paths: list[Path],
     stage: str,
-    enforce_standard_section_count: bool = False,
     enabled_rule_ids: set[str] | None = None,
     primary_tex_path: Path | None = None,
 ) -> set[str]:
@@ -455,25 +338,10 @@ def assessed_rule_ids(
         assessed.update(TEXT_RULE_IDS & enabled)
         if stage in FINAL_STAGES and "FINAL.NO_UNRESOLVED_MARKERS" in enabled:
             assessed.add("FINAL.NO_UNRESOLVED_MARKERS")
-        primary_paths = primary_manuscript_tex_paths(
-            root, tex_paths, primary_tex_path
-        )
-        for path in primary_paths:
-            text = "\n".join(line for _, line in iter_tex_lines(path))
-            if re.search(
-                rf"\\section\*?\{{(?:{CONCLUSION_TITLE_PATTERN})\}}", text, re.I
-            ):
-                if "STRUCT.CONCLUSION_SINGLE_PARAGRAPH" in enabled:
-                    assessed.add("STRUCT.CONCLUSION_SINGLE_PARAGRAPH")
-                break
-        if enforce_standard_section_count:
-            assessed.add("STRUCT.SECTION_COUNT_PROFILE")
         if "LATEX.REFERENCEABLE_DISPLAY" in enabled:
             assessed.add("LATEX.REFERENCEABLE_DISPLAY")
         if "ANON.DOUBLE_BLIND" in enabled:
             assessed.add("ANON.DOUBLE_BLIND")
-        if "STRUCT.CONCLUSION_INTEGRATES_LIMITATIONS" in enabled:
-            assessed.add("STRUCT.CONCLUSION_INTEGRATES_LIMITATIONS")
     if (tex_paths or bib_paths) and "CITE.APPROVED_SOURCE_ONLY" in enabled:
         assessed.add("CITE.APPROVED_SOURCE_ONLY")
     if tex_paths and bib_paths and "CITE.UNUSED_KEYS_REPORTED" in enabled:
@@ -484,7 +352,6 @@ def assessed_rule_ids(
 def lint_project(
     root: Path,
     stage: str,
-    enforce_standard_section_count: bool = False,
     active_rule_ids: set[str] | None = None,
     tex_paths: list[Path] | tuple[Path, ...] | None = None,
     bib_paths: list[Path] | tuple[Path, ...] | None = None,
@@ -503,24 +370,15 @@ def lint_project(
                 enabled_rule_ids=active_rule_ids,
             )
         )
-    if enforce_standard_section_count:
-        findings.extend(
-            lint_standard_section_count(root, tex_paths, primary_tex_path)
-        )
     if active_rule_ids is None or "CITE.APPROVED_SOURCE_ONLY" in active_rule_ids:
         findings.extend(lint_citations(root, tex_paths, bib_paths))
     if active_rule_ids and "LATEX.REFERENCEABLE_DISPLAY" in active_rule_ids:
         findings.extend(lint_referenceable_displays(root, tex_paths))
-    if active_rule_ids and "STRUCT.CONCLUSION_INTEGRATES_LIMITATIONS" in active_rule_ids:
-        findings.extend(
-            lint_standalone_limitations(root, tex_paths, primary_tex_path)
-        )
     return findings, assessed_rule_ids(
         root,
         tex_paths,
         bib_paths,
         stage,
-        enforce_standard_section_count,
         active_rule_ids,
         primary_tex_path,
     )
@@ -530,16 +388,6 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("project", type=Path)
     parser.add_argument("--stage", choices=["draft", "polish", "submission", "camera_ready"], default="draft")
-    parser.add_argument(
-        "--standard-conference-structure",
-        action="store_true",
-        help="enforce the profile-specific five-to-seven top-level section rule",
-    )
-    parser.add_argument(
-        "--strict-house-style",
-        action="store_true",
-        help="enable deterministic checks owned by the optional strict-house-style set",
-    )
     parser.add_argument("--json", action="store_true", dest="as_json")
     parser.add_argument("--primary-tex")
     parser.add_argument("--additional-tex", action="append", default=[])
@@ -557,12 +405,9 @@ def main() -> int:
             root, args.primary_tex, args.additional_tex
         )
         active_rule_ids = set(DEFAULT_RULE_IDS)
-        if args.strict_house_style:
-            active_rule_ids.update(STRICT_HOUSE_LINT_RULE_IDS)
         findings, _ = lint_project(
             root,
             args.stage,
-            args.standard_conference_structure,
             active_rule_ids=active_rule_ids,
             tex_paths=selected.tex_paths,
             bib_paths=selected.bib_paths,
@@ -577,11 +422,12 @@ def main() -> int:
     elif findings:
         for finding in findings:
             locator = f"{finding.path}:{finding.line}" if finding.line else finding.path
-            print(f"{locator}: [{finding.rule_id}] {finding.message}")
-        print(f"{len(findings)} deterministic violation(s)")
+            print(f"{locator}: [{finding.kind}] [{finding.rule_id}] {finding.message}")
+        print(f"{sum(f.kind == 'deterministic' for f in findings)} deterministic violation(s); "
+              f"{sum(f.kind == 'review_hint' for f in findings)} review hint(s)")
     else:
         print("No deterministic violations found")
-    return 1 if findings else 0
+    return 1 if any(f.kind == "deterministic" for f in findings) else 0
 
 
 if __name__ == "__main__":

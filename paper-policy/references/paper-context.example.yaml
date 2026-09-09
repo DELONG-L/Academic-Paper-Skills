@@ -13,7 +13,6 @@ task_scope: multi_section
 task_mode: writing
 policy_sets: [integrity-core, academic-defaults]
 artifact_mode: [final_figure, final_table]
-structure_profile: standard_conference
 evaluation_structure: rq_driven
 experiment_type: stochastic
 measurement_bias_status: known_systematic

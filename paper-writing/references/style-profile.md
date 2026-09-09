@@ -1,18 +1,18 @@
 # Style Profile
 
-Use this as the public academic writing profile plus documented opt-in variants.
+Use this as adaptable academic writing guidance. It preserves author preferences for precise, concrete prose without creating a separate style-readiness gate.
 
 ## Core Identity
 
-The public default is precise, scoped, and evidence-forward. Optional table,
-structure, and typography preferences apply only when their policy set is enabled.
+The shared default is precise, scoped, and evidence-forward. Table, structure,
+and typography guidance is adaptable to the argument and venue.
 
 Default story arc:
 
 1. Start from a field pressure, deployment change, measurement need, or threat-model mismatch.
 2. Identify the missing boundary, assumption, interface, taxonomy, or evaluation axis.
 3. Define the paper scope before making strong claims.
-4. Introduce the artifact: system, dataset, taxonomy, mechanism, benchmark, or protocol.
+4. Introduce the new knowledge or artifact: finding, synthesis, system, dataset, taxonomy, mechanism, benchmark, or protocol.
 5. Preview evidence with concrete scope: task count, dataset, attack variant, model family, benchmark, or corpus.
 6. End with a bounded implication.
 
@@ -49,11 +49,14 @@ A strong paragraph usually has one job:
 
 Use this pattern for related work, method prose, result interpretation, discussion, and limitations.
 
+These are optional functions, not a paragraph template. Do not append a scope
+disclaimer or recap when the paragraph is already clear and complete.
+
 ## Contribution Lists
 
-When `CONTRIB.COUNT` is enabled, use 3 to 5 contribution bullets unless the paper type genuinely requires more.
+Under the soft `CONTRIB.COUNT` preference, start with 3 to 5 distinct contributions; use fewer or more when that better represents the actual work. Never split or inflate contributions to meet a count.
 
-When `CONTRIB.ARTIFACT_REQUIRED` is active, each contribution must name an artifact:
+Under `CONTRIB.CONCRETE`, name the new knowledge or artifact in each contribution, including measurement findings, replication, negative results, or systematic synthesis when supported. Avoid activity-only claims. Concrete artifacts may include:
 
 - dataset or benchmark
 - formalization, taxonomy, lifecycle, threat model, or specification
@@ -65,25 +68,29 @@ Avoid contribution bullets that only say `we propose a method` or `we conduct ex
 
 ## Boundary Setting
 
-Make scope visible near the claim it supports:
+State supported findings directly, with relevant conditions in the claim itself.
+Do not preemptively explain what an accurate result cannot prove merely because
+a reader might ask for something broader. Correct an overclaim at its source;
+do not surround it with disclaimers. Use `over-defensive-writing.md` for this
+distinction, including when revising existing defensive prose.
 
-- State what the paper excludes.
-- Separate descriptive observations from causal claims.
-- Say when a privacy or security property is not cryptographic.
-- Treat limitations as part of the design contract.
+Keep descriptive observations distinct from causal claims. Report material
+limitations and actual adverse findings where they belong; specific reviewer
+questions receive direct answers. Neither requires routine self-defense after
+each finding.
 
-Useful forms:
+Ordinary manuscript forms:
 
 ```latex
-This paper focuses on [scoped subset] rather than [broader category].
+We evaluate [object] on [dataset or workload].
 ```
 
 ```latex
-The result should be read within [threat model/interface/dataset]; it does not imply [stronger property].
+Under [relevant condition], [observed result].
 ```
 
 ```latex
-This limitation reflects the [budget/enforcement/data] boundary of the design.
+[Method] assumes [condition needed for the stated property].
 ```
 
 ## Typography Discipline
@@ -99,21 +106,24 @@ Use ordinary roman text by default.
 
 Keep the paper-facing narrative separate from internal provenance records.
 
-- Paper captions and prose should state what the artifact shows and how it supports the claim.
-- README files, review notes, artifact specs, and appendices can record renderer choices, script names, source paths, DPI checks, and placeholder status.
+- Captions explain the artifact and its non-obvious encodings; discuss implications in the caption or surrounding prose where useful.
+- Keep internal renderer choices, script paths and DPI checks in task records. A scientific appendix carries details relevant to reproducibility or interpretation, not routine workflow logs.
 - Mention simulated or synthetic evidence where it changes the scientific claim, but avoid repeating internal provenance in every caption and paragraph.
 
 ## Result Prose
 
-Use a four-sentence micro-structure:
+Under the soft `RESULTS.FOUR_MOVE` guidance, cover the information needed to interpret the result. These are functions, not a four-sentence requirement; combine or expand them as needed and avoid repeating a boundary already explicit nearby:
 
-1. Scope sentence: name the table/figure, setting, metric, or workload boundary.
-2. Reading sentence: state the main numerical or visual fact.
-3. Interpretation sentence: explain how it supports the claim.
-4. Boundary sentence: mention the trade-off, exception, remaining risk, or scope limit.
+1. Scope: name the table/figure, setting, metric, or workload boundary.
+2. Observation: state the main numerical or visual fact.
+3. Interpretation: explain how it supports the claim.
+4. Boundary, when needed: report a material trade-off or condition of the result;
+   do not list unclaimed capabilities or untested settings as anticipatory defense.
 
-Do not end an experiment subsection with a raw number. End with the bounded meaning of the result.
+Make the result's meaning clear where interpretation is needed. If the scoped
+observation is already self-explanatory, do not add a formulaic final interpretation
+or disclaimer solely to give the subsection a prescribed ending.
 
-When `RESULTS.RQ_EXPLICIT_ANSWER` is active, close each load-bearing RQ block
-with exactly one direct answer grounded in evidence already presented in that
-block. Use a visual box only when `RESULTS.RQ_ANSWER_BOX` is also enabled.
+Under `RESULTS.CLAIM_MAPPING`, give clear evidence-grounded answers to the
+stated RQs or identify unresolved questions. An answer box is an optional
+presentation under `RESULTS.RQ_ANSWER_BOX`; no fixed placement or count is required.

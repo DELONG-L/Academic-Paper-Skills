@@ -1,5 +1,24 @@
 # Artifact Routing
 
+## Choose the Information Before the Layout
+
+Identify the comparison or explanation the reader needs. Select dimensions from
+that purpose and the available evidence, including important counterexamples or
+unfavorable comparisons. Remove decorative columns before shrinking type or
+expanding width; do not remove dimensions merely because they weaken the proposed
+method's apparent advantage. A synthesis table may legitimately need many axes.
+
+For a conceptual figure, establish supported entities, relationships, inputs,
+outputs and grouping before visual styling. Split an overloaded overview when it
+mixes abstraction levels; do not add an overview or gap teaser solely because it
+is Figure 1. For a data figure, match the visual encoding to the question and
+preserve uncertainty/distribution when relevant.
+
+For long heatmap labels, consider meaningful abbreviations with an accessible
+mapping, wrapping, or a different layout. Select single-column, full-width or
+multi-panel form by actual final-size readability. No fixed aspect ratio, panel
+count, column budget or source-canvas font size proves that the figure works.
+
 Use this to choose between tables, precise data figures, and conceptual figures.
 
 ## Use A Table When
@@ -10,7 +29,8 @@ Use this to choose between tables, precise data figures, and conceptual figures.
 - The argument depends on categorical support such as `\cmark`, `\pmark`, and `\xmark`.
 - The result has many metrics or baselines where a plot would hide exact comparison.
 
-Related Work artifacts should normally be axis-based comparison tables unless the user says prose-only or the target venue forbids tables.
+For Related Work, choose an axis-based table when it adds comparative value or
+is explicitly required. Sufficient axis-based prose does not need a redundant table.
 
 Before choosing a wide table, ask whether the table can make its point with fewer columns. Prefer a single-column table when 3--4 dimensions carry the claim; choose `table*` only when the additional dimensions are essential and still readable.
 
@@ -29,7 +49,7 @@ Use data-visualization data profiling and chart-selection references before draw
 - The artifact should orient the paper before details or explain a mechanism that prose alone cannot keep clear.
 - The visual does not encode exact experimental values.
 
-Conceptual figures default to generation with a generative image model. Use Graphviz, Mermaid, TikZ, or hand-authored SVG only when strict topology, editable vector output, or venue constraints require them.
+Choose conceptual-figure tools from topology, editability, available capabilities, and venue requirements. Code-native vector diagrams and image generation are both valid when suited to the requested artifact.
 
 ## If Both Table And Figure Are Plausible
 

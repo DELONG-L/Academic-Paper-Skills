@@ -4,7 +4,7 @@ submission_stage: camera_ready
 language: en
 task_scope: artifact
 task_mode: related_work_full
-policy_sets: [strict-house-style]
+policy_sets: [integrity-core, academic-defaults]
 artifact_mode: final_table
 scopes: [tables]
 artifacts: [table, tex]

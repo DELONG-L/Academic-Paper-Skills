@@ -1,6 +1,6 @@
 # Review Modes
 
-Use the mode that matches the user's intent. If the user gives only a paper and says "review", default to pre-submission audit for the user's own paper unless they say they are reviewing someone else's submission.
+Use the mode that matches the user's intent and established role. Do not infer a formal reviewer assignment or manuscript ownership from the word "review" alone. For a general critique, work within the supplied material and requested scope without a submission-readiness claim. If handling a confidential assigned submission depends on the user's role, clarify that role before inspection; formal assigned review is outside this skill and awaits a separate workflow.
 
 Set the machine-readable `task_mode` as follows. These values are controlled;
 unknown values are rejected rather than silently disabling policy.
@@ -9,10 +9,11 @@ unknown values are rejected rather than silently disabling policy.
 |---|---|
 | Pre-submission audit | `self_review` |
 | Reviewer panel for own draft | `self_review` |
-| Formal review of another paper | `formal_review` |
 | External review analysis | `external_review_analysis` |
 | Rebuttal strategy/drafting | `rebuttal` |
 | Revision verification | `revision_verification` |
+| Paragraph/argument structure review | `architecture_review` |
+| Explicit manuscript-only reader test | `cold_reader` |
 
 `pre_submission_audit` and `reviewer_panel` are accepted aliases for
 `self_review`. Detector-specific review must use `detector_review` or
@@ -21,7 +22,11 @@ workflow gate.
 
 ## Mode A: Pre-submission Audit
 
-Goal: find rejection risks before advisor review, collaborator review, or submission.
+For structural problems, use `argument-structure.md`. When formal policy context
+is requested, the existing `architecture_review` mode activates its structural
+preservation checks; ordinary local structure edits need no context file.
+
+Goal: find evidence, argument, and presentation problems in the requested manuscript scope. A general self-review is not automatically a formal compliance or readiness assessment.
 
 Inputs:
 - Manuscript source or PDF.
@@ -32,13 +37,13 @@ Output:
 - Severity-ranked findings.
 - Prioritized fix list.
 - Handoffs to `paper-writing` and `paper-figures-tables`.
-- Manual BibTeX update prompts when citation support is locally missing.
+- Citation verification or completion when already requested; manual-source requests only for remaining inaccessible or closed-corpus gaps.
 
 ## Mode B: Reviewer Panel for Own Draft
 
 Goal: simulate likely reviewer objections and produce a fix list.
 
-Run distinct perspectives:
+Use distinct analytic perspectives; additional agents require separate authorization:
 - Champion: strongest fair case for the paper.
 - Skeptic: soundness, baselines, ablations, statistics, reproducibility.
 - Novelty/AC: positioning, contribution delta, related work, likely decision factors.
@@ -46,28 +51,10 @@ Run distinct perspectives:
 Output:
 - Simulated reviews with evidence anchors.
 - Consensus and split risks.
-- Predicted outcome marked as simulation, never as a promise.
+- Indicative scores or outcome only when requested, clearly marked as simulation.
 - Fix list sorted by impact and cost.
 
-## Mode C: Formal Review of Someone Else's Paper
-
-Goal: draft a fair, venue-shaped review for user sign-off.
-
-Rules:
-- Keep a professional, neutral, constructive tone.
-- Anchor every strength and weakness to the paper.
-- Do not use unfair rejection reasons from the fairness firewall.
-- Remind the user that final scores and submission responsibility are theirs.
-
-Output:
-- Paper summary.
-- Strengths.
-- Weaknesses with severity and anchors.
-- Questions for authors.
-- Suggestions that are not rejection grounds.
-- Venue score recommendation when requested.
-
-## Mode D: External Review Analysis
+## Mode C: External Review Analysis
 
 Goal: convert raw reviewer comments into a structured issue board.
 
@@ -78,7 +65,7 @@ Output:
 - Priority and response mode per issue.
 - Evidence gaps and user-input blockers.
 
-## Mode E: Rebuttal Strategy and Drafting
+## Mode D: Rebuttal Strategy and Drafting
 
 Goal: produce a grounded, concise author response.
 
@@ -88,7 +75,7 @@ Output:
 - Exact limits if provided.
 - Revision plan covering every promised manuscript edit.
 
-## Mode F: Revision Verification
+## Mode E: Revision Verification
 
 Goal: verify that the rebuttal and revised manuscript match.
 

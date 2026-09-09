@@ -506,7 +506,7 @@ export_figure(fig, 'figs/09_panels', formats=['pdf', 'svg', 'png'],
 
 ## 10. Plotly 交互图
 
-**何时用**：补充材料、博客、需要 hover 数据的 web 端展示。**正式投稿 PDF 不用 plotly**——投稿系统不接受 HTML。
+**何时用**：补充材料、博客、需要 hover 数据的 web 端展示。用于正式稿件时导出目标支持的静态格式并检查成品；HTML 是否可提交由实际 venue 要求决定。
 
 ```python
 import plotly.express as px

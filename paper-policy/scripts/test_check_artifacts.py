@@ -72,24 +72,16 @@ class ArtifactPolicyTests(unittest.TestCase):
             "UNVERIFIED", self.by_id(result)["FIG.FINAL_WIDTH_READABLE"]["status"]
         )
 
-    def test_conceptual_typography_is_covered_but_requires_manual_evidence(self) -> None:
+    def test_conceptual_figure_content_and_readability_require_evidence(self):
         root = FIXTURES / "artifact-pass"
         evidence = load_yaml(root / "figure-evidence.yaml")
-        evidence["artifacts"][0]["artifact_types"] = [
-            "paper_figure",
-            "conceptual_figure",
-            "generated_conceptual_figure",
-        ]
+        evidence["artifacts"][0]["artifact_types"] = ["paper_figure", "conceptual_figure", "generated_conceptual_figure"]
         findings, assessed, coverage = check_artifacts(root, evidence["artifacts"])
         self.assertEqual([], findings)
-        self.assertEqual(
-            {"main-results"}, coverage["FIG.CONCEPT_TYPOGRAPHY"]
-        )
-        self.assertNotIn("FIG.CONCEPT_TYPOGRAPHY", assessed)
-        self.assertEqual(
-            {"main-results"}, coverage["FIG.CONCEPT_MODEL_NATIVE_OUTPUT"]
-        )
-        self.assertNotIn("FIG.CONCEPT_MODEL_NATIVE_OUTPUT", assessed)
+        for rid in ["FIG.NO_INVENTED_COMPONENTS", "FIG.FINAL_WIDTH_READABLE"]:
+            self.assertEqual({"main-results"}, coverage[rid])
+            self.assertNotIn(rid, assessed)
+        self.assertNotIn("FIG.CONCEPT_TYPOGRAPHY", coverage)
 
     def test_generated_conceptual_artifact_requires_conceptual_type(self) -> None:
         root = FIXTURES / "artifact-pass"
@@ -180,38 +172,53 @@ class ArtifactPolicyTests(unittest.TestCase):
         )
         self.assertIn("FIG.SOURCE_DATA_REQUIRED", assessed)
 
-    def test_booktabs_autopasses_but_marker_manual_check_does_not(self) -> None:
+    def test_table_source_check_cannot_autopass_render_readability(self):
         root = FIXTURES / "artifact-pass"
         evidence = load_yaml(root / "table-evidence.yaml")
         findings, assessed, coverage = check_artifacts(root, evidence["artifacts"])
-        result = assess_compliance(
-            self.resolution("final-table.yaml"),
-            self.hard,
-            evidence,
-            findings,
-            assessed,
-            coverage,
-        )
-        records = self.by_id(result)
-        self.assertEqual("PASS", records["TABLE.BOOKTABS_FINAL"]["status"])
-        self.assertEqual(
-            "UNVERIFIED", records["TABLE.CANONICAL_RELATED_MARKERS"]["status"]
-        )
+        result = assess_compliance(self.resolution("final-table.yaml"), self.hard, evidence, findings, assessed, coverage)
+        self.assertEqual([], findings)
+        self.assertEqual("UNVERIFIED", self.by_id(result)["TABLE.FINAL_READABLE"]["status"])
 
-    def test_booktabs_is_checked_per_labeled_table_environment(self) -> None:
+    def test_missing_table_label_is_checked_per_artifact(self):
         root = FIXTURES / "artifact-table-granularity"
         evidence = load_yaml(root / "evidence.yaml")
+        evidence["artifacts"][1]["latex_label"] = "tab:missing"
         findings, assessed, coverage = check_artifacts(root, evidence["artifacts"])
-        booktabs_findings = [
-            finding for finding in findings
-            if finding.rule_id == "TABLE.BOOKTABS_FINAL"
-        ]
-        self.assertEqual(1, len(booktabs_findings))
-        self.assertEqual("<artifact:bad-table>", booktabs_findings[0].path)
-        self.assertNotIn("TABLE.BOOKTABS_FINAL", assessed)
-        self.assertEqual(
-            {"good-table", "bad-table"}, coverage["TABLE.BOOKTABS_FINAL"]
-        )
+        failures = [x for x in findings if x.rule_id == "TABLE.FINAL_READABLE"]
+        self.assertEqual(1, len(failures))
+        self.assertEqual("<artifact:bad-table>", failures[0].path)
+        self.assertNotIn("TABLE.FINAL_READABLE", assessed)
+        self.assertEqual({"good-table", "bad-table"}, coverage["TABLE.FINAL_READABLE"])
+
+    def test_plain_natural_width_table_accepts_human_render_evidence(self):
+        evidence = deepcopy(load_yaml(FIXTURES / "artifact-pass" / "table-evidence.yaml"))
+        record = evidence["artifacts"][0]
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "plain.tex").write_text(
+                r"\begin{table}\begin{tabular}{ll} Method & Support \\ A & Partial \\"
+                r"\end{tabular}\caption{Comparison.}\label{tab:plain}\end{table}",
+                encoding="utf-8",
+            )
+            record["latex_label"] = "tab:plain"
+            record["files"]["outputs"] = ["plain.tex"]
+            record["files"]["table_sources"] = ["plain.tex"]
+            evidence["hard_results"] = [{
+                "rule_id": "TABLE.FINAL_READABLE", "status": "PASS",
+                "artifact": "plain.tex", "artifact_refs": [record["id"]],
+                "locator": "Table 1, rendered at its final placement width",
+                "evidence": "Synthetic test record: human checked legible labels, units and marker meaning, with no clipping.",
+                "evaluator": "human",
+            }]
+            findings, assessed, coverage = check_artifacts(root, evidence["artifacts"])
+            result = assess_compliance(self.resolution("final-table.yaml"), self.hard, evidence, findings, assessed, coverage)
+            self.assertEqual([], findings)
+            self.assertEqual("PASS", self.by_id(result)["TABLE.FINAL_READABLE"]["status"])
+            record["latex_label"] = "tab:missing"
+            findings, assessed, coverage = check_artifacts(root, evidence["artifacts"])
+            result = assess_compliance(self.resolution("final-table.yaml"), self.hard, evidence, findings, assessed, coverage)
+            self.assertEqual("FAIL", self.by_id(result)["TABLE.FINAL_READABLE"]["status"])
 
     def test_table_label_is_required(self) -> None:
         root = FIXTURES / "artifact-pass"
@@ -220,7 +227,7 @@ class ArtifactPolicyTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "latex_label: required"):
             check_artifacts(root, evidence["artifacts"])
 
-    def test_hollow_partial_marker_fails_canonical_marker_check(self) -> None:
+    def test_alternative_partial_marker_is_not_a_mechanical_failure(self) -> None:
         root = FIXTURES / "artifact-pass"
         evidence = deepcopy(load_yaml(root / "table-evidence.yaml"))
         with TemporaryDirectory() as directory:
@@ -238,12 +245,9 @@ class ArtifactPolicyTests(unittest.TestCase):
             record["files"]["outputs"] = ["related.tex"]
             record["files"]["table_sources"] = ["related.tex"]
             findings, _, _ = check_artifacts(temporary_root, evidence["artifacts"])
-        self.assertIn(
-            "TABLE.CANONICAL_RELATED_MARKERS",
-            {finding.rule_id for finding in findings},
-        )
+        self.assertEqual([], findings)
 
-    def test_excluded_tex_cannot_mask_bad_primary_marker_definition(self) -> None:
+    def test_marker_style_is_not_a_source_validity_requirement(self) -> None:
         with TemporaryDirectory() as directory:
             root = Path(directory).resolve()
             primary = root / "paper.tex"
@@ -275,10 +279,7 @@ class ArtifactPolicyTests(unittest.TestCase):
             findings, _, _ = check_artifacts(
                 root, records, project_tex_paths=[primary]
             )
-            self.assertIn(
-                "TABLE.CANONICAL_RELATED_MARKERS",
-                {finding.rule_id for finding in findings},
-            )
+            self.assertEqual([], findings)
 
     def test_complete_artifact_evidence_can_feed_ready_gate(self) -> None:
         root = FIXTURES / "artifact-pass"
@@ -307,6 +308,69 @@ class ArtifactPolicyTests(unittest.TestCase):
             coverage,
         )
         self.assertEqual("READY", result["readiness"]["status"])
+
+    def test_eps_and_raster_exports_need_quality_evidence_not_vector_gate(self):
+        for suffix in ("eps", "tiff", "png", "jpg"):
+            with self.subTest(suffix=suffix), TemporaryDirectory() as directory:
+                root = Path(directory)
+                # This checker assesses presence/extension, not image content.
+                (root / f"figure.{suffix}").write_bytes(b"synthetic file-presence fixture")
+                (root / "data.csv").write_text("x,y\n1,2\n")
+                (root / "plot.R").write_text("# synthetic source-presence fixture\n")
+                evidence = {"version": 1, "artifacts": [{
+                    "id": "plot", "kind": "figure",
+                    "artifact_types": ["paper_figure", "data_figure"],
+                    "claim": "Synthetic fixture for format handling.",
+                    "files": {"outputs": [f"figure.{suffix}"],
+                              "scripts": ["plot.R"], "source_data": ["data.csv"]},
+                }]}
+                findings, assessed, coverage = check_artifacts(root, evidence["artifacts"])
+                self.assertEqual([], findings)
+                self.assertIn("FIG.FINAL_EXPORT_ACCESSIBILITY", assessed)
+                result = assess_compliance(self.resolution("final-figure.yaml"), self.hard,
+                                           evidence, findings, assessed, coverage)
+                self.assertEqual("UNVERIFIED", self.by_id(result)["FIG.FINAL_EXPORT_ACCESSIBILITY"]["status"])
+
+    def test_unrecognized_existing_export_is_hint_and_missing_file_still_fails(self):
+        evidence = deepcopy(load_yaml(FIXTURES / "artifact-pass" / "figure-evidence.yaml"))
+        # A conceptual figure isolates format handling from source-data checks.
+        record = evidence["artifacts"][0]
+        record["artifact_types"] = ["paper_figure", "conceptual_figure"]
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "figure.custom").write_text("synthetic unsupported-format fixture")
+            record["files"] = {"outputs": ["figure.custom"]}
+            findings, assessed, coverage = check_artifacts(root, evidence["artifacts"])
+            self.assertEqual(["review_hint"], [f.kind for f in findings])
+            self.assertNotIn("FIG.FINAL_EXPORT_ACCESSIBILITY", assessed)
+            result = assess_compliance(self.resolution("final-figure.yaml"), self.hard,
+                                       evidence, findings, assessed, coverage)
+            self.assertEqual("UNVERIFIED", self.by_id(result)["FIG.FINAL_EXPORT_ACCESSIBILITY"]["status"])
+            (root / "figure.custom").unlink()
+            findings, _, _ = check_artifacts(root, evidence["artifacts"])
+            self.assertEqual(["deterministic"], [f.kind for f in findings])
+
+    def test_shared_notebook_keeps_per_figure_source_mapping(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "plots.ipynb").write_text('{"cells": [], "nbformat": 4}')
+            records = []
+            for name in ("a", "b"):
+                (root / f"{name}.csv").write_text("x,y\n1,2\n")
+                (root / f"{name}.svg").write_text('<svg xmlns="http://www.w3.org/2000/svg"/>')
+                records.append({"id": name, "kind": "figure", "artifact_types": ["data_figure"],
+                                "claim": "Synthetic source-presence fixture.",
+                                "files": {"scripts": ["plots.ipynb"], "source_data": [f"{name}.csv"],
+                                          "outputs": [f"{name}.svg"]}})
+            findings, assessed, coverage = check_artifacts(root, records)
+            self.assertEqual([], findings)
+            self.assertEqual({"a", "b"}, coverage["FIG.TRACEABLE_SCRIPT"])
+            self.assertIn("FIG.TRACEABLE_SCRIPT", assessed)
+            (root / "plots.ipynb").unlink()
+            findings, assessed, _ = check_artifacts(root, records)
+            failures = [f for f in findings if f.rule_id == "FIG.TRACEABLE_SCRIPT"]
+            self.assertEqual(2, len(failures))
+            self.assertNotIn("FIG.TRACEABLE_SCRIPT", assessed)
 
 
 if __name__ == "__main__":

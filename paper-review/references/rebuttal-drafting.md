@@ -1,6 +1,8 @@
 # Rebuttal Drafting
 
-Use this reference only after an issue board and strategy plan exist, even if they are lightweight.
+Use the actual comments, evidence and response decisions. For a small response,
+identify these inline; an issue board or strategy file is useful only when the
+number of concerns or revision rounds warrants it.
 
 ## Venue Shape
 
@@ -11,7 +13,14 @@ Confirm:
 - Whether Markdown, LaTeX, tables, or figures are allowed.
 - Whether revised manuscript content can be referenced.
 
-If venue shape or limit is unknown, draft a strategy first and ask before final paste-ready drafting.
+If venue shape or limit is unknown, produce a useful response draft with that
+format assumption stated in the delivery note. Verify actual constraints before
+claiming it is ready to paste into a particular submission form.
+
+For journal or multi-round revision, preserve the editor's requests and each
+reviewer's comments separately, identify the round, and point to current revised
+locations. Deliver clean and marked manuscripts when requested. For a short
+conference response, compress repeated setup while answering every actual concern.
 
 ## Single-Document Structure
 
@@ -72,12 +81,20 @@ Avoid:
 - Vague promises such as "we will improve the paper" without location.
 - Flattery aimed at the area chair.
 
+Judge defensive prose by its contribution to answering the concern, not its
+length or use of a negative sentence. Keep a reasoned disagreement, necessary
+qualification, and proportionate courtesy; shorten repeated apologies and
+self-justification. Consult
+`../../paper-writing/references/over-defensive-writing.md` when this is the
+requested focus. Each independently read response still needs a complete answer.
+
 ## Missing Results
 
 If a result is needed but not provided:
 
 - Use `[TBD: user-provided result]` in a draft only when the user asked for a fill-in draft.
-- Otherwise stop at strategy and ask the user for the result.
+- Otherwise draft the supported parts and identify the precise missing result;
+  ask only when that input is needed to complete the remaining response.
 - Never fabricate a plausible number.
 
 ## Tables in Rebuttals
@@ -106,3 +123,5 @@ Compression order:
 - Tone is respectful but not submissive.
 - No invented citations, numbers, experiments, or links.
 - Limit is satisfied or overage is explicitly reported.
+- Each claimed completed edit matches the current source, not an earlier draft
+  or an approved future commitment; use `revision-plan.md` for verification.

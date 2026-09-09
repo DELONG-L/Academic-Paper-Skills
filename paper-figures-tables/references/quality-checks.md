@@ -4,13 +4,13 @@ Use this before finishing any figure or table task.
 
 ## Universal Checks
 
-- The artifact supports one explicit paper claim or comparison.
+- The artifact has a clear scientific purpose; related questions may share an intentionally organized multi-panel figure.
 - Source data, source notes, manuscript context, or handoff spec is identified.
 - Caption is self-contained.
 - Label exists and follows local convention.
 - Artifact is referenced by the manuscript or has a proposed reference sentence.
 - Claims do not exceed the data or manuscript content shown.
-- No in-artifact title is used for figures.
+- Titles, panel headings and annotations help interpretation without needless repetition of the caption.
 - Venue constraints are respected when supplied: page limit, anonymity, allowed formats, color restrictions, and appendix/supplement rules.
 
 ## Table Checks
@@ -18,7 +18,7 @@ Use this before finishing any figure or table task.
 - Uses `booktabs` when the final-table hard rule or venue requires it; otherwise the selected rule style is internally consistent.
 - Aligns with `\columnwidth`, `\textwidth`, or `\linewidth`; uses `\resizebox` only when the active rule requires it or structural fitting is insufficient and the scaled text remains readable.
 - Uses the smallest readable placement; Related Work and comparison tables are single-column by default after pruning to high-signal dimensions.
-- Related Work tables use the axis-based comparison-table style unless explicitly waived.
+- Related Work comparison dimensions and row definitions are clear and supported; layout preferences need no waiver.
 - Up/down arrows are not used in headers by default; metric directions, if needed, are stated briefly in caption or prose.
 - `\cmark`, `\pmark`, `\xmark`, colors, abbreviations, or ratios are defined.
 - Every family-row marker is conservative across all named members; mixed support uses `\pmark`.
@@ -28,7 +28,7 @@ Use this before finishing any figure or table task.
 - `threeparttable` is used only with actual `tablenotes`; the caption states the claim and scope while notes carry secondary definitions or caveats.
 - Semantic emphasis is used sparingly; not every strong-looking cell is bolded or colored.
 - Wide matrices use `table*` before becoming unreadable single-column tables.
-- Captions do not include internal source paths, plotting scripts, renderer names, DPI checks, or internal provenance status unless the manuscript explicitly requires an audit section.
+- Keep irrelevant workflow bookkeeping in artifact or review notes. Retain scientifically necessary implementation identifiers, renderer details and truthful synthetic-data disclosures in the caption or prose where they support interpretation; a venue mandate is not required for relevant scientific content.
 
 ## Precise Data Figure Checks
 
@@ -44,36 +44,24 @@ Use this before finishing any figure or table task.
 - Script reruns from a documented working directory.
 - Exports include PDF or SVG for LaTeX when practical.
 - Visual QA was performed for final venue-ready plots when a rendered preview is available.
-- The final-width human QA result and artifact ID are recorded in
-  `compliance-evidence.yaml`; source-level PASS alone is not treated as complete.
+- Record actual final-width inspection and its evaluator. Agent visual inspection is agent evidence, not human sign-off. Use formal compliance records only when that assessment is in scope; manual rules still require their declared authority.
 
 ## Conceptual Figure Checks
 
-- A generative image model is the default renderer unless strict topology, editability, or venue constraints justify another renderer.
-- The paper does not exceed the normal 1-2 generated-conceptual-figure budget without explicit justification.
-- Figure 1, system overview, pipeline, architecture, and threat-model figures include a precise `structure.svg` wireframe or an explicit note explaining why it was unnecessary.
-- The generated image preserves the `structure.svg` component set, topology, arrow direction, boundaries, and labels, or the deviations are documented and intentional.
-- Components match the manuscript.
-- Direction of flow is correct.
-- Trust boundaries, attacker paths, or data transformations are visually clear.
-- Figure 1 and overview-like conceptual figures use a pure white background, with no gradient wash, texture, vignette, or gray canvas.
-- When `FIG.CONCEPT_TYPOGRAPHY` is active, every non-mathematical label and annotation is Times New Roman.
-- Mathematical variables, operators, Greek symbols, and equations use a dedicated manuscript- or venue-compatible math font rather than Times New Roman imitation.
-- Exact font roles are inspected in the accepted model output; prompt wording or silent font fallback is not treated as proof. Uncertain typography triggers regeneration or a stop, never a post-generation repair.
-- For `generated_conceptual_figure`, every visible semantic element is present in the accepted model output and the final artifact contains no later text, formula, arrow, icon, component, or boundary overlay.
-- Post-generation operations are limited to non-semantic crop, resize, compression, color-profile conversion, or format wrapping.
-- Labels are short and readable.
-- No title appears inside the generated image.
-- Caption explains semantics that are not obvious.
+- Renderer and format suit the topology, editing needs, and available tools.
+- Components, mathematical symbols, labels, and flow match the manuscript.
+- Trust boundaries and transformations are clear.
+- Any structural reference agrees with the final figure or records intentional changes.
+- Fonts, contrast, spacing, and labels remain readable at the actual paper width.
+- Presentation choices follow `FIG.CONCEPT_PRESENTATION` as soft guidance and explicit venue requirements when present.
+- Source and transformations are recorded; a prompt alone does not prove fidelity.
+- Caption explains scope and non-obvious visual semantics.
 
 ## Stop Conditions
 
-Stop and ask or emit a spec instead of final artifact when:
-
-- required source data is absent for a precise data figure
-- multiple incompatible artifact interpretations exist
-- the user asks for exact values but only prose is available
-- the artifact would require inventing methods, baselines, citations, components, or results
-- a generated conceptual figure has wrong or unreadable labels, formulae, font roles, or topology after reasonable model regeneration attempts
-- Times New Roman or the required mathematical font is unavailable or cannot be verified and no user/venue waiver exists
-- the generative image model repeatedly corrupts the `structure.svg` topology or labels; post-generation semantic repair is not an allowed fallback
+Leave the affected artifact incomplete and state the missing input when
+required source data are unavailable, interpretations cannot be resolved from
+the manuscript, or producing the artifact would require invented results or
+components. After reasonable correction attempts, report unreadable or
+incorrect labels, formulas, or topology that remain unresolved. A different
+font, background, marker scheme, or renderer is not itself a reason to stop.

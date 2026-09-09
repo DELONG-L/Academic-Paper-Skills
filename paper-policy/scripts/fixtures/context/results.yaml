@@ -4,7 +4,7 @@ submission_stage: draft
 language: en
 task_scope: section
 task_mode: writing
-policy_sets: [strict-house-style]
+policy_sets: [integrity-core, academic-defaults]
 evaluation_structure: rq_driven
 experiment_type: stochastic
 scopes: [writing, tables]

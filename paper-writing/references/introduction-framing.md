@@ -17,7 +17,7 @@ Rebuild the Introduction as:
 
 ## Gap Standard
 
-The gap must be concrete. State what existing work can explain or support, then state what it cannot interpret, measure, enforce, or compare.
+Make the research need concrete. A supported gap may concern a missing comparison, unresolved assumption, replication need or opportunity for synthesis. Describe prior-work limitations only when relevant and evidenced; a deficit narrative is not required for every contribution.
 
 Weak:
 

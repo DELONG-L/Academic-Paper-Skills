@@ -1,126 +1,91 @@
 ---
 name: paper-writing
-description: Policy-aware academic paper prose writing and rewriting with public academic defaults and an optional strict house-style policy set. Use for drafting or revising abstracts, introductions, RQ framing, related work, background, method prose, system-model prose, results narrative, discussion, limitations, conclusions, contribution lists, claim calibration, citation-integrated prose, venue-aware section structure, and academic prose cleanup. Do not use for final figure/table rendering, data plotting, self-review, reviewer response, or rebuttal drafting.
+description: Draft and revise evidence-grounded academic manuscripts with adaptable author preferences. Use for section writing, implementing structural edits, claim calibration, citation-integrated prose, prose cleanup, standalone review excerpts, and LaTeX template migration. Use paper-review for critique or author responses, and paper-figures-tables for final visual artifacts.
 ---
 
 # Paper Writing
 
-Use this as the single entrypoint for academic paper prose. It combines claim calibration, public academic defaults, optional house-style rules, introduction/RQ framing, citation discipline, and academic prose cleanup.
+Produce the requested manuscript text or revision. Begin at the task's actual
+scope: a supplied paragraph needs a local edit; a full paper needs a coherent
+argument grounded in its available evidence. Use the shared `integrity-core`
+and `academic-defaults`; author preferences remain adaptable.
 
-## Priority Model
+## Select the Work
 
-Always load `references/priority-model.md` first. For any prose-writing task, also load `references/style-profile.md`.
+| Request | Start with | Return | Load when needed |
+|---|---|---|---|
+| Rewrite, shorten, translate, or polish supplied prose | The passage and requested change | Revised text; explain only material changes or unresolved facts | `references/academic-prose.md`; `references/prose-pattern-audit.md` for explicit formulaic-prose cleanup |
+| Reduce over-defensive writing or self-undermining | The passage and available claim context | Direct, scoped prose retaining necessary qualifications | `references/over-defensive-writing.md` |
+| Draft a section or contribution list | Section purpose, supplied findings/notes, surrounding claims | A usable section with evidence-bounded claims and explicit factual gaps | `references/section-drafting.md`; `references/introduction-framing.md` for gap/RQs |
+| Organize an outline or revise several sections | Research question, evidence, existing manuscript if any | Argument outline or revised sections, according to the request | `references/writing-workflow.md`, `references/section-architecture.md` |
+| Review or implement paragraph placement and cross-section structure | Draft, available evidence, requested scope or review plan | Located structural findings or completed edits, as requested | `../paper-review/references/argument-structure.md`; continue through `paper-review` for audit |
+| Turn repository results into manuscript text | Relevant results, configurations, analysis records and outline | Evidence-supported Results and requested artifacts | `references/evidence-to-results.md` |
+| Draft or revise a full paper | Available sources and intended contribution | Supported manuscript draft; track unresolved evidence and cross-section changes | `references/writing-workflow.md`, applicable section references |
+| Write Related Work or repair citations | Allowed source corpus and comparison purpose | Source-supported synthesis or scoped citation repair | `references/related-work.md`, `references/citation-integration.md` |
+| Prepare final manuscript prose | Current manuscript and verified submission requirements | Revised source plus relevant validation results and remaining blockers | `references/policy-integration.md`, `references/venue-adaptation.md` |
+| Compile a standalone section for coauthor review | Main source, selected section, desired preview or portable package | Working excerpt PDF and necessary sources | `references/review-excerpts.md` |
+| Prepare a template, migrate venues or package sources | Source manuscript/template and target requirements | Migrated source, compiled output and build notes | `references/template-migration.md` |
+| Learn writing techniques from reference papers | Supplied papers and learning focus | Source-located decisions and applicable examples | `references/learning-from-papers.md` |
+| Need a finished figure or table as part of writing | Claim and supplied data/content | Completed artifact through its owning skill, plus prose integration | `references/artifact-handoffs.md`, then `paper-figures-tables` |
 
-Authority order:
+Read `references/style-profile.md` when composing prose. Read
+`references/priority-model.md` when sources or requirements conflict. The workflow
+reference describes evidence handoffs and completion criteria for substantial
+writing; it is not a checklist to load for every sentence edit.
 
-1. Core integrity constraints from the sibling `paper-policy` skill.
-2. User-provided facts, approved evidence, author intent, and task constraints.
-3. Verified venue or template requirements.
-4. Hard rules from all activated policy sets, including optional house rules only after explicit opt-in.
-5. `references/style-profile.md` and enabled soft guidance.
-6. Task-specific references and then generic advice.
+## Evidence and Scope
 
-When sources conflict, prefer the higher item. Do not treat disabled house rules as public academic requirements.
+- Preserve numbers, technical meaning, claim strength, causal status, terminology,
+  citation attachment, and material limitations. Never invent results or support.
+- Ground contributions in new knowledge or concrete artifacts; measurements,
+  replications, negative results, and systematic syntheses can be contributions.
+- Apply the existing source boundary: local polish uses existing evidence;
+  an explicit closed corpus stays closed; literature completion or verification
+  permits scoped public primary-source lookup and supported bibliography edits.
+  Use `references/citation-integration.md` for that work.
+- Keep missing facts explicit and continue the supported parts. Ask only when a
+  missing decision controls the requested work; do not invent an author position.
+- Preserve LaTeX commands, labels, citations, math, and macros unless their change
+  is within scope. Keep internal paths and validation logs outside paper prose.
+- Improve clarity without detector scores, invented human signals, or claims
+  about authorship inferred from style. Check semantic drift after cleanup.
+- For characterized systematic bias, preserve its supported direction or explicit
+  indeterminacy. Keep distinct evidence roles from silently supporting stronger
+  claims. Read the method/results guidance when those issues apply.
 
-## Policy Consumption
+## Policy and Validation
 
-Load `references/policy-integration.md` for full-paper, multi-section, outline,
-polish, venue-aware, submission-stage, citation-aware, or conditionally governed
-section work. Resolve the sibling `paper-policy` rules before drafting.
+Use `references/policy-integration.md` to choose the validation depth. Ordinary
+writing applies the relevant constraints without requiring a context file,
+registry run, or readiness assessment. Resolve machine-readable policy for an
+explicit policy task, a complex rule conflict, or formal submission validation.
+An existing policy context can be reused after checking that it describes the
+current task; its existence alone does not require a full audit.
 
-Consume policy read-only. Apply active hard rules before adapting active soft
-rules. Resolver warnings are unresolved context, not compliance. Do not infer
-permission to apply semantic fixes, mutate unrelated manuscript files, or edit
-`.bib` files.
+Check the changed claims, values, citations, and local context before delivery.
+Compile modified LaTeX when a buildable project is available and inspect the
+render where the edit can affect layout. A text-only edit cannot establish PDF
+readiness. A formal submission-ready claim requires `paper-policy` evidence
+assessment, including its source-snapshot and manual-check boundaries.
 
-A short isolated rewrite may use transient context and must not create a
-persistent policy file solely to satisfy workflow machinery.
+## Authorized Work and Workspace
 
-## Task Routing
+A writing request authorizes its necessary reversible local edits. Internal
+handoffs continue in the same task; a spec is the endpoint only when the user
+asked for a spec. Audit-only requests remain read-only. Use
+`../paper-policy/references/authority-model.md` for authorization conflicts.
 
-Load only the references needed for the current writing task:
+Before persistent manuscript edits, check for `PROJECT-WORKSPACE.md` at the
+selected research-project root. Inside an independent paper Git repository,
+resolve `.research-workspace.yml` without searching beyond its Git boundary.
+If a valid contract resolves, use its declared paper repository and keep
+experiment records and data in their designated locations. Otherwise use the
+normal writing workflow; a prose task does not require workspace initialization.
 
-| Task | Load |
-|---|---|
-| Full paper, multi-section, venue-aware, polish, or submission-stage work | `policy-integration.md`, then applicable section references |
-| Outline or top-level section structure | `policy-integration.md`, `section-architecture.md`, optionally `venue-adaptation.md` |
-| Abstract or general section draft | `section-drafting.md`, `academic-prose.md`; add `policy-integration.md` when context is persistent or conditional |
-| Introduction, gap, or RQs | `policy-integration.md`, `introduction-framing.md`, contribution guidance in `section-drafting.md` |
-| Related Work or Background and Related Work | `policy-integration.md`, `related-work.md`, `citation-integration.md` |
-| Method, System Model, Approach, or technical prose | `policy-integration.md`, `section-drafting.md`, `citation-integration.md` if claims cite prior work |
-| Results narrative without making plots/tables | `policy-integration.md`, `section-drafting.md`, `artifact-handoffs.md` |
-| Discussion, limitations, conclusion | `policy-integration.md`, `section-drafting.md`, `academic-prose.md` |
-| Contribution list or claim calibration | `policy-integration.md`, `section-drafting.md`, `style-profile.md` |
-| Prose polish, AI-pattern cleanup, or "make this sound less AI" | `academic-prose.md`, `style-profile.md` |
-| Citation-aware writing | `citation-integration.md` |
-| Need a figure or table artifact | `artifact-handoffs.md`; hand off artifact production to Figures & Tables |
+## Delivery
 
-If a task spans multiple sections, load `section-architecture.md` first, then the section-specific reference files.
-
-## Integrity And Hard Boundaries
-
-- When `STRUCT.TRADITIONAL_HEADINGS` is active, keep top-level section names traditional and concise. Otherwise treat that pattern as optional structure guidance.
-- When `RELATED.COMPARISON_REQUIRED` is active, include a Related Work comparison-table plan unless an authorized waiver or venue requirement applies. Otherwise propose a table only when it improves the argument.
-- Do not produce final figure/table layout in this skill. Writing may produce an artifact plan, caption draft, or table spec, then hand off to Figures & Tables.
-- Use only citation and evidence sources declared by the user or project; local `.bib` files and user notes are the default. Do not invent citations, BibTeX entries, venues, years, or paper claims. If support is missing, request a manual update or an explicitly authorized citation audit. Use `citation-integration.md`.
-- During Anti-AI cleanup, preserve claim strength, causal status, evidence scope, limitations, technical terms, citations, values, and the author's evidence-bound position.
-- Do not use detector, perplexity, authenticity, or human-likeness scores to judge compliance, readiness, or authorship, and do not rewrite prose to evade such detectors.
-- Do not write meta-text such as "this draft", "this manuscript aims to", or "in xxx-style" in the paper body unless the source paper itself uses that phrase for a substantive reason.
-- Keep internal provenance out of the paper body unless the paper is explicitly about audit methods. Internal paths, script names, renderer names, DPI checks, placeholder-citation status, and artifact-bundle notes belong in README, artifact specs, review files, appendices, or comments.
-
-## Soft Academic And House Defaults
-
-- Prefer scoped claims, explicit boundaries, evidence-forward paragraphs, and contribution bullets that name artifacts rather than activities.
-- Diagnose formulaic AI-associated prose patterns as concrete style issues; do not infer authorship from them or treat every pattern as forbidden.
-- Use ordinary roman text by default. Use `\textbf{}` sparingly for named paragraph cues such as RQs or stage names. Avoid frequent `\textit{}` and `\texttt{}` in prose unless the text is a mathematical variable, code literal, file path in an audit appendix, or venue-required notation.
-- Adapt paragraph rhythm, list density, RQ-answer presentation, and table/figure references to the manuscript state and venue pressure while preserving all active hard boundaries.
-
-## Output Contracts
-
-For drafting or rewriting prose:
-
-1. Prefer concrete rewritten text over advice.
-2. Preserve LaTeX commands, labels, citations, math, and macros unless the user asks to refactor them.
-3. State any missing factual input as a bracketed placeholder, not as invented content.
-4. Keep claims scoped to the available evidence.
-5. For Anti-AI cleanup, distinguish hard integrity boundaries from soft pattern diagnostics and compare the source and revision for semantic drift.
-
-For Related Work:
-
-1. Return prose organized by intellectual axes, not paper-by-paper summaries.
-2. Include or specify a comparison table with row groups, 3--4 high-signal dimensions by default, marker semantics only if needed, compact caption draft, placement preference, and the sentence that references it.
-3. If the final LaTeX table is outside scope, emit a handoff spec for Figures & Tables.
-
-For Results narrative:
-
-1. Interpret supplied values only within the stated experiment scope.
-2. Mention the table or figure that should carry exact values.
-3. If an artifact is missing, provide a handoff spec instead of pretending the evidence exists.
-4. When `RESULTS.RQ_EXPLICIT_ANSWER` is active, close each load-bearing RQ block with exactly one direct, evidence-traceable, bounded answer.
-5. When `RESULTS.RQ_ANSWER_BOX` is enabled, treat the `Answer to RQn` box as an adaptable presentation; otherwise use the manuscript's existing RQ closure style.
-
-For method and evidence architecture:
-
-1. When evidence sources have different roles, declare which claims each source may and may not support before interpreting results.
-2. Prefer a compact evidence-role ledger, but keep role boundaries mandatory even when the ledger is adapted to prose or moved partly to an appendix.
-3. When a systematic measurement or extraction error is characterized, state its evidence-supported direction and affected claims; say `directionally indeterminate` when the direction cannot be justified.
-
-For threats and limitations:
-
-1. Map each load-bearing threat to the affected claim or RQ, the mitigation or explicit absence of one, and the residual boundary.
-2. Choose a taxonomy appropriate to the paper type rather than forcing one universal validity taxonomy.
-3. When `STRUCT.CONCLUSION_INTEGRATES_LIMITATIONS` is active, preserve the key limitation inside the Conclusion even when fuller threat analysis appears elsewhere; enforce a single paragraph only when `STRUCT.CONCLUSION_SINGLE_PARAGRAPH` is also active.
-
-## Reference Map
-
-- `references/priority-model.md`: source priority and conflict resolution.
-- `references/policy-integration.md`: read-only consumption of context-resolved hard and soft rules.
-- `references/style-profile.md`: claim-calibrated public defaults and opt-in house variants.
-- `references/section-architecture.md`: adaptive paper structure and optional traditional-heading profile.
-- `references/section-drafting.md`: section-level drafting patterns and claim calibration.
-- `references/introduction-framing.md`: gap and RQ-driven introduction flow.
-- `references/related-work.md`: related work organization and conditional comparison-table planning.
-- `references/academic-prose.md`: academic anti-AI cleanup and prose guardrails.
-- `references/citation-integration.md`: manual-BibTeX citation integration and local citation hygiene.
-- `references/venue-adaptation.md`: venue and checklist adaptation.
-- `references/artifact-handoffs.md`: handoff specs for Figures & Tables.
+Return the requested prose or files, relevant verification, and material gaps.
+For revisions, identify substantive claim or structure changes; for audit-only
+requests, provide exact suggested replacements without applying them. Keep
+ordinary preference choices out of a per-rule compliance report. Reuse existing
+notes when continuity matters; do not manufacture empty workflow documents.

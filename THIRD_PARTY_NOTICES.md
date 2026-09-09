@@ -1,14 +1,21 @@
 # Third-Party Notices
 
-## Design Inspiration Not Incorporated
+## OniReimu/claude-scholar — workflow inspiration
 
-The policy architecture was informed by a comparative review of the public
-behavior and documentation of
-[`OniReimu/claude-scholar`](https://github.com/OniReimu/claude-scholar).
-That repository did not expose a recognized open-source license when reviewed
-on 2026-07-11. This project therefore does not copy, adapt, vendor, or
-redistribute its code or documentation; the rules and implementation here are
-independently authored.
+The academic workflow was informed by a comparative review of
+[`OniReimu/claude-scholar`](https://github.com/OniReimu/claude-scholar), including
+argument architecture, paragraph review, citation verification, results analysis,
+author responses, revision closure, prose diagnostics, review excerpts and
+LaTeX template migration. Relevant references link to their source workflows.
+The guidance and policy implementation here are independently written; upstream
+code, rule cards and documentation are not vendored or reproduced verbatim.
+
+The reviewed writing-workflow snapshot is
+`d5eb9fc2e46128fccaf0a198519035c752f358b7`. A follow-up comparison with
+`fcfdc1fbdef57471a87b42da5d54cb78e569135e` on 2026-09-09 found no changes to the
+paper-writing workflows used here. No root license file was present in that
+snapshot. This notice attributes workflow ideas and does not assign a license
+to the upstream repository.
 
 Some optional table and evidence-architecture preferences were informed by
 reading reference research papers. No paper text, data, result values, figures,

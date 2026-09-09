@@ -17,6 +17,10 @@ Always include a one-line required action for `critical` and `major` findings.
 
 Check whether claims follow from premises and evidence.
 
+For paragraph decisions or cross-section reorganization, use
+`argument-structure.md` before line editing. Identify missing inferential links
+as well as repeated information; a checklist of section presence is insufficient.
+
 Flag:
 - Causal claims without causal evidence.
 - Universal claims that exceed the evaluated scope.
@@ -46,7 +50,7 @@ Flag:
 - Mitigations named without evidence that they address the stated threat.
 - Mitigations presented as eliminating risk when a residual boundary remains.
 - A fixed validity taxonomy that hides domain-specific failure modes.
-- If the strict Conclusion rules are active, a missing Conclusion limitation or a Conclusion that violates the configured paragraph shape.
+- Missing substantive limitations or unsupported conclusion claims remain evidence problems. Treat paragraph count and limitation placement as soft structural preferences unless an explicit project or sourced venue requirement applies.
 
 ### Contribution and Positioning
 
@@ -58,16 +62,17 @@ Flag:
 - Contributions that restate implementation details rather than scientific advances.
 - Scope too narrow for the stated claim.
 
-Conditional house rule:
-- When `RELATED.COMPARISON_REQUIRED` is active, Related Work must include the axis-based comparison table unless an authorized waiver or venue requirement applies.
+Personal comparison preference:
+- `RELATED.COMPARISON_REQUIRED` favors an axis-based table when useful; sufficient axis-based prose is a valid soft adaptation and does not block readiness.
 
 ### Writing and Structure
 
-Check whether the manuscript reads like a traditional academic paper.
+Check whether readers can follow the manuscript accurately and efficiently.
 
 Flag:
-- Top-level section names that cause a concrete clarity problem; enforce traditional names as a rule only when `STRUCT.TRADITIONAL_HEADINGS` is active.
-- Paragraphs without a clear topic sentence.
+- Top-level section names that cause a concrete clarity problem or violate a sourced venue requirement; traditional names remain a soft preference.
+- Paragraphs whose function or relation to the argument is unclear; a fixed
+  first-sentence formula is not required.
 - Overclaims, promotional adjectives, filler, repeated formulaic structures, or other concrete prose defects.
 - Excessive lists, bolding, or rhetorical self-answering.
 - Excessive `\textit{}`, `\texttt{}`, small caps, underlining, or other special typography in normal prose.
@@ -80,6 +85,10 @@ passage AI-generated or infer authorship from style alone.
 
 For rewriting, hand off to `paper-writing`.
 
+For substantial review, finish with `revision-closure.md`. Optional style findings
+do not automatically trigger another full rewrite, and partial source coverage
+does not justify a whole-manuscript judgment.
+
 ### Citations and Attribution
 
 Use only citation and evidence sources declared by the user or project; local
@@ -91,7 +100,7 @@ Flag:
 - Claims that need a citation but have no local support.
 - Self-citation or code-link anonymity leaks in double-blind mode.
 
-Do not search or verify references by default. Use the manual BibTeX update prompt from `citation-and-evidence-policy.md`.
+Use the source modes in `citation-and-evidence-policy.md`. Ordinary manuscript review stays local; a requested literature or citation check permits scoped public primary-source verification. Request manual input only when necessary support cannot be obtained within scope.
 
 ### Math and Notation
 
@@ -100,7 +109,7 @@ Flag:
 - Same symbol used for multiple meanings.
 - Different symbols used for the same quantity.
 - Display equations not integrated into prose.
-- Equations numbered but never referenced, or referenced equations unnumbered.
+- Broken equation references or ambiguous numbering; an unreferenced numbered equation is not itself a scientific or formatting defect.
 
 ### Double-blind and Submission Compliance
 
@@ -116,36 +125,33 @@ Diagnose only; route creation/revision to `paper-figures-tables`.
 
 Flag:
 - Figure/table not referenced or interpreted.
-- In-figure title text when `FIG.NO_IN_FIGURE_TITLE` is active or when it duplicates the caption.
-- Captions that lack what/how/takeaway.
-- Captions that read like internal audit logs or include renderer names, local data paths, plotting scripts, DPI checks, or internal-validation notes without a venue reason.
+- In-figure titles that duplicate the caption without helping navigation.
+- Captions that omit information needed to interpret the artifact; a separate takeaway is unnecessary when the observation is clear or interpreted in the body.
+- Captions containing irrelevant workflow bookkeeping. Retain scientifically necessary implementation identifiers, renderer details and synthetic-data disclosures; their presence alone is not a defect.
 - Precise data figures not traceable to source data.
-- Tables lacking `booktabs` when `TABLE.BOOKTABS_FINAL` is active.
-- Tables that fail target-width readability; enforce the house `resizebox` pattern only when its rule is enabled.
-- Related Work tables that are wider or denser than their argument requires; enforce house placement budgets only when enabled.
+- Tables whose final rendering clips content or makes labels, values, or units unreadable.
+- Related Work tables that are wider or denser than their argument requires.
 - Related Work family rows whose full-support marker is not defensible for every named member; mixed support should be partial.
 - Cells labeled or shaded as unique without a defined comparison corpus, row-wise evidence, or corpus-bounded wording.
 - Meaning-bearing color highlights with no non-color cue or grayscale interpretation.
-- Up/down arrows in table headers when `TABLE.NO_DIRECTION_ARROWS` is enabled.
+- Unclear optimization-direction markers; arrows are acceptable when their meaning is defined.
 - Unnecessary Notes blocks, long marker explanations, or captions that carry too much table metadata.
-- Conceptual figures that violate `FIG.CONCEPT_HOUSE_STYLE` when that optional rule is active.
-- Generated conceptual figures whose non-mathematical text is not Times New Roman, whose mathematics does not use a dedicated math font, or whose font roles cannot be verified when `FIG.CONCEPT_TYPOGRAPHY` is active.
-- Generated conceptual figures containing post-generation text, formula, arrow, icon, component, or boundary overlays, redraws, composites, or replacements when `FIG.CONCEPT_MODEL_NATIVE_OUTPUT` is active.
+- Conceptual figures with inconsistent terminology, ambiguous arrows, or unreadable labels.
 
 ### Reproducibility
 
 Flag:
-- Missing dataset split, preprocessing, hyperparameters, hardware, random seeds, code release plan, or compute resources.
+- Missing methodological details needed to reproduce or assess the stated claim. Check relevant data handling, parameters and computation; a public code-release commitment is not universal.
 - Missing failure cases or limitations for a claim that reviewers can test.
 
 ## Output Template
 
 ```markdown
 ## Review Summary
-<2-4 sentences on overall readiness.>
+<Concise assessment of the inspected scope; formal readiness only when assessed.>
 
 ## Policy Compliance
-- Readiness: <READY | BLOCKED | NOT_EVALUATED>
+- Readiness: <READY | BLOCKED | NOT_EVALUATED> (omit for a local critique; only an actual compliance assessment can establish READY)
 - Hard results: <PASS n | FAIL n | UNVERIFIED n | NOT_APPLICABLE n | WAIVED n>
 - Context blockers: <none or list>
 
@@ -163,7 +169,7 @@ Flag:
 ## Handoffs
 - paper-writing: <prose/structure changes>
 - paper-figures-tables: <artifact changes>
-- Manual BibTeX update needed: <if any>
+- Unresolved citation support and required input: <if any>
 
 ## Fix Priority
 1. <highest impact and feasible>

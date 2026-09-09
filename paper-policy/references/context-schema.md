@@ -2,9 +2,12 @@
 
 ## Context File
 
-Use a persistent `paper_context.yaml` for full-paper, multi-section, polish,
-submission, rebuttal, or camera-ready work. A short rewrite may use the same
-mapping transiently without creating a file.
+Use `paper_context.yaml` when running a reproducible policy audit or formal
+submission-readiness assessment. Ordinary prose work can apply relevant
+constraints from its supplied context without a YAML file. For substantial or
+resumed work, persist context when it helps continuity; task size alone does not
+make workflow files an acceptance criterion. CLI resolution still requires the
+validated mapping described below.
 
 ```yaml
 version: 1
@@ -22,7 +25,6 @@ task_scope: multi_section
 task_mode: writing
 policy_sets: [integrity-core, academic-defaults]
 artifact_mode: [final_figure, final_table]
-structure_profile: standard_conference
 evaluation_structure: rq_driven
 experiment_type: stochastic
 measurement_bias_status: known_systematic
@@ -54,13 +56,10 @@ Unknown fields and unknown controlled values are rejected to catch
 misspellings. Optional scalar fields may be omitted. `scopes` and `artifacts`
 are required non-empty lists because they control applicability.
 `approved_citation_sources` and `modes` are optional lists of non-empty strings.
-`policy_sets` is optional. When omitted, the resolver inserts the public default
-`[integrity-core, academic-defaults]`. Use `[strict-house-style]` to opt in; its
-declared dependencies automatically restore both public sets. Unknown set names
-fail resolution instead of silently suppressing rules.
-`artifact_mode` accepts either one controlled value or a non-empty list. Use a
-list when one run governs multiple final artifact families, for example
-`[final_figure, final_table]`; matching profiles compose by set intersection.
+`policy_sets` defaults to `[integrity-core, academic-defaults]` for all
+installations. Author style preferences remain soft within those shared sets.
+Describe explicit project and venue constraints with their source in the task
+context; there is no universal conference section-count profile.
 `table_profile` is optional. Set it to `layered_capability_matrix` only for a
 load-bearing comparison table whose dimensions form explicit semantic layers.
 The profile prefers the relevant soft table guidance; it does not promote that

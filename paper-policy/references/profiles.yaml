@@ -18,8 +18,7 @@ profiles:
       field: artifact_mode
       any_of: [final_table]
     activate_hard:
-      - TABLE.BOOKTABS_FINAL
-      - TABLE.FINAL_TARGET_WIDTH
+      - TABLE.FINAL_READABLE
     prefer_soft:
       - TABLE.SINGLE_COLUMN_FIRST
       - TABLE.TARGET_WIDTH
@@ -43,9 +42,9 @@ profiles:
     match:
       field: task_mode
       any_of: [related_work_full, background_and_related_work_full]
-    activate_hard:
-      - RELATED.COMPARISON_REQUIRED
+    activate_hard: []
     prefer_soft:
+      - RELATED.COMPARISON_REQUIRED
       - RELATED.AXIS_ORGANIZATION
       - RELATED.DIMENSION_BUDGET
       - TABLE.SINGLE_COLUMN_FIRST
@@ -87,8 +86,8 @@ profiles:
       any_of: [sok]
     activate_hard:
       - SOK.REQUIRED_CONTENT
-      - RELATED.COMPARISON_REQUIRED
     prefer_soft:
+      - RELATED.COMPARISON_REQUIRED
       - STRUCT.SECTION_COUNT
       - INTRO.RQ_FRAMING
       - RELATED.AXIS_ORGANIZATION
@@ -159,22 +158,11 @@ profiles:
       - REVIEW.SUBSTANCE_VS_MISREAD
     source: {kind: imported-design, url: null, as_of: null}
 
-  - id: standard-conference-structure
-    match:
-      field: structure_profile
-      any_of: [standard_conference]
-    activate_hard:
-      - STRUCT.SECTION_COUNT_PROFILE
-    prefer_soft:
-      - STRUCT.SECTION_COUNT
-    source: {kind: user, url: null, as_of: null}
-
   - id: rq-driven-evaluation
     match:
       field: evaluation_structure
       any_of: [rq_driven]
-    activate_hard:
-      - RESULTS.RQ_EXPLICIT_ANSWER
+    activate_hard: []
     prefer_soft:
       - INTRO.RQ_FRAMING
       - INTRO.RQ_RESPONSE_MAP
@@ -187,9 +175,9 @@ profiles:
     match:
       field: task_scope
       any_of: [full_paper, multi_section, polish, submission, rebuttal]
-    activate_hard:
-      - WORKFLOW.COMPLEX_TASK_STATE
+    activate_hard: []
     prefer_soft:
+      - WORKFLOW.COMPLEX_TASK_STATE
       - PROFILE.COMPOSITION
       - STRUCT.SECTION_COUNT
       - STRUCT.ARGUMENTATIVE_SPINE

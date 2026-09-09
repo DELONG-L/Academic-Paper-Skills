@@ -1,6 +1,6 @@
 # Figure Contract
 
-Create `figure_spec.yaml` before drawing any nontrivial paper figure. Keep it short enough to review.
+For a complex figure, capture the scientific purpose, sources, encodings and target placement in existing notes or a short spec. `figure_spec.yaml` below is optional; a simple supplied plot need not create an extra workflow file.
 
 ```yaml
 figure:
@@ -52,51 +52,30 @@ validation:
 
 ## Required Decisions
 
-- **Claim:** one sentence, falsifiable from the figure.
+- **Purpose:** the comparison, definition, evidence pattern or mechanism the figure lets the reader inspect.
 - **Source data:** exact local paths or generated `source_data.csv`.
 - **Panel map:** panel IDs, plot type, metric, method/condition order, and message.
 - **Structural reference:** for Figure 1, system overview, pipeline, architecture, and threat-model figures, path to `structure.svg` or a reason it is unnecessary.
-- **Conceptual-figure typography:** when `FIG.CONCEPT_TYPOGRAPHY` is active, identify every text role as non-mathematical or mathematical; require the model output itself to use Times New Roman for the former and a dedicated manuscript- or venue-compatible math font for the latter.
-- **Model-native output:** for `generated_conceptual_figure`, preserve the accepted model output as the complete semantic artifact. Record the original generated file and only non-semantic packaging transformations.
-- **Boundary:** what the figure does not prove.
+- **Typography:** identify text and mathematical roles; verify readable, accurate, manuscript-compatible rendering.
+- **Production record:** preserve source files and record transformations; follow the selected tools' constraints.
+- **Conditions:** assumptions or settings needed to interpret the figure; do not manufacture a list of unclaimed capabilities.
 - **Caption boundary:** what belongs in the paper caption versus artifact audit notes.
 - **Source scale:** use 3x by default so 24pt source text maps to approximately
   8pt at final placement; record any smaller-source or venue-specific adaptation.
-- **Final-width evidence:** name the rendered preview and human evaluator in the
-  shared compliance evidence.
+- **Final-width evidence:** record the preview and actual evaluator; agent inspection must not be labeled human evidence. Formal manual checks remain governed by the compliance schema.
 
 ## Conceptual Figure Structure Policy
 
-For overview-like conceptual figures, use `structure.svg` as the editable structural contract before generation with a generative image model. It should encode:
+For topology-sensitive conceptual figures, record the manuscript-supported
+components, connections, boundaries, and labels before rendering. A structure.svg
+wireframe is useful as a reference for image generation; a code-native diagram
+may already serve as the editable structure and final source.
 
-- the 3 to 8 manuscript-supported components
-- input/output blocks
-- directed arrows and arrow labels where needed
-- trust, phase, or module boundaries
-- short visible labels that match the paper text
-
-Record the conceptual-figure font contract in its spec:
-
-```yaml
-typography:
-  non_math_font: Times New Roman
-  math_font: manuscript_or_venue_math_font
-  math_rendering: model_native_only
-generation:
-  artifact_type: generated_conceptual_figure
-  semantic_content_source: model_output_only
-  allowed_postprocess: [crop, resize, compression, color_profile, format_wrap]
-```
-
-Use the final generated output for visual polish, not for inventing or changing structure. If the generative image model cannot preserve the SVG's topology, labels, or formulae, regenerate with a stricter prompt or stop. Do not apply a deterministic label/formula overlay or redraw the generated figure in SVG/TikZ.
-
-Do not infer font compliance from prompt wording alone. Under
-`FIG.CONCEPT_TYPOGRAPHY`, inspect the accepted model output for Times New Roman
-non-mathematical text and manuscript- or venue-compatible mathematical
-typography. If either role is wrong or cannot be verified, regenerate or leave
-the rule `UNVERIFIED`; post-generation text or formula repair is forbidden.
-
-For Figure 1 and overview-like conceptual figures, the final paper image should have a pure white background. Avoid background gradients, gray washes, paper textures, vignettes, and atmospheric effects. Use color only for components, arrows, boundaries, and semantic highlights.
+Record the selected renderer, source artifact, typography choices, and any
+explicit venue requirements. Inspect the final figure for topology, labels,
+mathematical accuracy, contrast, and readability. Correct discrepancies using
+the selected tools and keep the transformation record. A clean white background
+is a presentation default, not a hard requirement.
 
 ## Source Data Policy
 
@@ -107,9 +86,4 @@ For Figure 1 and overview-like conceptual figures, the final paper image should 
 
 ## Caption Policy
 
-Write captions as paper claims, not descriptions of visual marks. Include:
-
-- The comparison setup.
-- The metric or constraint that makes the comparison fair.
-- The main result.
-- The boundary if readers could overgeneralize.
+Use `captions.md` for the artifact type. Explain the setup, encodings and conditions needed to read the figure. Include a result or interpretation when helpful; do not require a takeaway or anticipatory disclaimer in every caption.

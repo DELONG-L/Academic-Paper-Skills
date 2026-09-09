@@ -53,8 +53,11 @@ Pattern:
 Use when new empirical evidence is central and feasible.
 
 Rules:
-- Only cite completed results if the user provided them.
-- If the user has not provided results, mark `[TBD: user-provided result]` or ask the user to run/add the experiment.
+- Cite completed results only after inspecting supplied or already accessible
+  evidence within the task's scope.
+- If evidence is missing, identify the required result and draft supported parts.
+  A proposed experiment needs the applicable authorization before execution or a
+  commitment in the response; do not automatically ask the user to run it.
 - Do not invent expected gains, p-values, runtime, or table entries.
 
 ### Narrow Concession
@@ -76,11 +79,9 @@ Rules:
 - If useful, add it to limitations or future work.
 - Do not use "out of scope" as a way to dodge a central claim.
 
-### Manual BibTeX Needed
+### Citation Support Needed
 
-Use when a cited comparison or missing prior work is needed but not present locally.
-
-Follow `citation-and-evidence-policy.md`.
+Follow `citation-and-evidence-policy.md`: resolve public sources when literature completion or citation verification is in scope, and use a manual-source request only for an inaccessible source or a closed corpus. Keep unsupported promises out of the rebuttal.
 
 ## Feasibility Filter
 
@@ -91,7 +92,7 @@ Do not promise:
 - Major architectural redesign.
 - New theorem or proof not already derived or user-approved.
 - New numerical claims without results.
-- New citations not in the local `.bib` unless the user will manually add BibTeX.
+- New citation claims before source identity and relevant support are verified. Add verified BibTeX within an authorized citation-completion task; unresolved sources remain explicit gaps.
 
 Feasible actions often include:
 
@@ -100,7 +101,8 @@ Feasible actions often include:
 - Adding a small ablation the user confirms is possible.
 - Reframing claims and limitations.
 - Moving clarification from appendix to main text.
-- Adding a related-work comparison row after the user supplies BibTeX.
+- Adding a related-work comparison row from verified sources within the
+  authorized citation workflow.
 
 ## Strategy Plan Template
 
@@ -118,7 +120,7 @@ Feasible actions often include:
 - <issue_id>: mode=<mode>; evidence=<source>; action=<action>; blocker=<none|user input needed>.
 
 ### Evidence Gaps
-- <issue_id>: <needed evidence>; status=<ask user|manual BibTeX|experiment result>.
+- <issue_id>: <needed evidence>; status=<source verification|needs user input|experiment result>.
 
 ### Compression Plan
 - Must keep: <items>
