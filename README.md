@@ -2,121 +2,128 @@
 
 English | [简体中文](README.zh-CN.md)
 
-Academic Paper Skills is a compact Codex skill bundle for academic paper workflows. It contains four sibling skills that must stay version-aligned:
+Four coordinated Codex skills for evidence-grounded academic writing:
 
-- `paper-policy`: shared hard/soft rule resolution, deterministic lint, evidence-backed assessment, and readiness reporting.
-- `paper-writing`: prose drafting and revision for abstracts, introductions, RQ framing, related work, methods, results narratives, discussions, limitations, conclusions, claim calibration, citation-aware writing, and academic prose cleanup.
-- `paper-figures-tables`: publication-ready LaTeX tables, related-work comparison tables, result tables, source-data-driven plots, conceptual figures, captions, artifact specs, and visual QA.
-- `paper-review`: pre-submission audit, reviewer simulation, red-team review, rebuttal planning, rebuttal drafting, revision verification, and submission-readiness checks.
+| Skill | Responsibility |
+|---|---|
+| `paper-writing` | Draft and revise prose, integrate verified citations, calibrate claims, remove formulaic or over-defensive writing, prepare review excerpts, and migrate LaTeX templates. |
+| `paper-review` | Review the author's argument and paragraph structure, simulate reviewer concerns, draft author responses, and verify revision closure. |
+| `paper-figures-tables` | Produce grounded tables, reproducible numeric plots and faithful conceptual figures; inspect final-size output. |
+| `paper-policy` | Resolve applicable rules and assess formal compliance using actual evidence. |
 
-The bundle is intentionally narrow. It does not include literature search, reference verification, experiment execution, or project-management workflows.
+Formal assigned peer review, experiment execution and project management belong
+to separate workflows. Citation verification and completion are supported within
+the authorized writing or review task; this bundle is not a literature manager.
 
-The public default is deliberately portable rather than opinionated. It enables
-`integrity-core` and `academic-defaults`; optional formatting and structural
-preferences live in `strict-house-style`, which is disabled until a project
-explicitly selects it.
+## Shared workflow
 
-## Policy Sets
-
-Omit `policy_sets` from `paper_context.yaml` to use the public defaults:
+Local and public installations use the same two policy sets:
 
 ```yaml
 policy_sets: [integrity-core, academic-defaults]
 ```
 
-Opt into the stricter formatting and structure profile explicitly:
+Omitting `policy_sets` selects these defaults. There is no separate
+`strict-house-style` mode. The registry contains 50 hard rules and 49 soft
+preferences. Hard rules apply within their declared scope and activation;
+they protect integrity, evidence and applicable requirements. Preferences for
+headings, paragraph shapes, comparison tables, fonts, source canvas sizes and
+renderers can adapt to the paper. Their adaptation does not block readiness.
 
-```yaml
-policy_sets: [strict-house-style]
-```
-
-The strict set includes the public sets transitively. Its hard rules remain
-hard after opt-in; reliable venue requirements may still override conflicting
-house formatting or structure.
-
-## Design Principles
-
-- Keep claims scoped, evidence-forward, and easy to audit.
-- Use traditional, concise top-level section names when the optional strict set is active; otherwise adapt headings to the paper and venue.
-- Treat user-declared citation and evidence sources as the source of truth.
-- Never invent citations, paper claims, venues, years, baselines, metrics, p-values, or experimental results.
-- Prompt the user to manually update BibTeX when a needed citation is missing.
-- Require a related-work comparison-table plan only when the optional strict rule is active; otherwise propose one when it improves the argument.
-- Keep tables compact and argumentative; apply `booktabs`, marker, placement, and resizing house rules only when enabled.
-- For an explicitly justified wide Related Work matrix, use `table_profile: layered_capability_matrix` to group capabilities by semantic layer; coverage-delta highlights remain evidence-bound and color is never the sole cue.
-- Use source-data-driven Python plots for numeric figures.
-- Select conceptual-figure tooling from topology, editability, venue constraints, and enabled policy; generative rendering is an optional house default.
-- When `strict-house-style` is active, generated conceptual figures must contain all text, mathematics, arrows, components, and other semantic content directly in the accepted model output. Non-mathematical text uses Times New Roman and mathematics uses a dedicated manuscript- or venue-compatible math font; post-generation semantic overlays or redraws are forbidden. Public defaults do not impose these house rules.
-- Keep review work separate from writing and artifact creation: diagnose first, then route substantial rewrites to `paper-writing` or artifact changes to `paper-figures-tables`.
+- Write the supported claim directly. Preserve material adverse findings and
+  necessary conditions; remove redundant anticipatory defenses.
+- Review argument order and paragraph purpose before polishing sentences when
+  structural revision is needed. Do not impose one paragraph template everywhere.
+- Diagnose concrete prose problems. Do not infer AI authorship from style or
+  optimize detector scores.
+- Preserve closed-corpus and confidentiality constraints. A request for public
+  citation completion permits scoped primary-source verification and supported
+  bibliography updates; missing access remains an unresolved source gap.
+- Continue authorized edits across skill boundaries. Ordinary text and artifact
+  tasks do not require a full compliance run or empty tracking files.
+- Numeric plots use supplied data or explicit supplied values and a reproducible
+  generation process. Tools and formats follow content and actual delivery
+  requirements. Inspect exports at their final placement size.
 
 ## Installation
 
-Clone the repository and copy all four skill folders into your Codex skills directory as one versioned bundle:
+Keep all four sibling folders at the same revision. For a fresh installation:
 
 ```bash
 git clone https://github.com/DELONG-L/Academic-Paper-Skills.git
 mkdir -p ~/.codex/skills
 cp -R Academic-Paper-Skills/paper-policy ~/.codex/skills/
 cp -R Academic-Paper-Skills/paper-writing ~/.codex/skills/
-cp -R Academic-Paper-Skills/paper-figures-tables ~/.codex/skills/
 cp -R Academic-Paper-Skills/paper-review ~/.codex/skills/
+cp -R Academic-Paper-Skills/paper-figures-tables ~/.codex/skills/
 ```
 
-Start a new Codex thread after installation so the skills list refreshes.
+For an upgrade, back up and replace the four existing folders in full before
+copying; merging folders can leave retired rules and references installed.
+Preserve intentional local customizations in the backup for inspection.
+Start a new Codex task after installation so the skill list refreshes.
 
-## Usage Examples
+Python 3.10+ is recommended. Policy tools require PyYAML; figure helpers use the
+optional plotting dependencies. LaTeX and PDF rendering tools are needed for
+source builds and visual checks, not for prose-only work.
+
+```bash
+python3 -m pip install -r requirements-policy.txt
+python3 -m pip install -r requirements-figures.txt
+```
+
+## Examples
 
 ```text
-Use $paper-writing to rewrite this introduction with clearer RQs and scoped claims.
+Use $paper-writing to revise this Results paragraph using the supplied values.
+Keep the claim direct and remove repeated anticipatory defenses.
 ```
 
 ```text
-Use $paper-figures-tables to turn this related-work table spec into compact LaTeX.
-```
-
-For a wide, layered capability matrix, add this controlled context value:
-
-```yaml
-table_profile: layered_capability_matrix
+Use $paper-review to check paragraph necessity, argument order and repeated
+material. Show what should change, what can stay, and exact replacements.
 ```
 
 ```text
-Use $paper-review to audit this manuscript before submission and produce a prioritized issue board.
+Use $paper-figures-tables to plot these measurements and inspect the final export.
 ```
-
-## Folder Layout
 
 ```text
-Academic-Paper-Skills/
-├── paper-policy/
-├── paper-writing/
-├── paper-figures-tables/
-├── paper-review/
-├── README.md
-├── README.zh-CN.md
-├── requirements-policy.txt
-├── requirements-figures.txt
-├── LICENSE
-└── THIRD_PARTY_NOTICES.md
+Use $paper-review to answer these reviewer comments and verify each promised edit.
 ```
 
-Each skill folder is self-contained and includes its own `SKILL.md`, optional `references/`, optional `scripts/`, and UI metadata under `agents/`.
+Explicit readiness requests use a project context and evidence records. Missing
+semantic/manual evidence remains `UNVERIFIED`. Agent semantic PASS requires
+current source snapshots; agent inspection cannot substitute for a manual
+evaluator. Definite failures take precedence. A `review_hint` requires inspection
+and is neither a failure nor proof of compliance.
 
-## Requirements
+See [policy usage](paper-policy/SKILL.md) and the
+[evidence contract](paper-policy/references/compliance-schema.md) for commands
+and the exact authority model. Editorial completion and submission readiness
+are separate judgments.
 
-- Codex with local skill support.
-- Python 3.10 or newer.
-- `PyYAML` for `paper-policy`: `python3 -m pip install -r requirements-policy.txt`.
-- Optional figure/table packages: `python3 -m pip install -r requirements-figures.txt`.
-- LaTeX tooling only when you want to compile or visually verify a paper project.
+## Maintenance and validation
 
-## Citation Policy
+```bash
+python3 paper-policy/scripts/validate_registry.py
+python3 paper-policy/scripts/audit_skill_integration.py .
+python3 -m unittest discover -s paper-policy/scripts -p 'test_*.py'
+python3 -m unittest discover -s paper-figures-tables/scripts -p 'test_*.py'
+```
 
-This bundle does not perform automatic literature verification. Use the citation
-and evidence sources declared by the user or project; local `.bib` files and
-user-provided notes are the default. When support is unavailable, emit a manual
-update request instead of fabricating a reference.
+CI runs these checks and compiles Python helpers. The integration audit checks
+explicit references and rule IDs; it does not prove semantic consistency or
+manuscript quality. Review registry wording, guidance, examples and checker
+behavior together. See [rule maintenance](paper-policy/references/rule-maintenance.md)
+and [release notes](CHANGELOG.md).
 
-## License
+## Sources and license
+
+The academic workflow incorporates independently written guidance informed by
+[OniReimu/claude-scholar](https://github.com/OniReimu/claude-scholar), including
+argument architecture, paragraph review, citation verification, revision closure
+and prose diagnostics. Source-specific references document the relevant ideas.
+Figure helpers retain attribution to `Haojae/scipilot-figure-skill`.
 
 MIT. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

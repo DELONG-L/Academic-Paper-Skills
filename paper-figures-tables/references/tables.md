@@ -5,8 +5,7 @@ Use this for LaTeX tables, related-work comparison tables, result tables, notati
 ## Core Style
 
 Prefer clean grouped headers, compact captions, and semantic emphasis over plain
-grid tables. Require `booktabs` only when `TABLE.BOOKTABS_FINAL` is active;
-otherwise use it as a compatible option. Tables should make one comparison easy
+grid tables. Use `booktabs` as a clean option when compatible with the template. Tables should make one comparison easy
 to scan rather than store every available dimension.
 
 Do not use dense grid lines. Prefer spacing, grouped headers, and row order to communicate structure. In a load-bearing high-density matrix, one or two sparse vertical separators may mark true column groups when whitespace and `\cmidrule` are insufficient; do not box individual cells.
@@ -44,11 +43,11 @@ Common packages and macros:
 
 Only include package or macro definitions if the target paper does not already define them.
 
-## Resizebox Rule
+## Width And Readability
 
-When `TABLE.FINAL_TARGET_WIDTH` is active, align the table with the target width.
-Use `\resizebox` only when scaling is needed and the natural table does not fit
-cleanly; prefer structural pruning over unreadable shrinkage.
+Under `TABLE.FINAL_READABLE`, the table must remain readable and fit within the
+available page area. A natural-width table is valid. Use `\resizebox` only when
+needed, and prefer structural pruning over unreadable shrinkage.
 
 Use:
 
@@ -70,20 +69,20 @@ or:
 
 inside `table*` or width-constrained wrappers.
 
-Only omit `resizebox` when all of these hold:
+Before finalizing a table, check:
 
 - the table naturally fits the intended column or page width
 - there is no overfull hbox risk
 - column spacing and font size are readable
-- the rendered table is visually better without scaling
+- scaling, if used, does not make the final table unreadable
 
 ## Placement And Dimension Budget
 
-When the strict placement preferences are enabled, default to the smallest readable placement.
+Prefer the smallest layout that preserves a fair, readable comparison.
 
 - Prefer single-column `table` for compact comparison tables, notation tables, and most Related Work comparison tables.
 - Before using `table*`, prune columns to the minimum set that supports the table's claim.
-- A Related Work comparison table should normally use 3--4 high-signal dimensions. Use 5 only when the fifth dimension is essential. Use 6--7 with a justified dense empirical design. Use 8 or more only for an activated layered capability matrix with 2--4 semantic groups and readable final-width rendering.
+- A Related Work comparison table should normally use 3--4 high-signal dimensions. Adapt the dimension count to the evidence and final readability; use semantic grouping when useful. A profile is a layout aid, not permission to include an extra column.
 - If a table becomes wide because the column names are verbose, shorten the headers before switching to `table*`.
 - Do not add a Notes block unless the table cannot be read without it.
 
@@ -91,17 +90,17 @@ When the strict placement preferences are enabled, default to the smallest reada
 
 Rows should be paper families, systems, datasets, mechanisms, or approaches. Columns should expose the missing comparison axis from the paper.
 
-When `RELATED.COMPARISON_REQUIRED` is active, produce or preserve an axis-based
-comparison table unless an authorized waiver or venue requirement applies. If
-the rule is disabled, create one only when requested or argumentatively useful.
+`RELATED.COMPARISON_REQUIRED` is a soft preference for an axis-based table
+when it adds argumentative value. Axis-based prose is a valid alternative;
+record an adaptation without a waiver. An explicit request to create a table
+or a sourced venue requirement still governs the requested artifact.
 
-When `TABLE.CANONICAL_RELATED_MARKERS` is active, use `\cmark` as a green
-check for full support, `\pmark` as an amber filled pifont circle
-(`\ding{108}`) for partial support, and `\xmark` as a red cross for absence.
-When disabled, choose accessible symbols or text that fit the venue and define
-their semantics locally.
+Choose accessible symbols or text and define their semantics locally. The
+`\cmark`/`\pmark`/`\xmark` macros above are an example, not a required scheme.
+State full, partial, absent, and unreported support accurately, independently
+of the chosen color or glyph.
 
-Prefer rows that are atomic enough for every marker to be directly defensible. A clearly named literature family is an allowed soft adaptation when its membership is coherent and every marker is assigned conservatively across the entire family. Do not use a naked merged citation row such as `\citep{a,b,c}`. Cite representative works in prose or in the row label, and use `\pmark` whenever support is mixed or only partial across the group.
+Prefer rows that are atomic enough for every marker to be directly defensible. A clearly named literature family is an allowed soft adaptation when its membership is coherent and every marker is assigned conservatively across the entire family. Do not use a naked merged citation row such as `\citep{a,b,c}`. Cite representative works in prose or in the row label, and mark partial support explicitly whenever evidence is mixed across the group.
 
 Do not treat highlighting as proof. A proposed-row background is optional: bold
 the row label, use a light whole-row tint, use sparse cell-level coverage-delta
@@ -115,7 +114,7 @@ Represent missing values explicitly. Prefer `N/A`, `Not reported`, or `Not appli
 
 ### Table-1-Style Related Work Matrix
 
-Use this compact single-column pattern for paper-positioning tables that compare prior work against the paper's claimed gap. Use 3--4 dimensions by default; use 5 only when the fifth dimension is essential to the argument.
+Use this compact single-column pattern for paper-positioning tables that compare prior work against the paper's claimed gap. Use 3--4 dimensions by default; adapt the count to the comparison and readability.
 
 ```latex
 \begin{table}[t]
@@ -141,7 +140,7 @@ Use this compact single-column pattern for paper-positioning tables that compare
 
 Do not choose dimensions solely to make the proposed method look good. The columns must follow from the paper's stated gap.
 
-Do not fabricate prior-work rows, citation keys, or feature support. If a row or citation is missing, return a manual-update note asking the user to supply the needed BibTeX/source details.
+Do not fabricate prior-work rows, citation keys, or feature support. If source completion is already requested, use the writing skill's citation-integration reference internally to verify primary sources and complete the grounded table. For a closed corpus or inaccessible source, mark the gap and request only the source information that cannot be resolved within scope.
 
 ## Result Tables
 
@@ -169,11 +168,11 @@ Notation tables should define only symbols used later. Dataset tables should inc
 
 - Do not use plain `\hline` grid tables by default.
 - Do not color every result cell.
-- Do not replace the canonical marker scheme when `TABLE.CANONICAL_RELATED_MARKERS` is active.
+- Preserve marker meanings when changing symbols, colors, or layout.
 - Do not merge multiple unrelated papers into one citation-only row; split rows unless the row is an explicitly named family and the marker values are conservative.
 - Do not label or shade a cell as unique without a defined comparison corpus and row-wise evidence.
 - Do not use color as the only carrier of a novelty or coverage-delta claim.
 - Do not force a wide matrix into a single-column table with unreadable text.
 - Do not write captions that merely restate the table label.
 - Do not keep a wide table only because the first draft had many dimensions.
-- Do not put internal data paths, script names, renderer names, or internal provenance status in a paper caption.
+- Keep irrelevant workflow bookkeeping in artifact or review notes. Retain scientifically necessary implementation identifiers, renderer details and truthful synthetic-data disclosures in the caption or prose where they support interpretation; a venue mandate is not required for relevant scientific content.

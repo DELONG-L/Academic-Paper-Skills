@@ -1,6 +1,6 @@
 version: 1
-source: public-policy-migration-v1
-note: Stable migration IDs preserve adjudication traceability; private deliberation notes are not required at runtime or distributed with the skill.
+source: academic-workflow-redesign-2026-09-09
+note: Current decision classifications for the public academic workflow. IDs document rationale; no legacy configuration or style enforcement is retained.
 semantics:
   H: hard
   P: hard_with_activation
@@ -16,7 +16,7 @@ rules:
   A07: H
   A08: H
   A09: S
-  A10: P
+  A10: S
   A11: H
   A12: H
   A13: H
@@ -33,8 +33,8 @@ rules:
   B09: H
   B10: H
   B11: H
-  B12: P
-  B13: P
+  B12: S  # 2026-09-09: adaptable author preference.
+  B13: S  # 2026-09-09: adaptable author preference.
   B14: S
   B15: H
   C01: H
@@ -59,8 +59,8 @@ rules:
   D01: H
   D02: P
   D03: H
-  D04: H
-  D05: H
+  D04: S  # 2026-09-09: adaptable author preference.
+  D05: S  # 2026-09-09: adaptable author preference.
   D06: S
   D07: S
   D08: H
@@ -69,13 +69,13 @@ rules:
   D11: P
   D12: H
   D13: S
-  E01: H
-  E02: H
-  E03: P
+  E01: S  # 2026-09-08: user-approved structural preference, no readiness gate.
+  E02: S  # 2026-09-08: user-approved structural preference, no readiness gate.
+  E03: S  # 2026-09-09: adaptable author preference.
   E04: D
   E05: S
   E06: S
-  E07: H
+  E07: S  # 2026-09-08: user-approved structural preference, no readiness gate.
   E08: P
   E09: S
   E10: S
@@ -86,8 +86,8 @@ rules:
   E15: S
   E16: S
   E17: H
-  E18: H
-  E19: H
+  E18: S  # 2026-09-08: user-approved structural preference, no readiness gate.
+  E19: S  # 2026-09-08: user-approved structural preference, no readiness gate.
   E20: H
   E21: H
   E22: H
@@ -101,7 +101,7 @@ rules:
   F08: H
   F09: S
   F10: S
-  F11: H
+  F11: S  # 2026-09-09: adaptable author preference.
   F12: S
   F13: S
   F14: H
@@ -115,28 +115,28 @@ rules:
   F22: H
   F23: S
   F24: S
-  F25: H
-  F26: P
-  F27: P
+  F25: S  # Typography preference; technical identity remains hard under F14.
+  F26: S  # Typography preference; explicit venue requirements remain binding.
+  F27: S  # 2026-09-09: adaptable author preference.
   G01: S
   G02: S
-  G03: P
-  G04: H
-  G05: P
+  G03: S  # 2026-09-08: user-approved structural preference, no readiness gate.
+  G04: S  # 2026-09-08: user-approved structural preference, no readiness gate.
+  G05: S  # 2026-09-08: user-approved structural preference, no readiness gate.
   G06: S
   G07: S
-  G08: P
+  G08: S  # 2026-09-08: user-approved structural preference, no readiness gate.
   G09: H
   G10: S
   G11: S
   G12: S
   G13: D
   G14: H
-  H01: P
+  H01: S  # 2026-09-09: adaptable author preference.
   H02: P
   H03: S
-  H04: P
-  H05: P
+  H04: S  # 2026-09-08: user-approved structural preference, no readiness gate.
+  H05: S  # 2026-09-08: user-approved structural preference, no readiness gate.
   H06: S
   H07: D
   H08: H
@@ -147,18 +147,18 @@ rules:
   H13: S
   H14: S
   H15: S
-  H16: P
+  H16: S  # 2026-09-09: adaptable author preference.
   H17: H
   H18: S
   I01: H
   I02: P
   I03: H
-  I04: H
+  I04: S  # 2026-09-09: adaptable author preference.
   I05: P
-  I06: H
+  I06: S  # 2026-09-09: adaptable author preference.
   I07: S
   I08: D
-  I09: H
+  I09: S  # 2026-09-09: adaptable author preference.
   I10: D
   I11: S
   I12: S
@@ -170,8 +170,8 @@ rules:
   I18: S
   I19: P
   I20: S
-  I21: H
-  I22: H
+  I21: S  # 2026-09-09: adaptable author preference.
+  I22: S  # 2026-09-09: adaptable author preference.
   J01: H
   J02: S
   J03: H
@@ -196,9 +196,9 @@ rules:
   K06: H
   K07: H
   K08: H
-  K09: P
-  K10: P
-  K11: P
+  K09: S
+  K10: S
+  K11: S
   K12: P
   K13: P
   K14: H

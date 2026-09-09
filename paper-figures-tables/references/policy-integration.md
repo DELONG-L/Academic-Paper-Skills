@@ -1,8 +1,10 @@
 # Artifact Policy Integration
 
-Use the sibling `paper-policy` skill before creating or finalizing a governed
-figure or table. Keep creation in this skill and compliance aggregation in
-`paper-policy`/`paper-review`.
+Apply relevant sibling `paper-policy` rules to artifact work. Use the structured
+context, evidence inventory and CLI below when formal artifact compliance or
+submission readiness is requested. An ordinary plot or caption task does not
+require a context file, evidence ledger or human sign-off before delivery.
+Keep creation in this skill and formal aggregation in `paper-policy`/`paper-review`.
 
 ## Resolve Context
 
@@ -29,9 +31,9 @@ python3 ../paper-policy/scripts/resolve_policy.py paper_context.yaml
 ```
 
 Apply active hard rules before soft artifact preferences.
-Confirm `active_policy_sets` first. Omitted `policy_sets` means the public
-defaults; add `policy_sets: [strict-house-style]` only when the user or project
-explicitly opts into the house table and figure rules.
+Confirm `active_policy_sets` first. Omitted `policy_sets` selects
+`[integrity-core, academic-defaults]`. Choose renderer, font, and marker
+style for accuracy, readability, and explicit venue requirements.
 
 ## Record Artifact Evidence
 
@@ -39,7 +41,10 @@ Add each artifact to the shared `compliance-evidence.yaml` under `artifacts`.
 Record a stable ID, kind, types, supported claim, outputs, scripts, source data,
 previews, and table sources. For every table, also record the exact
 `latex_label`; the checker resolves that label to one `table` or `table*`
-environment before inspecting booktabs and marker usage. Paths may be absolute or relative to the selected
+environment as a deterministic source check. Final-render readability, units,
+and marker meaning require separate evidence under `TABLE.FINAL_READABLE`;
+booktabs and particular marker glyphs are not mandatory checks. Paths may be
+absolute or relative to the selected
 `--artifact-root`; they may point to a separate replication bundle rather than
 requiring the data and scripts to live inside the LaTeX project. Read
 `../../paper-policy/references/compliance-schema.md` for the schema.
@@ -72,6 +77,12 @@ python3 ../paper-policy/scripts/assess_compliance.py \
   --evidence compliance-evidence.yaml
 ```
 
+The `files.scripts` list can contain notebooks or shared pipeline files; locate
+the figure-specific function/cell/command in the associated evidence. The format
+checker establishes file presence and recognizes common formats; suitability,
+resolution and venue acceptance require inspection. An unfamiliar extension is
+a `review_hint`, not a definite violation or an automatic PASS.
+
 ## Source Font Preference And Final-Width Rule
 
 For paper figures:
@@ -83,10 +94,11 @@ For paper figures:
    source canvas.
 4. Export vector output where appropriate.
 5. Render or place the artifact at the actual target LaTeX width.
-6. Perform human visual QA for clipping, density, label readability, legend
-   occlusion, grayscale distinction, and panel alignment.
-7. Record the visual judgment as a hard result for
-   `FIG.FINAL_WIDTH_READABLE` with all governed `artifact_refs`.
+6. Inspect clipping, density, readability, grayscale distinctions and alignment;
+   identify the actual evaluator. Agent inspection supports editing and delivery.
+7. In a formal assessment, `FIG.FINAL_WIDTH_READABLE` retains its manual evidence
+   requirement and all governed `artifact_refs`. Leave it `UNVERIFIED` without
+   admissible human/user/venue evidence; never relabel agent inspection as human.
 
 Record a below-24pt choice as `ADAPTED` for `FIG.SOURCE_FONT_SCALE`, with the
 source scale and final-width rationale. Source points alone never pass the hard
@@ -96,16 +108,13 @@ final-width rule.
 
 - File existence does not prove that values, rows, components, or arrows are
   correct.
-- Canonical marker tokens do not prove that related-work rows are defensible.
+- Marker tokens do not prove that related-work rows are defensible.
 - A cell tint or dagger does not prove that a capability is absent from the
   comparison corpus; record the corpus boundary and row-wise evidence.
-- A prompt that requests Times New Roman or mathematical typesetting does not
-  prove `FIG.CONCEPT_TYPOGRAPHY`; inspect the accepted model output and leave the
-  rule `UNVERIFIED` if the font roles cannot be confirmed.
-- Preserve the accepted model-generated source and a record of subsequent
-  transformations for `FIG.CONCEPT_MODEL_NATIVE_OUTPUT`. Any later semantic
-  overlay, redrawing, compositing, or replacement is a hard failure; only
-  non-semantic technical packaging is allowed.
+- A font name or formula in a prompt does not prove accurate or readable
+  rendering; inspect the actual artifact.
+- Preserve source artifacts and transformation records. Judge the final
+  content against the manuscript and follow the selected tools' constraints.
 - Vector export does not prove color accessibility.
 - A declared script does not prove that it produced the inspected output.
 

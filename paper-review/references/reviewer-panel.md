@@ -1,6 +1,6 @@
 # Reviewer Panel
 
-Use this reference for simulated review, red-team review, or formal peer-review drafting.
+Use this reference for author-side simulated review or red-team review. These are analytic perspectives, not independent reviewer testimony. Additional agents require separate authorization.
 
 ## Evidence Anchors
 
@@ -113,18 +113,9 @@ Focus:
 1. <factor most likely to decide the outcome>.
 2. ...
 
-**Predicted outcome.**
+**Indicative outcome (only if requested).**
 <Reject / Borderline / Accept> as simulation only, not a real decision.
 
 **Fix list.**
-- [ ] <action> [anchor] - impact: high|medium|low; cost: low|medium|high; route: paper-writing|paper-figures-tables|experiment|manual BibTeX.
+- [ ] <action> [anchor] - impact: high|medium|low; cost: low|medium|high; route: paper-writing|paper-figures-tables|experiment|citation verification; request manual source input only for a remaining access or scope gap.
 ```
-
-## Formal Review Mode
-
-When reviewing someone else's paper:
-
-- Use one consolidated review, not adversarial personas in the final output.
-- Keep tone professional, neutral, and constructive.
-- Separate rejection-relevant weaknesses from suggestions.
-- Make clear that the draft is for user review and final scoring responsibility stays with the user.

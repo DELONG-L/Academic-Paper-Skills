@@ -1,63 +1,35 @@
 # Citation and Evidence Policy
 
-This skill follows a local-only citation policy.
+Use `../../paper-writing/references/citation-integration.md` as the shared source
+workflow. Ordinary manuscript review starts from local evidence; an explicit
+closed corpus remains closed. A request to complete literature, verify novelty,
+or check citations already authorizes the needed public primary-source lookup.
+No separate skill invocation or repeat approval is required. Read-only review
+does not authorize editing the manuscript or bibliography.
 
-## Source of Truth
+Never disclose confidential manuscript or review content in external queries.
+Verify source identity and read source content before claiming support. A local
+BibTeX key alone establishes identifier presence, not semantic correctness.
 
-Use:
+## Evidence labels
 
-- Local `.bib` files.
-- User-provided BibTeX.
-- User notes, related-work matrices, and manuscript text.
-- Local PDFs or paper notes only when the user provided them.
+- `in-paper`: reported in the manuscript, with a location.
+- `local-bib`: bibliographic entry exists locally; verify claim support separately.
+- `source-verified`: primary-source metadata/content actually checked, with URL,
+  version, access date, and the relevant locator.
+- `user-confirmed`: supplied directly by the user, retaining its stated scope.
+- `missing`: absent from available material.
+- `needs-user-input`: a consequential gap that cannot be resolved within scope.
 
-Do not by default:
+For local hygiene, check key presence, duplicates, citation consistency and
+applicable anonymity requirements. For an unresolved citation, state the needed
+source, affected claim and exact remaining gap. Manual BibTeX input is a fallback
+for inaccessible or deliberately closed sources, not the default for a requested
+literature-completion task.
 
-- Search the web for references.
-- Fetch BibTeX.
-- Verify citation content against APIs.
-- Claim that a citation supports a sentence unless the support is evident from local notes or user-provided material.
+## Numerical evidence
 
-## Local Citation Hygiene
-
-When requested or relevant, check:
-
-- `\cite{key}` exists in local `.bib`.
-- No obvious duplicate BibTeX keys.
-- Citation keys follow the local project's style if one is visible.
-- Double-blind self-citations are third-person and anonymous where required.
-
-## Missing Citation Handoff
-
-If the review suggests a claim needs citation support and the local `.bib` does not contain an appropriate entry, do not invent a key. Emit:
-
-```text
-Manual BibTeX update needed:
-- Need: prior work on [topic/claim]
-- Why: supports [sentence/paragraph/table axis]
-- Suggested search target: [paper family, author if user mentioned one, or keyword]
-- Current placeholder: [citation needed: ...]
-```
-
-If the user later adds BibTeX, then the review skill may check local key presence and help route prose/table updates.
-
-## Evidence Labels
-
-Use explicit labels in issue boards and rebuttal plans:
-
-- `in-paper`: already present in manuscript.
-- `local-bib`: supported by a local citation key or user-provided notes.
-- `user-confirmed`: supplied directly by the user.
-- `needs-user-input`: cannot be resolved by the agent.
-- `missing`: absent from current materials.
-
-## Numerical Evidence
-
-Never invent:
-
-- Accuracy, runtime, memory, p-values, confidence intervals, seed count, or qualitative win/loss status.
-- Baseline results.
-- Ablation values.
-- Dataset sizes unless present in local materials.
-
-If the user asks for a draft before results are ready, use `[TBD: user-provided value]` placeholders and mark them as blockers.
+Never invent results, p-values, uncertainty, seed counts, baselines, ablations,
+or dataset sizes. Distinguish externally reported values from this project's own
+measurements. Missing experimental evidence remains missing even when a citation
+has been verified. Draft placeholders must not be presented as finished evidence.

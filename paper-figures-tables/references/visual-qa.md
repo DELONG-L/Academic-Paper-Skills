@@ -1,147 +1,31 @@
-# 视觉自检闭环：让 AI 看着图自己挑错、自己改
+# 实际导出与最终尺寸视觉检查
 
-这是 `paper-figures-tables` v2.1 的核心新增能力。普通画图工具画完就结束了——**没人回看成图**，于是中文方框、文字被裁、图例压住数据、子图编号乱放这些问题全部留到投稿才被审稿人发现。本文件定义一套**出图后的闭环**：
+用于图表的导出、排版和可读性核对。源码检查、内存画布预览、最终导出文件及论文内放置是不同对象；检查过前者不能直接宣称后者合格。
 
-```
-绘制 → ① 渲染 PNG 预览 → ② 程序自检(visual_qa) → ③ AI 读图自检
-                                                        ↓ 发现问题
-        ⑤ 通过 ← ④ 回到对应步骤改图 → 重新渲染 → 再读图 ←┘
-```
+## 执行
 
-## 为什么必须「渲染成 PNG 再让 AI 看」
+1. 用可用工具检查源布局；Matplotlib 可用 `scripts/visual_qa.py` 的 `audit_layout(fig)` 与 `render_preview(fig, path)` 提前发现问题。
+2. 导出实际目标文件，再渲染或在论文中放置到目标栏宽查看。PDF/SVG 可通过渲染后的图像检查，不要求特定查看工具。
+3. 核对内容与版式：字符、数值、单位、数学符号、图例、刻度、裁切、遮挡、子图编号及正文引用；检查颜色或灰度中的关键区别。
+4. 从源码或可编辑成品修复相关问题，重新导出并检查受影响的成品。批量修复同一原因造成的问题，不要求每改一处单独渲染。
+5. 当实际问题解决时完成；若仍有不可解决的输入或工具障碍，明确具体缺项。不要以固定轮数结束可完成的必要修复，也不要无原因反复重跑已通过检查。
 
-- **矢量 PDF/SVG 没法直接"看"像素层面的重叠和遮挡**——必须先栅格化成 PNG。
-- **程序能查的有限**：缺字、越界、刻度相交这类**确定性**问题程序能抓（`visual_qa.py`），但"图例正好压在一簇数据点上""这两条标注文字叠在一起""配色看着发灰分不开"这类**感知性**问题，只有把图当成图像看才发现。
-- 本 skill 假设执行环境具备图像检查能力，可以读取 PNG 预览并判断遮挡、裁切、字体和布局问题。因此这个闭环应被实际执行，而不是停留在 checklist。
+## 常见修复
 
-## 分工：程序自检 vs AI 读图
-
-| 层 | 工具 | 负责抓 |
-|---|---|---|
-| 程序自检 | `scripts/visual_qa.py :: audit_layout(fig)` | 缺字乱码、文字越界裁切、刻度标签重叠（确定性） |
-| AI 读图 | 本文件清单 + `Read` 读 PNG | 图例压数据、标注重叠、子图标签对齐、配色/灰度可分、整体观感（感知性） |
-
-**两层都要过**。程序 PASS 不代表图就好看；AI 读图才是终检。
-
-## 标准操作流程
-
-### 第 1 步：渲染预览
-
-```python
-from visual_qa import render_preview, audit_layout, print_report
-
-# fig 是刚画好、还没导出的 matplotlib Figure
-preview = render_preview(fig, "figs/_preview.png", dpi=150)
-```
-
-> 用 150 dpi：足够看清文字与重叠，又不会让图太大拖慢读图。**导出最终矢量图之前**就做这一步——发现问题还能在源头改。
-
-### 第 2 步：程序自检
-
-```python
-issues = audit_layout(fig)
-print_report(issues)
-```
-
-任何 `FAIL`（几乎只会是缺字乱码）**必须先修**再继续。`WARN`（裁切/重叠）记下来，到第 3 步读图时重点确认。
-
-### 第 3 步：AI 读图自检（关键）
-
-先把图按实际 `\columnwidth` 或 `\textwidth` 放置并渲染预览，再读取
-`figs/_preview.png`，然后**逐条**对照下面的清单核对。源码是否达到 24pt
-只是 soft source-scale 证据，不能代替这一 hard 终检。
-
-#### 读图自检清单
-
-1. **乱码 / 方框**
-   - 中文有没有变成 □□□ 方框 / 豆腐块？
-   - 负号、`±`、`×`、`μ`、`Δ`、希腊字母、上下标有没有缺字？
-   - → 命中：见下方「回改对应表」缺字行。
-
-2. **文字被裁切**
-   - 标题、x/y 轴标签、图例、数值标注，有没有被画布四边切掉一截？
-   - 旋转后的长刻度标签底部有没有出界？
-
-3. **文字遮盖 / 重叠**
-   - **图例有没有压住数据**（点、线、柱）？
-   - 显著性标注、数值标签、注释文字之间有没有互相叠？
-   - x 轴刻度标签有没有挤成一团、互相穿插？
-
-4. **子图编号对齐**（多面板必查）
-   - a/b/c/d 是否**横看一条线、竖看一条线**？同一行的标签等高吗？同一列的标签左缘对齐吗？
-   - 字号、加粗、风格是否一致（不能有的 `a` 有的 `(a)`）？
-   - → 没对齐：改用 `layout_tools.add_panel_labels(fig)` 统一重打。
-
-5. **子图间距 / 互相侵入**
-   - 子图之间有没有重叠？某个子图的 y 轴标签有没有伸进左边邻居？
-   - colorbar 有没有和子图挤在一起或压住数据？
-
-6. **配色与灰度**
-   - 各类别颜色能区分吗？有没有用到红绿对比（色盲不友好）？
-   - 如果生成了 `_grayscale.png`，灰度下还能分开吗？分不开 → 加线型/marker 冗余编码。
-
-7. **数据完整性**
-   - 有没有数据点 / 曲线 / 误差棒被坐标轴范围切掉？
-   - 误差棒顶端、最高的柱、最外的点是否都在框内可见？
-
-8. **跨子图一致性**
-   - 同一个变量在多个子图里是否**同色、同标记、同量纲**？
-   - 共享含义的坐标轴范围是否一致（便于横向比较）？
-
-### 第 4 步：回改对应表
-
-发现问题后，回到对应环节改，**不要在预览图上手动 P 图**：
-
-| 读图发现 | 回改动作 |
+| 问题 | 可选动作 |
 |---|---|
-| 中文/符号缺字方框 | `setup_style(lang='zh')`（中文）；查 `setup_style.py --list-fonts`；负号方框确认 `axes.unicode_minus=False` |
-| 文字被裁切 | `layout_tools.finalize_figure(fig)`；导出 `bbox_inches='tight'`；标题过长则换行/缩短 |
-| 图例压住数据 | `ax.legend(loc=..., bbox_to_anchor=(1.02,1), frameon=False)` 移到图外；或直接末端标注代替图例 |
-| 标注文字互相叠 | 调整 `xytext` 偏移；或用 `adjustText`；减少标注数量（只标关键的） |
-| x 轴刻度重叠 | `ax.tick_params(axis='x', rotation=30)`；减少刻度数；缩短标签 |
-| 子图标签不对齐 | `add_panel_labels(fig, style='nature')` 统一重打 |
-| 子图互相重叠 | `finalize_figure(fig)` 或建图时 `constrained_layout=True` |
-| 配色不可区分/灰度糊 | 换 Okabe-Ito / `colorblind` 调色板 + 加线型/marker |
-| 数据被切掉 | 放宽 `set_xlim/set_ylim`，或 `ax.margins(0.05)` |
+| 缺字或数学符号错误 | 检查实际字体与符号排版；字体预设只是起点。 |
+| 标签裁切 | 调整布局、边距或换行；检查 tight 裁剪后实际尺寸。 |
+| 图例遮挡 | 移到空白处或图外，或采用直接标注。 |
+| 刻度重叠 | 减少密度、调整角度或标签长度，不改变数据含义。 |
+| 面板编号不一致 | 对齐并按实际模板更新标记与引用。 |
+| 颜色不可分 | 增加线型、符号或直接标注。 |
+| 数据被裁切 | 检查轴范围、放大窗口和实际数据；保留读者理解范围所需的说明。 |
 
-### 第 5 步：重新渲染，再读图
+在正确的源文件或可编辑矢量中修复，不通过涂抹测量点或数字来伪造完整性。概念图编辑遵循所选工具的真实能力与限制。
 
-改完**回到第 1 步**重新 `render_preview` 并再读一次。循环直到：
+## 记录与证据
 
-- 程序自检无 `FAIL`，且
-- 读图清单 8 项全部通过，**或**
-- 剩余问题已明确告知用户并获其接受（如"标签确实密，但这是数据本身决定的"）。
+记录实际查看的文件、放置尺寸、检查结果与执行者。模型查看渲染图是 agent 检查，不能填写为 human evidence 或宣称独立审阅。正式评估时，`policy-integration.md` 及共享 compliance schema 决定哪类证据可满足 manual 项。
 
-## 循环纪律
-
-- **每改一处就重渲一次**——不要一次改五处然后猜结果，看不到就是没验证。
-- **最多 3 轮**：3 轮还过不了，多半是图型选错了（回 `chart-selection.md` 重选）或数据维度太多（拆图，见 `visual-pitfalls.md` P12）。
-- **留痕**：把每轮发现的问题和改法简要告诉用户，让 ta 知道图为什么长这样。
-
-## 一个完整示例
-
-```python
-import matplotlib.pyplot as plt
-from setup_style import setup_style
-from layout_tools import finalize_figure, add_panel_labels
-from visual_qa import render_preview, audit_layout, print_report
-from export_figure import export_figure
-
-setup_style(journal='nature', lang='zh')      # 中文 + 自动 CJK 字体 + constrained_layout
-
-fig, axes = plt.subplots(2, 2, figsize=(21.6, 16.2))
-# ... 在 axes 上作图 ...
-
-# —— 自检闭环 ——
-finalize_figure(fig)                           # 兜底理顺版面
-add_panel_labels(fig, style='nature')          # a b c d 对齐
-render_preview(fig, 'figs/_preview.png')       # 渲 PNG
-print_report(audit_layout(fig))                # 程序自检
-# 然后：用 Read 读 figs/_preview.png，对照上面 8 项清单逐条核对
-# 有问题 → 按回改表改 → 重渲 → 再读；全过后再导出最终矢量图：
-
-export_figure(fig, 'figs/fig1', formats=['pdf', 'svg'],
-              size_inches=(21.6, 16.2), grayscale_preview=True)
-```
-
-**记住**：导出矢量图是**最后一步**，在读图清单全过之后。把问题挡在导出之前，而不是投稿之后。
+普通出图无需创建空 `compliance-evidence.yaml`；正式记录可以复用现有证据文件。源字号和 3x 画布偏好不能替代最终可读性，`check_figure.py` 的退出码也不能证明语义或完整投稿合规。

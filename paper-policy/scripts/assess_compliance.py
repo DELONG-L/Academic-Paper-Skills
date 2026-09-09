@@ -14,6 +14,7 @@ from typing import Any
 import yaml
 
 from check_artifacts import check_artifacts, validate_artifact_records
+from evidence_sources import inspect_sources, validate_snapshots
 from lint_project import FINAL_STAGES, Finding, lint_project
 from project_files import ProjectFiles, select_project_files
 from resolve_policy import resolve_policy
@@ -63,7 +64,7 @@ def validate_evidence(
     seen_hard: set[str] = set()
     allowed_hard_fields = {
         "rule_id", "status", "artifact", "artifact_refs", "locator", "evidence",
-        "evaluator", "waiver"
+        "evaluator", "waiver", "source_snapshots"
     }
     for index, record in enumerate(hard_results):
         where = f"evidence.hard_results[{index}]"
@@ -74,6 +75,12 @@ def validate_evidence(
         if unknown:
             errors.append(f"{where}: unknown fields {', '.join(unknown)}")
         rule_id = record.get("rule_id")
+        if rule_id in active_soft:
+            errors.append(
+                f"{where}.rule_id: {rule_id} is a soft rule; reassess as "
+                "APPLIED, ADAPTED, or SKIPPED in soft_results, not a hard result"
+            )
+            continue
         if rule_id not in active_hard:
             errors.append(f"{where}.rule_id: rule is not active: {rule_id!r}")
             continue
@@ -98,14 +105,24 @@ def validate_evidence(
                 f"{where}.evaluator: tool cannot decide semantic or manual checks"
             )
         if record.get("evaluator") == "agent":
-            if status != "FAIL":
+            if status not in {"PASS", "FAIL"}:
                 errors.append(
-                    f"{where}.evaluator: agent may record anchored FAIL only; semantic/manual PASS requires human, user, or venue evidence"
+                    f"{where}.evaluator: agent cannot assign WAIVED or NOT_APPLICABLE"
                 )
             elif not (check_kinds & {"semantic", "manual"}):
                 errors.append(
                     f"{where}.evaluator: agent cannot decide deterministic-only checks"
                 )
+            elif status == "PASS" and "manual" in check_kinds:
+                errors.append(
+                    f"{where}.evaluator: manual PASS requires human, user, or venue evidence"
+                )
+        if "source_snapshots" in record or (
+            record.get("evaluator") == "agent" and status == "PASS"
+        ):
+            errors.extend(validate_snapshots(
+                record.get("source_snapshots"), f"{where}.source_snapshots"
+            ))
         refs = record.get("artifact_refs", [])
         if not isinstance(refs, list):
             errors.append(f"{where}.artifact_refs: expected list")
@@ -190,6 +207,7 @@ def assess_compliance(
     findings: list[Finding] | None = None,
     assessed_rules: set[str] | None = None,
     artifact_coverage: dict[str, set[str]] | None = None,
+    source_root: Path | None = None,
 ) -> dict[str, Any]:
     evidence = evidence or {
         "version": 1, "hard_results": [], "soft_results": [], "artifacts": []
@@ -218,30 +236,46 @@ def assess_compliance(
         rule_id = active["id"]
         rule = active_hard[rule_id]
         record = evidence_by_id.get(rule_id)
-        detected = findings_by_id.get(rule_id, [])
+        freshness = inspect_sources(
+            record, source_root, evidence.get("artifacts") or []
+        ) if record else {"status": "NOT_SUPPLIED", "issues": []}
+        usable_record = record if freshness["status"] != "UNVERIFIED" else None
+        rule_findings = findings_by_id.get(rule_id, [])
+        detected = [item for item in rule_findings if item["kind"] == "deterministic"]
+        review_hints = [item for item in rule_findings if item["kind"] == "review_hint"]
         check_kinds = {check["kind"] for check in rule["checks"]}
 
-        if record and record["status"] == "WAIVED":
+        if usable_record and record["status"] == "WAIVED":
             status = "WAIVED"
             basis = "authorized_waiver"
         elif detected:
             status = "FAIL"
             basis = "deterministic_finding"
-        elif record and record["status"] == "FAIL":
+        elif usable_record and record["status"] == "FAIL":
             status = "FAIL"
             basis = "supplied_evidence"
-        elif record and record["status"] == "NOT_APPLICABLE":
+        elif usable_record and record["status"] == "NOT_APPLICABLE":
             status = "NOT_APPLICABLE"
             basis = "supplied_evidence"
-        elif rule_id in assessed_rules and check_kinds == {"deterministic"}:
+        elif rule_id in assessed_rules and check_kinds == {"deterministic"} and not review_hints:
             status = "PASS"
             basis = "deterministic_clean"
-        elif record and record["status"] == "PASS":
+        elif (
+            usable_record and record["status"] == "PASS"
+            and record["evaluator"] == "agent"
+            and "deterministic" in check_kinds and rule_id not in assessed_rules
+        ):
+            status = "UNVERIFIED"
+            basis = "deterministic_checks_not_assessed"
+        elif usable_record and record["status"] == "PASS":
             status = "PASS"
             basis = "supplied_evidence"
         else:
             status = "UNVERIFIED"
-            basis = "missing_evidence"
+            basis = (
+                "source_evidence_unverified"
+                if freshness["status"] == "UNVERIFIED" else "missing_evidence"
+            )
 
         result = {
             "rule_id": rule_id,
@@ -250,7 +284,9 @@ def assess_compliance(
             "basis": basis,
             "activation_reason": active["activation_reason"],
             "findings": detected,
+            "review_hints": review_hints,
             "evidence_record": record,
+            "source_verification": freshness,
         }
         hard_results.append(result)
 
@@ -296,6 +332,7 @@ def assess_compliance(
             if rule_id in active_hard
         },
         "readiness": {
+            "meaning": "Policy compliance assessment; not human sign-off or submission authorization.",
             "status": readiness_status,
             "stage": stage,
             "hard_blockers": blockers if trusted_final_stage else [],
@@ -371,7 +408,7 @@ def main() -> int:
             findings, assessed = lint_project(
                 root,
                 stage,
-                "STRUCT.SECTION_COUNT_PROFILE" in active_hard_ids,
+
                 active_hard_ids,
                 project_files.tex_paths,
                 project_files.bib_paths,
@@ -399,6 +436,10 @@ def main() -> int:
             findings,
             assessed,
             artifact_coverage,
+            source_root=(
+                args.artifact_root or args.project
+                or (args.evidence.parent if args.evidence else Path.cwd())
+            ).resolve(),
         )
     except ValueError as exc:
         print(f"Compliance assessment failed: {exc}", file=sys.stderr)

@@ -2,10 +2,16 @@
 
 Use this for outlines, section naming, and paper structure.
 
+For post-draft paragraph decisions and cross-section relocation, use
+`../../paper-review/references/argument-structure.md`. This reference covers
+writing-time organization; that workflow checks an existing draft's structure
+and provides a located edit plan at the requested scope.
+
 ## Top-Level Section Names
 
-When `STRUCT.TRADITIONAL_HEADINGS` is active, top-level section names must be
-traditional and concise. Otherwise use the following names as safe defaults:
+The soft `STRUCT.TRADITIONAL_HEADINGS` preference favors traditional concise
+names. Adapt them when a precise topic-specific heading improves navigation or
+follows a venue requirement. The following names are useful defaults:
 
 - Introduction
 - Background
@@ -27,7 +33,7 @@ traditional and concise. Otherwise use the following names as safe defaults:
 - Limitations
 - Conclusion
 
-Avoid rhetorical or decorative top-level titles:
+The following title forms need a clear navigational purpose; their wording alone is not a violation:
 
 - `Towards ...`
 - `Rethinking ...`
@@ -37,12 +43,13 @@ Avoid rhetorical or decorative top-level titles:
 - long colon titles
 - metaphorical titles
 
-When the strict heading rule is disabled, use these phrases only when they
-improve navigation rather than as automatic novelty signals.
+Under `STRUCT.TRADITIONAL_HEADINGS`, retain a precise topic-specific or
+question heading when it clarifies the section function. Revise decorative
+headings that obscure that function or violate a sourced project requirement.
 
 ## Default Structure
 
-For ML, systems, and security papers, start from this structure and adapt only when the venue or paper type requires it:
+For ML, systems, and security papers, the following is a starting example. Adapt order and grouping to the argument, evidence, reader navigation, paper type, and applicable venue requirements:
 
 ```text
 1 Introduction
@@ -80,13 +87,13 @@ For measurement papers:
 ## Section Discipline
 
 - Keep top-level sections few and predictable.
-- Do not exceed the venue's sectioning convention. Apply the 5--7 section range only when `STRUCT.SECTION_COUNT_PROFILE` or `STRUCT.SECTION_COUNT` is enabled.
-- Merge thin `Preliminaries` into `Background and Related Work`.
-- Do not create a subsection for one paragraph.
-- Use inline bold paragraph heads for short local distinctions.
-- Place limitation analysis where the venue and argument support it. Require the key boundary in Conclusion only when `STRUCT.CONCLUSION_INTEGRATES_LIMITATIONS` is active, and require one paragraph only when `STRUCT.CONCLUSION_SINGLE_PARAGRAPH` is active.
+- Follow explicit project and sourced venue sectioning requirements. `STRUCT.SECTION_COUNT` is an adaptable starting preference, never a universal conference section-count gate.
+- Merge thin `Preliminaries` into Background when this improves navigation; retain a distinct section when definitions or the template give it a clear role.
+- Apply `STRUCT.THIN_SUBSECTION` as soft guidance. Retain a short subsection for a distinct formal artifact or a venue requirement; paragraph count alone is not a failure criterion.
+- Prefer a short paragraph heading for a local distinction when it improves navigation, following the manuscript formatting convention.
+- Place material limitation analysis where the venue and argument support it. A compact Conclusion can finish with a supported finding or implication when its scope is clear. Separate Limitations sections and multiple conclusion paragraphs are valid.
 - Keep section numbering consistent with the template. Do not mix numbered and unnumbered main sections unless the venue template requires it.
-- For venues requiring Ethics, Broader Impact, Limitations, or Reproducibility statements, include them with traditional concise headings.
+- For venues requiring Ethics, Broader Impact, Limitations, or Reproducibility statements, use the names and placement required by the verified venue or template.
 
 ## Roadmaps
 

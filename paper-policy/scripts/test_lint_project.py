@@ -9,14 +9,12 @@ from pathlib import Path
 
 from lint_project import (
     DEFAULT_RULE_IDS,
-    STRICT_HOUSE_LINT_RULE_IDS,
+    Finding,
     assessed_rule_ids,
     citation_keys,
     lint_citations,
     lint_project,
     lint_referenceable_displays,
-    lint_standalone_limitations,
-    lint_standard_section_count,
     lint_tex_file,
     unused_bibtex_entries,
     unused_bibtex_keys,
@@ -24,10 +22,49 @@ from lint_project import (
 
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
-STRICT_TEST_RULE_IDS = DEFAULT_RULE_IDS | STRICT_HOUSE_LINT_RULE_IDS
+TEST_RULE_IDS = DEFAULT_RULE_IDS
 
 
 class ProjectLintTests(unittest.TestCase):
+    def test_gather_multline_and_explicit_tags_are_supported(self):
+        with TemporaryDirectory() as directory:
+            root=Path(directory);path=root/'main.tex'
+            path.write_text(r'\eqref{g}\eqref{m}\eqref{t}'+'\n'+
+                            r'\begin{gather}x=1\label{g}\end{gather}'+'\n'+
+                            r'\begin{multline}x+y\\=1\label{m}\end{multline}'+'\n'+
+                            r'\begin{equation*}x=1\tag{A}\label{t}\end{equation*}')
+            self.assertEqual([],lint_referenceable_displays(root,[path]))
+
+    def test_suppressed_rows_fail_and_custom_forms_are_only_hints(self):
+        with TemporaryDirectory() as directory:
+            root=Path(directory);path=root/'main.tex'
+            path.write_text(r'\eqref{a}\eqref{b}\eqref{custom}'+'\n'+
+                            r'\begin{align}x&=1\label{a}\\y&=2\notag\label{b}\end{align}')
+            findings=lint_referenceable_displays(root,[path])
+            self.assertEqual(['deterministic','review_hint'],[f.kind for f in findings])
+            self.assertIn("'b'",findings[0].message)
+
+    def test_scientific_renderer_and_script_are_review_hints(self):
+        with TemporaryDirectory() as directory:
+            root=Path(directory)
+            path=root/'main.tex'
+            path.write_text('The renderer implements the measured operator. We evaluate reference.py.\n')
+            findings=lint_tex_file(path,root,'submission',{'PROSE.NO_INTERNAL_PROVENANCE'})
+            self.assertTrue(findings)
+            self.assertTrue(all(f.kind=='review_hint' for f in findings))
+
+    def test_repository_identity_requires_context_but_author_field_is_definite(self):
+        with TemporaryDirectory() as directory:
+            root=Path(directory)
+            path=root/'main.tex'
+            path.write_text('We use https://github.com/example/third-party.\n' + r'\author{Named Author}')
+            findings=lint_tex_file(path,root,'submission',{'ANON.DOUBLE_BLIND'})
+            self.assertEqual(['review_hint','deterministic'],[f.kind for f in findings])
+
+    def test_finding_kind_cannot_silently_disable_failure(self):
+        with self.assertRaises(ValueError):
+            Finding('FACT.NO_FABRICATION','main.tex',1,'bad kind',kind='ignored')
+
     def lint_fixture(self, name: str, stage: str):
         root = FIXTURES / name
         tex_paths = sorted(root.rglob("*.tex"))
@@ -36,7 +73,7 @@ class ProjectLintTests(unittest.TestCase):
         for path in tex_paths:
             findings.extend(
                 lint_tex_file(
-                    path, root, stage, enabled_rule_ids=STRICT_TEST_RULE_IDS
+                    path, root, stage, enabled_rule_ids=TEST_RULE_IDS
                 )
             )
         findings.extend(lint_citations(root, tex_paths, bib_paths))
@@ -50,11 +87,8 @@ class ProjectLintTests(unittest.TestCase):
         rule_ids = {finding.rule_id for finding in findings}
         self.assertTrue(
             {
-                "PROSE.EM_DASH_FORBIDDEN",
-                "LATEX.NO_BRACKET_DISPLAY",
                 "PROSE.NO_INTERNAL_PROVENANCE",
                 "FINAL.NO_UNRESOLVED_MARKERS",
-                "STRUCT.CONCLUSION_SINGLE_PARAGRAPH",
                 "CITE.APPROVED_SOURCE_ONLY",
             }.issubset(rule_ids),
             rule_ids,
@@ -76,14 +110,14 @@ class ProjectLintTests(unittest.TestCase):
             tex_paths,
             [],
             "submission",
-            enabled_rule_ids=STRICT_TEST_RULE_IDS,
+            enabled_rule_ids=TEST_RULE_IDS,
         )
         self.assertNotIn("STRUCT.CONCLUSION_SINGLE_PARAGRAPH", assessed)
 
-    def test_concluding_remarks_alias_is_checked(self) -> None:
+    def test_concluding_remarks_paragraph_shape_is_not_a_hard_check(self) -> None:
         root = FIXTURES / "project-concluding-remarks"
         findings = self.lint_fixture("project-concluding-remarks", "submission")
-        self.assertIn(
+        self.assertNotIn(
             "STRUCT.CONCLUSION_SINGLE_PARAGRAPH",
             {finding.rule_id for finding in findings},
         )
@@ -92,9 +126,9 @@ class ProjectLintTests(unittest.TestCase):
             sorted(root.rglob("*.tex")),
             [],
             "submission",
-            enabled_rule_ids=STRICT_TEST_RULE_IDS,
+            enabled_rule_ids=TEST_RULE_IDS,
         )
-        self.assertIn("STRUCT.CONCLUSION_SINGLE_PARAGRAPH", assessed)
+        self.assertNotIn("STRUCT.CONCLUSION_SINGLE_PARAGRAPH", assessed)
 
     def test_spacing_inline_math_and_table_missing_markers_do_not_false_positive(self) -> None:
         findings = self.lint_fixture("project-tex-edge-pass", "submission")
@@ -105,30 +139,15 @@ class ProjectLintTests(unittest.TestCase):
         }
         self.assertTrue(forbidden.isdisjoint({finding.rule_id for finding in findings}))
 
-    def test_standard_conference_section_count_is_profile_scoped(self) -> None:
-        root = FIXTURES / "project-pass"
-        path = root / "main.tex"
-        without_profile = lint_tex_file(
-            path, root, "submission", enabled_rule_ids=STRICT_TEST_RULE_IDS
-        )
-        with_profile = lint_tex_file(
-            path,
-            root,
-            "submission",
-            enforce_standard_section_count=True,
-            enabled_rule_ids=STRICT_TEST_RULE_IDS,
-        )
-        self.assertNotIn(
-            "STRUCT.SECTION_COUNT_PROFILE", {item.rule_id for item in without_profile}
-        )
-        self.assertIn(
-            "STRUCT.SECTION_COUNT_PROFILE", {item.rule_id for item in with_profile}
-        )
+    def test_eight_sections_are_not_a_generic_lint_failure(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "main.tex").write_text("\n".join(
+                r"\section{Part %d}Content." % i for i in range(8)))
+            findings, _ = lint_project(root, "submission")
+            self.assertEqual([], findings)
 
-    def test_section_count_excludes_standalone_supplement(self) -> None:
-        root = FIXTURES / "project-main-with-supplement"
-        findings = lint_standard_section_count(root, sorted(root.rglob("*.tex")))
-        self.assertEqual([], findings)
+
 
     def test_common_biblatex_citation_commands_are_parsed(self) -> None:
         text = (
@@ -140,23 +159,14 @@ class ProjectLintTests(unittest.TestCase):
             citation_keys(text),
         )
 
-    def test_unicode_arrow_is_checked_only_when_rule_is_active(self) -> None:
+    def test_punctuation_and_display_style_are_not_hard_failures(self):
         with TemporaryDirectory() as directory:
             root = Path(directory)
-            path = root / "main.tex"
-            path.write_text(
-                "\\documentclass{article}\n\\begin{document}\nA → B.\n\\end{document}\n",
-                encoding="utf-8",
-            )
-            inactive = lint_tex_file(path, root, "draft", enabled_rule_ids=set())
-            active = lint_tex_file(
-                path,
-                root,
-                "draft",
-                enabled_rule_ids={"PROSE.NO_UNICODE_ARROWS"},
-            )
-            self.assertNotIn("PROSE.NO_UNICODE_ARROWS", {item.rule_id for item in inactive})
-            self.assertIn("PROSE.NO_UNICODE_ARROWS", {item.rule_id for item in active})
+            (root / "main.tex").write_text(
+                "A — B; A → B.\n" + r"\[x=1\] $$y=2$$" + "\n")
+            findings, assessed = lint_project(root, "submission")
+            self.assertEqual([], findings)
+            self.assertTrue({"PROSE.EM_DASH_FORBIDDEN", "LATEX.NO_BRACKET_DISPLAY"}.isdisjoint(assessed))
 
     def test_referenceable_display_requires_numbered_equation_or_align(self) -> None:
         with TemporaryDirectory() as directory:
@@ -227,7 +237,7 @@ class ProjectLintTests(unittest.TestCase):
             self.assertTrue(findings)
             self.assertEqual({"ANON.DOUBLE_BLIND"}, {item.rule_id for item in findings})
 
-    def test_standalone_limitations_section_is_rejected(self) -> None:
+    def test_standalone_limitations_section_has_no_hard_finding(self) -> None:
         with TemporaryDirectory() as directory:
             root = Path(directory)
             path = root / "main.tex"
@@ -236,11 +246,9 @@ class ProjectLintTests(unittest.TestCase):
                 "\\section{Limitations}\nBounded discussion.\n\\end{document}\n",
                 encoding="utf-8",
             )
-            findings = lint_standalone_limitations(root, [path])
-            self.assertEqual(
-                ["STRUCT.CONCLUSION_INTEGRATES_LIMITATIONS"],
-                [item.rule_id for item in findings],
-            )
+            findings, assessed = lint_project(root, "submission", active_rule_ids=TEST_RULE_IDS)
+            self.assertEqual([], findings)
+            self.assertNotIn("STRUCT.CONCLUSION_INTEGRATES_LIMITATIONS", assessed)
 
 if __name__ == "__main__":
     unittest.main()

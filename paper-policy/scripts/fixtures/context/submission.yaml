@@ -11,10 +11,9 @@ manuscript_state: full_draft
 reader_risk: medium
 task_scope: submission
 task_mode: submission_readiness
-policy_sets: [strict-house-style]
+policy_sets: [integrity-core, academic-defaults]
 modes: [related_work_full, final_citation_check]
 artifact_mode: final
-structure_profile: standard_conference
 evaluation_structure: rq_driven
 experiment_type: stochastic
 scopes: [workflow, writing, review, citations, figures, tables]

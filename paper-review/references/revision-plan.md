@@ -12,7 +12,7 @@ The revision plan is the source of truth for every manuscript change promised or
 # Revision Plan
 
 ## Overall Checklist
-- [ ] (<issue_id>) <atomic manuscript edit> - location: <section/table/figure/appendix>; commitment: <already-done|approved-for-rebuttal|future-work-only>; owner: <user|Codex|experiment>; status: <pending|done|blocked|deferred>.
+- [ ] (<issue_id>) <atomic manuscript edit> - location: <section/table/figure/appendix>; commitment: <already-done|approved-for-rebuttal|future-work-only>; owner: <user|Codex|experiment>; status: <pending|partial|done|blocked|deferred>.
 
 ## Grouped by Location
 ### <Section or artifact>
@@ -39,7 +39,7 @@ The revision plan is the source of truth for every manuscript change promised or
 - Every rebuttal promise maps to a checklist item.
 - Every checklist item must have a status.
 - Do not add a promised experiment or result unless the user approved it.
-- Do not add a new citation unless the BibTeX exists locally or the user will manually add it.
+- Add citations only from existing supported sources or primary-source verification within the authorized task. Update the bibliography when requested, preserve existing keys, and record unresolved support instead of promising it.
 - Update the same plan in place for follow-up rounds; do not regenerate from scratch if a plan already exists.
 
 ## Verification Pass
@@ -52,12 +52,28 @@ When checking a revised manuscript:
    - `done`: edit exists and matches the promise.
    - `partial`: edit exists but is weaker, unclear, or in the wrong location.
    - `blocked`: missing user result, missing BibTeX, or unresolved decision.
-   - `not done`: no matching edit found.
+   - `pending`: no matching edit found.
+   - `deferred`: the response explicitly postpones the item and gives the reason.
 4. Report any contradictions between rebuttal and manuscript.
 
 ## Handoff Rules
 
 - Prose edits: route to `paper-writing`.
 - Figure/table edits: route to `paper-figures-tables`.
-- Citation additions: ask the user to manually update `.bib` first.
-- Experiment results: ask the user for actual numbers/logs/source tables.
+- Citation additions: use the already authorized source and editing scope in
+  `../../paper-writing/references/citation-integration.md`; request manual input
+  only for a required inaccessible source or explicit manual-edit constraint.
+- Experiment results: inspect available actual numbers/logs/source tables; a
+  writing promise does not authorize new experiments. Identify missing evidence
+  and continue supported revisions.
+
+## Round and Dependency Tracking
+
+For multi-round responses, keep the comment/round identity and previous decision
+with the current verification record. Refresh section/line references after
+reorganization. When a result or claim changes, check dependent response text,
+abstract, conclusion, captions and supplement. Do not silently mark a previously
+completed promise done if its supporting source has changed.
+
+Finish substantial revision with `revision-closure.md`, distinguishing remaining
+scientific work from local formatting or optional style advice.

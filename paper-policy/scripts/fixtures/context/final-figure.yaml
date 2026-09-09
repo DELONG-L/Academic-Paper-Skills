@@ -4,7 +4,7 @@ submission_stage: camera_ready
 language: en
 task_scope: artifact
 task_mode: figure_creation
-policy_sets: [strict-house-style]
+policy_sets: [integrity-core, academic-defaults]
 artifact_mode: final_figure
 scopes: [figures]
 artifacts: [figure]

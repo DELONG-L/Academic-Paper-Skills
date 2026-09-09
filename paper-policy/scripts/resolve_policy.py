@@ -41,7 +41,6 @@ CONTEXT_FIELDS = {
     "modes",
     "policy_sets",
     "artifact_mode",
-    "structure_profile",
     "evaluation_structure",
     "table_profile",
     "experiment_type",
@@ -382,7 +381,7 @@ def _resolve_policy_sets(
         requested = list(policy_sets_doc["default_sets"])
         context["policy_sets"] = requested
         notes.append(
-            "No policy_sets were supplied; applied the public default policy sets."
+            "No policy_sets were supplied; applied the installation default policy sets."
         )
     unknown = sorted(set(requested) - set(set_docs))
     if unknown:
@@ -522,7 +521,7 @@ def resolve_policy(
         )
 
     return {
-        "resolver_version": 2,
+        "resolver_version": 3,
         "context": context,
         "active_policy_sets": active_policy_sets,
         "policy_set_notes": policy_set_notes,

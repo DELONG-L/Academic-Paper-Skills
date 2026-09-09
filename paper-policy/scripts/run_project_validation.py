@@ -48,10 +48,14 @@ def build_evidence_worklist(
                 "check_kinds": check_kinds,
                 "suggested_evaluator": (
                     "human_or_user"
-                    if {"semantic", "manual"} & set(check_kinds)
-                    else "tool_or_human"
+                    if "manual" in check_kinds
+                    else "agent_or_human" if "semantic" in check_kinds
+                    else "tool"
                 ),
+                "basis": result["basis"],
+                "source_verification": result["source_verification"],
                 "deterministic_findings": result["findings"],
+                "review_hints": result.get("review_hints", []),
             }
         )
     return {
@@ -106,7 +110,7 @@ def run_validation(
     findings, assessed = lint_project(
         project,
         stage,
-        "STRUCT.SECTION_COUNT_PROFILE" in active_hard_ids,
+
         active_hard_ids,
         project_files.tex_paths,
         project_files.bib_paths,
@@ -134,6 +138,7 @@ def run_validation(
         findings,
         assessed,
         artifact_coverage,
+        source_root=project,
     )
 
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -191,6 +196,15 @@ def run_validation(
             and (item.get("evidence_record") or {}).get("evaluator") == "agent"
         }
     )
+    agent_passing_ids = sorted(
+        item["rule_id"] for item in assessment["hard_results"]
+        if item["status"] == "PASS" and item["basis"] == "supplied_evidence"
+        and (item.get("evidence_record") or {}).get("evaluator") == "agent"
+    )
+    unverified_source_ids = sorted(
+        item["rule_id"] for item in assessment["hard_results"]
+        if item["source_verification"]["status"] == "UNVERIFIED"
+    )
     affected_artifacts = sorted(
         {
             item.path[len("<artifact:") : -1]
@@ -219,6 +233,10 @@ def run_validation(
         "affected_artifact_ids": affected_artifacts,
         "agent_failing_rule_count": len(agent_rule_ids),
         "agent_failing_rule_ids": agent_rule_ids,
+        "agent_passing_rule_count": len(agent_passing_ids),
+        "agent_passing_rule_ids": agent_passing_ids,
+        "unverified_source_rule_count": len(unverified_source_ids),
+        "unverified_source_rule_ids": unverified_source_ids,
         "total_failing_rule_count": len(failing_results),
         "unverified_rule_count": assessment["hard_summary"]["UNVERIFIED"],
         "unused_bibtex_key_count": len(unused_entries),

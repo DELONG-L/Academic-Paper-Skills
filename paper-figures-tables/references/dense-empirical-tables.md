@@ -60,7 +60,7 @@ Use `\footnotesize` as the starting point. For genuinely wide matrices,
 ## Grouped Empirical Matrix
 
 Use `@{}` to remove unused outer padding, right-align numeric columns, and add
-at most one sparse vertical separator when it carries a real semantic boundary.
+sparse separators when they clarify real semantic boundaries.
 
 ```latex
 \begin{table*}[t]

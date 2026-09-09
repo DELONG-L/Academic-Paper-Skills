@@ -53,7 +53,7 @@ waiver:
 
 `activation.when` must be empty only for `type: always`. Conditional activations require at least one value. `feature` activation uses semantic selectors from `context-schema.md`; generic artifact applicability remains in the rule's `artifacts` field.
 
-Semantic or manual checks must set `evidence_required: true`. They never pass merely because an LLM inspected the text.
+Semantic or manual checks must set `evidence_required: true`. Semantic checks may pass on agent evidence with artifact, locator, reasoning, and verified file snapshots under `compliance-schema.md`; a bare assertion of inspection is insufficient. Rules containing manual checks require human, user, or venue evidence to pass.
 
 `autofix: safe` is limited to deterministic, closed, meaning-preserving replacements. Semantic prose changes use `assisted` or `none`.
 
@@ -79,21 +79,19 @@ remain generic within their phase, scope, and artifact applicability.
 
 ## Policy Sets
 
-`policy-sets.yaml` controls distribution defaults without changing rule force:
+`policy-sets.yaml` is the canonical selection registry:
 
 ```yaml
 default_sets: [integrity-core, academic-defaults]
-sets:
-  - id: strict-house-style
-    includes: [academic-defaults]
-    hard_rules: [STRUCT.CONCLUSION_SINGLE_PARAGRAPH]
-    soft_rules: [RESULTS.RQ_ANSWER_BOX]
 ```
 
-Every hard and soft rule belongs to exactly one policy set. Included sets are
-expanded transitively. A disabled rule is unavailable, not waived or demoted;
-after `strict-house-style` is explicitly enabled, its hard rules retain hard
-status. Reliable venue requirements still outrank conflicting house style.
+`academic-defaults` includes `integrity-core`. Every rule belongs to exactly
+one set, and included sets expand transitively. A task-specific reference must
+not promote an active soft rule into a hard requirement. Disabled rules are
+unavailable; they are not automatically waived or satisfied.
+
+Author preferences live in the shared soft guidance and writing references.
+There is no separate house-style set or local-default override registry.
 
 ## Profiles
 
@@ -156,4 +154,4 @@ rationale: "Journal profile and complete Discussion require eight sections."
   alternatives and are not attached to active rules.
 - Scope, artifact, phase, feature, profile field, and task-mode values come from
   the shared controlled vocabulary and reject unknown spellings.
-- Registry validation checks structure only; manuscript compliance requires separate lint, semantic evidence, and human review.
+- Registry validation checks structure only; manuscript compliance requires separate lint, semantic evidence, and human review for applicable manual checks.

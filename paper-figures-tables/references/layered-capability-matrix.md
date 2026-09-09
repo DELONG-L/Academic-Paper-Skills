@@ -27,9 +27,9 @@ uniqueness claims about a literature corpus.
 - Shade or label a cell as a coverage delta only when the distinction is supported against every compared row.
 - Unless the comparison corpus is exhaustive, say "absent from the compared rows" rather than universally "unique to this work."
 
-The marker rules and the highlight rules are independent. Canonical markers may
-be hard under the active house policy, while row or cell highlighting remains a
-soft presentation choice.
+Marker meaning must be supported by row evidence. The example glyphs and row or
+cell highlighting are adaptable presentation choices; alternative clear symbols
+are valid when their meaning is defined.
 
 ## Layout Contract
 
@@ -39,7 +39,7 @@ soft presentation choice.
 - Use a fixed-width, ragged-right first column and remove unused outer padding with `@{}`.
 - Start at `\footnotesize`; use `\scriptsize` only after final-width QA shows that it remains comfortably readable.
 - Start with `\tabcolsep` near 3.5--4.0 pt and `\arraystretch` near 1.05--1.10.
-- Prefer whitespace and `\cmidrule` to vertical rules. Use at most one sparse vertical separator when it carries a necessary semantic boundary.
+- Prefer whitespace and `\cmidrule` to vertical rules. Use sparse separators only when they clarify necessary semantic boundaries.
 - Use `threeparttable` only when actual `tablenotes` are present.
 - Keep the caption focused on the table's claim and scope. Put secondary abbreviations, corpus boundaries, and caveats in notes.
 - Pair a meaning-bearing cell tint with a non-color cue such as `\dagger`.

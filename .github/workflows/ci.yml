@@ -25,8 +25,10 @@ jobs:
           python -m pip install -r requirements-policy.txt -r requirements-figures.txt
       - name: Validate policy registries
         run: python paper-policy/scripts/validate_registry.py
+      - name: Validate cross-skill references and rule IDs
+        run: python paper-policy/scripts/audit_skill_integration.py .
       - name: Compile Python helpers
-        run: python -m py_compile paper-policy/scripts/*.py paper-figures-tables/scripts/*.py
+        run: python -m py_compile paper-policy/scripts/*.py paper-figures-tables/scripts/*.py paper-review/scripts/*.py
       - name: Run policy tests
         run: python -m unittest discover -s paper-policy/scripts -p 'test_*.py'
       - name: Run figure policy tests

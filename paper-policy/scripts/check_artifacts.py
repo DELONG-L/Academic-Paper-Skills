@@ -23,15 +23,9 @@ ARTIFACT_TYPES = {
     "related_work_table", "data_table", "result_table", "paper_table",
 }
 FILE_FIELDS = {"outputs", "scripts", "source_data", "previews", "table_sources"}
-VECTOR_FORMATS = {".pdf", ".svg"}
-PAPER_FIGURE_FORMATS = VECTOR_FORMATS | {".png", ".tif", ".tiff"}
-FILLED_PARTIAL_MARKER_PATTERNS = [
-    re.compile(
-        r"\\(?:newcommand|renewcommand)\s*\{\\pmark\}"
-        r"[\s\S]{0,240}?\\ding\s*\{108\}"
-    ),
-    re.compile(r"\\def\s*\\pmark[\s\S]{0,240}?\\ding\s*\{108\}"),
-]
+# Recognition is not evidence of venue acceptance or final-size quality.
+VECTOR_FORMATS = {".pdf", ".svg", ".eps"}
+PAPER_FIGURE_FORMATS = VECTOR_FORMATS | {".png", ".tif", ".tiff", ".jpg", ".jpeg"}
 TABLE_ENV_PATTERN = re.compile(
     r"\\begin\{(?P<env>table\*?)\}(?P<body>[\s\S]*?)\\end\{(?P=env)\}"
 )
@@ -43,16 +37,7 @@ PUBLIC_DEFAULT_ARTIFACT_RULE_IDS = {
     "FIG.TRACEABLE_SCRIPT",
     "TABLE.PROPOSED_ROW_GROUNDED",
     "TABLE.VALUES_GROUNDED",
-}
-STRICT_HOUSE_ARTIFACT_RULE_IDS = {
-    "FIG.NO_IN_FIGURE_TITLE",
-    "FIG.CONCEPT_HOUSE_STYLE",
-    "FIG.CONCEPT_TYPOGRAPHY",
-    "FIG.CONCEPT_MODEL_NATIVE_OUTPUT",
-    "TABLE.BOOKTABS_FINAL",
-    "TABLE.FINAL_TARGET_WIDTH",
-    "RELATED.COMPARISON_REQUIRED",
-    "TABLE.CANONICAL_RELATED_MARKERS",
+    "TABLE.FINAL_READABLE",
 }
 
 
@@ -146,17 +131,6 @@ def _all_exist(root: Path, values: list[str]) -> tuple[bool, list[str]]:
     return bool(values) and not missing, missing
 
 
-def _read_project_tex(
-    root: Path, tex_paths: list[Path] | tuple[Path, ...] | None = None
-) -> str:
-    selected = sorted(root.rglob("*.tex")) if tex_paths is None else sorted(tex_paths)
-    return "\n".join(
-        path.read_text(encoding="utf-8", errors="replace")
-        for path in selected
-        if path.is_file()
-    )
-
-
 def _table_blocks_by_label(root: Path, values: list[str], label: str) -> list[str]:
     """Return exact table/table* environments containing the requested label."""
     label_pattern = re.compile(rf"\\label\s*\{{\s*{re.escape(label)}\s*\}}")
@@ -171,10 +145,6 @@ def _table_blocks_by_label(root: Path, values: list[str], label: str) -> list[st
             if label_pattern.search(block):
                 blocks.append(block)
     return blocks
-
-
-def _has_filled_partial_marker(text: str) -> bool:
-    return any(pattern.search(text) for pattern in FILLED_PARTIAL_MARKER_PATTERNS)
 
 
 def check_artifacts(
@@ -199,6 +169,9 @@ def check_artifacts(
     def fail(rule_id: str, artifact_id: str, message: str) -> None:
         findings.append(Finding(rule_id, f"<artifact:{artifact_id}>", 0, message))
 
+    def hint(rule_id: str, artifact_id: str, message: str) -> None:
+        findings.append(Finding(rule_id, f"<artifact:{artifact_id}>", 0, message, kind="review_hint"))
+
     for record in records:
         artifact_id = record["id"]
         kind = record["kind"]
@@ -206,9 +179,8 @@ def check_artifacts(
         files = {field: record["files"].get(field, []) for field in FILE_FIELDS}
 
         if kind == "figure":
-            if "paper_figure" in types:
+            if types & {"paper_figure", "data_figure"}:
                 for rule_id in (
-                    "FIG.NO_IN_FIGURE_TITLE",
                     "FIG.FINAL_WIDTH_READABLE",
                     "FIG.FINAL_EXPORT_ACCESSIBILITY",
                 ):
@@ -225,11 +197,16 @@ def check_artifacts(
                         artifact_id,
                         f"declared output files are missing: {', '.join(missing_outputs)}",
                     )
-                elif not allowed_outputs:
+                elif not files["outputs"]:
                     fail(
                         "FIG.FINAL_EXPORT_ACCESSIBILITY",
                         artifact_id,
-                        "no allowed PDF, SVG, PNG, or TIFF output is declared",
+                        "no final output is declared",
+                    )
+                elif not allowed_outputs:
+                    hint(
+                        "FIG.FINAL_EXPORT_ACCESSIBILITY", artifact_id,
+                        "output format is outside checker coverage; inspect content, final-size quality and applicable format requirements",
                     )
                 elif outputs_ok:
                     passed("FIG.FINAL_EXPORT_ACCESSIBILITY", artifact_id)
@@ -258,77 +235,27 @@ def check_artifacts(
                 elif scripts_ok:
                     passed("FIG.TRACEABLE_SCRIPT", artifact_id)
 
-                if files["outputs"] and not any(
-                    Path(value).suffix.lower() in VECTOR_FORMATS for value in files["outputs"]
-                ):
-                    fail(
-                        "FIG.FINAL_EXPORT_ACCESSIBILITY",
-                        artifact_id,
-                        "data figure has no declared PDF or SVG vector output",
-                    )
-
             if "conceptual_figure" in types:
                 candidate("FIG.NO_INVENTED_COMPONENTS", artifact_id)
-                candidate("FIG.CONCEPT_HOUSE_STYLE", artifact_id)
-
-            if "generated_conceptual_figure" in types:
-                candidate("FIG.CONCEPT_TYPOGRAPHY", artifact_id)
-                candidate("FIG.CONCEPT_MODEL_NATIVE_OUTPUT", artifact_id)
 
         if kind == "table":
-            candidate("TABLE.BOOKTABS_FINAL", artifact_id)
-            candidate("TABLE.FINAL_TARGET_WIDTH", artifact_id)
+            candidate("TABLE.FINAL_READABLE", artifact_id)
             sources = files["table_sources"] or [
                 value for value in files["outputs"] if Path(value).suffix.lower() == ".tex"
             ]
             latex_label = record["latex_label"]
             table_blocks = _table_blocks_by_label(root, sources, latex_label)
-            source_text = table_blocks[0] if len(table_blocks) == 1 else ""
             if len(table_blocks) != 1:
                 fail(
-                    "TABLE.BOOKTABS_FINAL",
-                    artifact_id,
+                    "TABLE.FINAL_READABLE", artifact_id,
                     f"expected exactly one table/table* environment with label {latex_label!r}; found {len(table_blocks)}",
                 )
             else:
-                if all(token in source_text for token in ("\\toprule", "\\midrule", "\\bottomrule")):
-                    passed("TABLE.BOOKTABS_FINAL", artifact_id)
-                else:
-                    fail(
-                        "TABLE.BOOKTABS_FINAL",
-                        artifact_id,
-                        "table source does not contain top, mid, and bottom booktabs rules",
-                    )
-
+                # This completes only the source check. The rule also requires
+                # manual evidence of readability and marker semantics.
+                passed("TABLE.FINAL_READABLE", artifact_id)
             if "related_work_table" in types:
-                for rule_id in (
-                    "RELATED.COMPARISON_REQUIRED",
-                    "TABLE.PROPOSED_ROW_GROUNDED",
-                    "TABLE.CANONICAL_RELATED_MARKERS",
-                ):
-                    candidate(rule_id, artifact_id)
-                if source_text:
-                    marker_tokens = ("\\cmark", "\\pmark", "\\xmark")
-                    marker_definition_text = source_text + "\n" + _read_project_tex(
-                        root, project_tex_paths
-                    )
-                    if (
-                        all(token in source_text for token in marker_tokens)
-                        and _has_filled_partial_marker(marker_definition_text)
-                    ):
-                        passed("TABLE.CANONICAL_RELATED_MARKERS", artifact_id)
-                    else:
-                        fail(
-                            "TABLE.CANONICAL_RELATED_MARKERS",
-                            artifact_id,
-                            "related-work table must use cmark/pmark/xmark and define pmark as the filled pifont circle \\ding{108}",
-                        )
-                else:
-                    fail(
-                        "TABLE.CANONICAL_RELATED_MARKERS",
-                        artifact_id,
-                        f"cannot inspect related-work markers because label {latex_label!r} did not resolve to exactly one table environment",
-                    )
+                candidate("TABLE.PROPOSED_ROW_GROUNDED", artifact_id)
 
             if types & {"data_table", "result_table"}:
                 candidate("TABLE.VALUES_GROUNDED", artifact_id)
@@ -356,11 +283,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("evidence", type=Path, help="compliance-evidence.yaml")
     parser.add_argument("--root", type=Path, help="artifact path root; defaults to evidence directory")
     parser.add_argument("--format", choices=("yaml", "json"), default="yaml")
-    parser.add_argument(
-        "--strict-house-style",
-        action="store_true",
-        help="include checks owned by the optional strict-house-style set",
-    )
     return parser.parse_args()
 
 
@@ -375,8 +297,6 @@ def main() -> int:
         print(f"Artifact assessment failed: {exc}", file=sys.stderr)
         return 2
     enabled = set(PUBLIC_DEFAULT_ARTIFACT_RULE_IDS)
-    if args.strict_house_style:
-        enabled.update(STRICT_HOUSE_ARTIFACT_RULE_IDS)
     findings = [finding for finding in findings if finding.rule_id in enabled]
     assessed &= enabled
     coverage = {key: value for key, value in coverage.items() if key in enabled}
@@ -390,7 +310,7 @@ def main() -> int:
         print(json.dumps(result, ensure_ascii=False, indent=2))
     else:
         print(yaml.safe_dump(result, sort_keys=False, allow_unicode=True), end="")
-    return 1 if findings else 0
+    return 1 if any(finding.kind == "deterministic" for finding in findings) else 0
 
 
 if __name__ == "__main__":

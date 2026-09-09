@@ -1,5 +1,7 @@
 # Artifact Handoffs
 
+A handoff is internal routing. If the user requested the finished artifact, load the owning skill and finish it in the same task; do not stop at a handoff spec or require another user message. A spec-only request should return the spec. Preserve existing authorization, source boundaries, and tool requirements.
+
 Use this when a writing task identifies a figure or table need.
 
 Writing owns the rhetorical need and content specification. Figures & Tables owns final artifact rendering, visual design, table layout, data plotting, `resizebox`, package choices, compile fixes, and figure export.
@@ -18,7 +20,7 @@ Figures & Tables handoff:
 - Claim supported:
 - Label: tab:related-comparison
 - Row groups:
-- Columns / dimensions: default 3--4; justify 5; use a dense design for 6--7; use the layered profile for 8+
+- Columns / dimensions: choose fair, useful comparisons; adapt count and grouping to the evidence and readable placement
 - Table profile: compact | dense empirical | layered capability matrix
 - Semantic column groups: required for a layered capability matrix
 - Comparison-corpus boundary:
@@ -40,7 +42,7 @@ Figures & Tables handoff:
 - Metrics and directions:
 - Baselines / variants:
 - Expected table/figure label:
-- Caption draft: paper-facing interpretation; keep file paths, scripts, renderer names, and validation notes out of the caption unless required
+- Keep irrelevant workflow bookkeeping in artifact or review notes. Retain scientifically necessary implementation identifiers, renderer details and truthful synthetic-data disclosures in the caption or prose where they support interpretation; a venue mandate is not required for relevant scientific content.
 - In-text interpretation paragraph:
 ```
 

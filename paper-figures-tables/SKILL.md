@@ -5,7 +5,27 @@ description: Create, revise, and validate publication-ready academic paper figur
 
 # Paper Figures & Tables
 
-Use this as the single entrypoint for paper artifacts: tables, precise data figures, generated conceptual figures, captions, and artifact QA. It combines public integrity defaults, optional house artifact style, data-visualization judgment, conceptual-figure planning, and experiment artifact checks.
+Use this as the single entrypoint for paper artifacts: tables, precise data figures, generated conceptual figures, captions, and artifact QA. It combines public integrity defaults, adaptable author preferences, data-visualization judgment, conceptual-figure planning, and experiment artifact checks.
+
+Use `integrity-core` and `academic-defaults` through `paper-policy`. Academic integrity and explicit project/venue requirements govern correctness. Author preferences guide presentation and remain adaptable; no separate house-style compliance set is used.
+
+For authorization and internal handoffs, follow `../paper-policy/references/authority-model.md` (Task authorization and internal handoffs). Continue authorized local work across skill boundaries without another user invocation; preserve audit-only and explicit approval-before-editing scopes.
+
+## Managed Research Workspace Preflight
+
+Before creating or changing persistent paper artifacts, resolve a valid
+`PROJECT-WORKSPACE.md` for the selected project, or the
+`.research-workspace.yml` link when operating in its independent paper Git
+repository. In a managed workspace, put final lightweight exports only in the
+declared paper repository and update its `figure-manifest.yml` with the
+experiment ID, run or data snapshot, generator, source path, and code
+revision. Keep raw data, logs, checkpoints, and plotting scratch outside the
+paper repository.
+
+If no contract resolves, use the normal artifact workflow. Do not initialize a
+workspace merely because an artifact is academic. Route repository setup,
+asset-provenance repair, or workspace reorganization to
+`research-workspace-governance`.
 
 ## Priority Model
 
@@ -16,11 +36,11 @@ Authority order:
 1. Core integrity constraints from the sibling `paper-policy` skill.
 2. User-provided data, manuscript facts, approved evidence, and explicit instructions.
 3. Verified venue requirements.
-4. Writing handoff specs from `paper-writing`, when present.
-5. Hard rules from all activated policy sets, including house rules only after explicit opt-in.
-6. Enabled soft guidance, optional house artifact style, and precise-plot advice.
+4. Applicable hard rules from the shared academic workflow.
+5. Writing handoff specs within the authorized task; a generated spec cannot override hard rules.
+6. Enabled soft guidance, adaptable author preferences, and precise-plot advice.
 
-Do not let generic artifact advice override user facts, enabled policy rules, or route boundaries. Do not impose disabled house rules as public requirements.
+Do not let generic artifact advice override user facts, enabled policy rules, or route boundaries. Presentation preferences do not establish academic correctness.
 
 ## Task Routing
 
@@ -29,10 +49,11 @@ Do not let generic artifact advice override user facts, enabled policy rules, or
 | Decide table vs figure | `artifact-routing.md`, `captions.md` |
 | Related Work comparison table | `tables.md`, `captions.md`; add `dense-empirical-tables.md` for a load-bearing multi-axis matrix and `layered-capability-matrix.md` when 8+ dimensions form explicit semantic layers |
 | Result table, findings index, sample ledger, taxonomy table, risk matrix | `tables.md`, `captions.md`, `quality-checks.md`; add `dense-empirical-tables.md` when hierarchy or density is high |
-| Precise experiment/data plot from CSV/JSON/logs | `data-figures.md`, `data-profiling.md`, `chart-selection.md`, `visual-pitfalls.md`, `figure-contract.md`, `plot-patterns.md`, `captions.md`, `quality-checks.md` |
+| Precise experiment/data plot from supplied values or artifacts | `data-figures.md`, `captions.md`, `quality-checks.md`; add profiling, chart-selection or recipes only when the task needs those decisions |
 | Journal/venue-specific plot sizing or export | `journal-specs.md`, `visual-qa.md`, `publication-checklist.md`, then the relevant artifact reference |
 | Conceptual figure, Figure 1, architecture, pipeline, threat model | `conceptual-figures.md`, `figure-contract.md`, `captions.md`, `quality-checks.md` |
 | Statistical summary for artifact creation | `source-data-and-statistics.md`, then `tables.md` or `data-figures.md` |
+| Multi-run result table or plot | `source-data-and-statistics.md` for run validity, comparability and reproducible aggregation, then the relevant artifact reference |
 | Caption-only task | `captions.md` plus the relevant artifact reference |
 | Artifact QA or cleanup | `quality-checks.md`, then the relevant artifact reference |
 
@@ -42,25 +63,22 @@ artifact feeding submission readiness, also load `policy-integration.md`.
 ## Artifact Constraints And Defaults
 
 - Use source data or user-provided values. Do not invent numbers, baselines, methods, p-values, error bars, or visual trends.
-- Every artifact must support one explicit paper claim or comparison.
+- Every artifact has a clear scientific purpose; related comparisons may share an organized multi-panel figure.
 - Every data-driven artifact must identify its source file or state that source data is missing.
-- Use `booktabs` as an optional clean default; require it only when `TABLE.BOOKTABS_FINAL` is active or the venue specifies it.
-- Align tables to the target width without unnecessary scaling. Require the house `\resizebox` pattern only when `TABLE.FINAL_TARGET_WIDTH` or its enabled soft companion calls for it.
-- Tables should be compact argumentative artifacts, not storage for every available dimension. Prefer single-column tables after pruning to the few dimensions that support the claim; use `table*` only when the argument would become misleading or unreadable in one column.
-- Use an axis-based Related Work comparison table when it improves the argument. Require the table and house dimension/placement defaults only when their strict rules are enabled.
-- Precise experiment data figures must be source-data-driven Python/Matplotlib/Seaborn plots. Do not use image generation for numeric plots.
-- Choose the renderer for non-data conceptual figures from topology, editability, venue constraints, and available tools. Use a generative image model by default only when `FIG.CONCEPT_HOUSE_STYLE` is active.
-- Apply the one-or-two conceptual-figure preference only when `FIG.CONCEPT_COUNT` is enabled.
-- Apply the pure-white, no-texture conceptual style only when `FIG.CONCEPT_HOUSE_STYLE` is active.
-- When `FIG.CONCEPT_TYPOGRAPHY` is active, require the image model itself to render Times New Roman for every non-mathematical label and a dedicated manuscript- or venue-compatible math font for variables, symbols, and equations. Regenerate or stop when those font roles are wrong or unverifiable; never repair them with a later overlay.
-- When `FIG.CONCEPT_MODEL_NATIVE_OUTPUT` is active, keep all visible text, mathematics, arrows, icons, components, and boundaries in the accepted model output. Corrections must use another model generation or model-editing pass; allow only non-semantic crop, resize, compression, color-profile, or format-packaging operations afterward.
-- Put interpretation in captions. Forbid in-figure titles only when `FIG.NO_IN_FIGURE_TITLE` is active or the venue requires that style.
+- Use `booktabs` as a clean option when compatible with the template. Natural-width tables are valid; verify final readability under `TABLE.FINAL_READABLE`.
+- Prefer compact tables after pruning dimensions that add little to the claim. Use wider layouts when needed for a fair, readable comparison.
+- Apply `RELATED.COMPARISON_REQUIRED` as soft guidance; create a table when useful or explicitly requested, not merely to satisfy a preference.
+- Precise data figures must be derived from source data with reproducible plotting tools. Do not generate numeric trends or error bars with an image model.
+- Select the conceptual-figure renderer from topology, editability, explicit requirements, and available tools. `FIG.CONCEPT_PRESENTATION` recommends clean, readable design without prescribing one renderer or font.
+- Keep mathematical symbols, components, arrows, and boundaries faithful to the manuscript. Inspect the actual output; prompt wording is not evidence of correctness.
+- Follow the active tools' editing constraints. Preserve source and transformation records for generated or edited artifacts; tool choice alone does not pass or fail scientific quality.
+- Prefer captions for interpretation and avoid redundant in-figure titles. Panel labels or headings are valid when they improve navigation.
 - Use a 3x source canvas with visible paper-figure text near or above 24pt by
   default. Smaller source text is an allowed soft adaptation only when the
   rendered artifact remains comfortably readable at the actual LaTeX column or
   text width. Final-width visual QA is mandatory for final figures.
 - Prefer vector exports (`.pdf` and/or `.svg`) for precise plots and LaTeX inclusion. PNG is acceptable for review packets and generated conceptual figures.
-- Keep one generated plot script per semantic figure unless the task explicitly asks for a multi-panel artifact.
+- Keep each data figure traceable to a reproducible script, notebook or shared-pipeline entrypoint; reuse appropriate plotting infrastructure.
 - Prefer tables for exact comparisons and figures for trend shape, flow, geometry, and distribution, adapting this heuristic to the enabled policy sets.
 - Writing prose belongs to `paper-writing`; this skill may polish captions and short artifact callouts but should not draft full paper sections.
 
@@ -77,24 +95,24 @@ For LaTeX tables:
 
 For data figures:
 
-1. Create or update a compact `figure_spec.yaml` and the shared artifact record
-   in `compliance-evidence.yaml`.
-2. Profile source data before selecting the chart when raw tabular data is available.
+1. Reuse source and encoding notes; write a compact spec when the figure's
+   complexity warrants it. Formal compliance records are needed only for that assessment.
+2. Profile unfamiliar raw data when it helps resolve types, grouping or chart selection.
 3. Recommend the chart type from the paper claim and data shape; actively warn when the requested chart hides distribution, uncertainty, or sample size.
 4. Save or describe outputs: `figure.pdf`, optional `figure.svg`, optional `figure.png`, script, source data path, and caption.
-5. Validate source fonts, render at final paper width, run visual QA, and record
-   the human evidence with the artifact ID.
+5. Validate source fonts, inspect the actual export at final paper width, and
+   record the actual evaluator. Agent visual inspection is not human sign-off.
 
 For conceptual figures:
 
 1. Read enough manuscript context before designing.
-2. Produce a `brief.md`, `spec.json` or `figure_spec.yaml`, generation prompt, and caption draft.
-3. Use the renderer selected by active policy and artifact needs; a generative image model is an opt-in house default, not a universal requirement.
+2. Capture the supported content, placement and caption in existing notes or a concise spec; add a prompt when using image generation.
+3. Select the renderer from the artifact needs and applicable tool/venue constraints; use `FIG.CONCEPT_PRESENTATION` as adaptable guidance.
 4. Add `generated_conceptual_figure` to context features and artifact types whenever an image model produces the final conceptual artifact.
-5. When image generation is selected for a topology-sensitive overview, create or update a precise editable `structure.svg` wireframe and use it only as a pre-generation structural reference.
-6. Use Graphviz, Mermaid, TikZ, or final SVG only for an explicitly non-generative conceptual artifact; never use them to repair or redraw an accepted generated figure when the model-native rule is active.
+5. For topology-sensitive generation, use an explicit component/connection specification or an editable wireframe when it helps preserve the structure. Reuse an existing accurate structural source.
+6. Keep source and editing operations traceable. Code-native diagrams and image-model assets are valid choices when they satisfy the requested output and active tool constraints.
 7. Preserve the manuscript's structure; do not invent components not supported by the paper.
-8. Inspect typography and semantics in the accepted model output. If they cannot be verified, regenerate or stop rather than adding post-generation content.
+8. Inspect final typography and semantics. Correct wrong or unreadable content with the selected tools, and leave unresolved requirements unverified when they cannot be checked.
 
 ## Reference Map
 

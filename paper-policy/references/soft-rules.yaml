@@ -37,18 +37,38 @@ rules:
   - id: STRUCT.SECTION_COUNT
     title: Adapt top-level section count
     force: soft
-    scope: [writing, review]
-    artifacts: [paper_outline]
-    phases: [outline, draft, polish, submission, camera_ready]
+    scope:
+    - writing
+    - review
+    artifacts:
+    - paper_outline
+    phases:
+    - outline
+    - draft
+    - polish
+    - submission
+    - camera_ready
     default: Use five to seven top-level sections plus Abstract and References.
     allowed_variants:
-      - Use four to six for short conference papers.
-      - Use seven to nine for journals, SoKs, or multi-part studies.
-    selection_factors: [paper_type, venue_template, page_pressure, manuscript_state]
-    avoid: [one-paragraph top-level sections, a universal six-section ceiling]
+    - Use four to six for short conference papers.
+    - Use seven to nine for journals, SoKs, or multi-part studies.
+    selection_factors:
+    - paper_type
+    - venue_template
+    - page_pressure
+    - manuscript_state
+    avoid:
+    - one-paragraph top-level sections
+    - a universal six-section ceiling
     report_when: The structure falls outside four to nine sections or conflicts with a venue profile.
-    decision_refs: [E03, L08, X07]
-    source: {origin: user-decision, note: 'Adaptive replacement for a six-section hard limit.'}
+    decision_refs:
+    - E03
+    - L08
+    - X07
+    source:
+      origin: user-decision
+      note: '2026-09-09: section count is adaptable; only explicit sourced project or venue requirements
+        constrain a particular manuscript.'
 
   - id: STRUCT.ARGUMENTATIVE_SPINE
     title: Carry one argumentative spine through the paper
@@ -113,7 +133,7 @@ rules:
       - Omit exact results when evidence is not final and use an explicit placeholder.
     selection_factors: [word_limit, paper_type, evidence_maturity]
     avoid: [generic importance openings, unsupported result previews]
-    report_when: A required move is omitted for reasons other than word limit or paper type.
+    report_when: A useful move is omitted for reasons other than word limit or paper type.
     decision_refs: [E10, E11]
     source: {origin: local-house-policy, note: 'Abstract structure preference.'}
 
@@ -155,7 +175,7 @@ rules:
     scope: [writing, review]
     artifacts: [prose]
     phases: [draft, polish, submission, rebuttal, camera_ready]
-    default: Organize each paragraph as topic, mechanism or evidence, consequence, and boundary or transition.
+    default: "Give the paragraph a recoverable purpose and enough information to fulfill it. Definitions, reasoning, evidence and transitions need different shapes; omit unnecessary recap or scope disclaimers."
     allowed_variants:
       - Use a compact definition paragraph.
       - Combine formula setup and explanation when the equation is short.
@@ -172,12 +192,12 @@ rules:
     artifacts: [prose]
     phases: [draft, polish, submission, camera_ready]
     features: [evaluation_section]
-    default: Use scope, observation, interpretation, and boundary.
+    default: "State the observation and relevant setting; explain its significance when needed. Include actual trade-offs or necessary conditions without appending what an already accurate result cannot prove."
     allowed_variants:
       - Combine observation and interpretation for a short result.
       - Expand the boundary when an exception is load-bearing.
     selection_factors: [artifact_density, result_complexity, exception_risk]
-    avoid: [ending on an isolated number, repeating every table value]
+    avoid: ["Repeating every table value", "Forcing a final interpretation or anticipatory defense onto a self-contained observation"]
     report_when: The interpretation lacks either scope or a bounded meaning.
     decision_refs: [F03, F04, J02, J06, J07, J13]
     source: {origin: local-house-policy, note: 'Result prose preference.'}
@@ -189,14 +209,11 @@ rules:
     artifacts: [prose, tex]
     phases: [draft, polish, submission, camera_ready]
     features: [evaluation_section]
-    default: End each RQ result block with one compact box titled Answer to RQn, optionally followed by a short thesis in parentheses; use two sentences and roughly 40 to 60 English words or an equivalently concise form in another language.
-    allowed_variants:
-      - Use a bold labeled closing paragraph instead of a box when page pressure, venue style, or template constraints make a box unsuitable.
-      - Omit the parenthetical thesis when the direct answer is already unmistakable.
-      - Use three short sentences when the evidence boundary needs its own sentence.
+    default: "Make the answer to each stated RQ easy to recover from the evidence. Use a compact answer box only when it improves navigation in a long result block."
+    allowed_variants: ["Integrate the answer into Results prose without a box or repeated closing paragraph.", "Use a labeled paragraph or a box with length and placement determined by the explanation."]
     selection_factors: [page_pressure, venue_style, rq_count, evidence_density, language]
-    avoid: [one box per experiment subsection, more than one closure per RQ, new evidence, new claims, citation dumps, repeating the findings table, bright decorative styling, bolding the entire body]
-    report_when: The visual box is replaced, the closure exceeds roughly 80 English words, or its claim strength exceeds the preceding RQ evidence.
+    avoid: ["Unnecessary repeated summaries", "New unsupported evidence or claims", "Fixed sentence counts and word quotas"]
+    report_when: "Explain a material change in the RQ answer or unresolved support; ordinary presentation choices need no separate report."
     decision_refs: [J16]
     source: {origin: user-decision, note: 'Advisor-reference two-sentence Answer to RQ pattern retained as adaptive presentation rather than hard visual syntax.'}
 
@@ -230,7 +247,7 @@ rules:
       - Use construct, internal, external, and statistical validity for empirical software-engineering or measurement studies.
       - Use data, model, evaluation, and deployment boundaries for ML studies.
       - Use threat model, implementation, measurement, and generalization boundaries for security or systems studies.
-      - Integrate the taxonomy compactly into Discussion and the mandatory Conclusion limitation statement when a dedicated section is unnecessary or disallowed.
+      - Integrate the taxonomy compactly into Discussion and a concise conclusion scope statement when useful when a dedicated section is unnecessary or disallowed.
     selection_factors: [paper_type, domain, venue_requirements, threat_count, page_pressure]
     avoid: [hard-coding one taxonomy across all papers, generic limitation lists, claiming a mitigation removes all residual risk]
     report_when: The chosen taxonomy hides a load-bearing threat or a dedicated Threats section is added despite page pressure or venue constraints.
@@ -286,18 +303,43 @@ rules:
   - id: LATEX.MATH_AND_REFERENCE_STYLE
     title: Explain equations and weave references into prose
     force: soft
-    scope: [writing, review]
-    artifacts: [prose, tex]
-    phases: [draft, polish, submission, rebuttal, camera_ready]
-    default: Introduce the left-hand concept, show the equation, explain right-hand terms, and weave cross-references into complete sentences.
+    scope:
+    - writing
+    - review
+    artifacts:
+    - prose
+    - tex
+    phases:
+    - draft
+    - polish
+    - submission
+    - rebuttal
+    - camera_ready
+    default: Introduce the left-hand concept, show the equation, explain right-hand terms, and weave cross-references
+      into complete sentences.
     allowed_variants:
-      - Use text in math mode for long descriptive tokens.
-      - Compress explanation for a conventional equation whose symbols are already defined.
-    selection_factors: [equation_complexity, notation_familiarity, page_pressure]
-    avoid: [isolated equations, standalone See Table sentences, multi-letter prose tokens as variables]
+    - Use text in math mode for long descriptive tokens.
+    - Compress explanation for a conventional equation whose symbols are already defined.
+    - Choose display-math environments to suit numbering, cross-references, and the venue template; delimiter
+      preference alone is not a failure.
+    selection_factors:
+    - equation_complexity
+    - notation_familiarity
+    - page_pressure
+    avoid:
+    - isolated equations
+    - standalone See Table sentences
+    - multi-letter prose tokens as variables
     report_when: Compression makes notation or reference attachment ambiguous.
-    decision_refs: [D06, D07, D13]
-    source: {origin: local-house-policy, note: 'Math and cross-reference style.'}
+    decision_refs:
+    - D06
+    - D07
+    - D13
+    - D04
+    - D05
+    source:
+      origin: local-house-policy
+      note: Math and cross-reference style.
 
   - id: PROFILE.COMPOSITION
     title: Compose profiles from paper state
@@ -475,19 +517,40 @@ rules:
     source: {origin: local-house-policy, note: 'Table placement preference.'}
 
   - id: TABLE.TARGET_WIDTH
-    title: Align tables to the target width
+    title: Fit tables readably within the available width
     force: soft
-    scope: [tables]
-    artifacts: [table, tex]
-    phases: [draft, polish, submission, camera_ready]
-    default: Resize to column or text width.
+    scope:
+    - tables
+    artifacts:
+    - table
+    - tex
+    phases:
+    - draft
+    - polish
+    - submission
+    - camera_ready
+    default: Prefer compact tables with readable text, using natural width when it fits and scaling only
+      when needed.
     allowed_variants:
-      - Keep natural width when it fits cleanly and remains more readable.
-    selection_factors: [natural_width, font_readability, target_width]
-    avoid: [unconditional scaling, overfull tables]
-    report_when: A natural-width exemption is used.
-    decision_refs: [H02, H03, X28]
-    source: {origin: local-house-policy, note: 'Explicit natural-fit exemption.'}
+    - Keep natural width when it fits cleanly and remains more readable.
+    - Use booktabs as a clean default or follow another table style suited to the venue.
+    selection_factors:
+    - natural_width
+    - font_readability
+    - target_width
+    avoid:
+    - unconditional scaling
+    - overfull tables
+    report_when: A layout choice materially changes readability.
+    decision_refs:
+    - H02
+    - H03
+    - X28
+    - H01
+    - H16
+    source:
+      origin: local-house-policy
+      note: '2026-09-09: table layout is adaptable; correctness is assessed by TABLE.FINAL_READABLE.'
 
   - id: TABLE.NO_DIRECTION_ARROWS
     title: Explain metric direction outside headers
@@ -558,8 +621,7 @@ rules:
     avoid: [triple-hyphen placeholders, unexplained dash glyphs, using one token for both not reported and not applicable]
     report_when: A symbolic missing-value marker is retained.
     decision_refs: [F11, H14]
-    source: {origin: user-decision, note: 'Triple hyphen remains a prose hard violation but table missingness is governed as explicit soft labeling.'}
-
+    source: {"origin": "user-decision", "note": "Explicit missingness semantics; punctuation alone is not a hard prose violation."}
   - id: FIG.CONCEPT_COUNT
     title: Limit generated conceptual figures
     force: soft
@@ -601,6 +663,7 @@ rules:
     default: Export precise plots as PDF or SVG and keep colorblind and grayscale readability.
     allowed_variants:
       - Use PNG for generated conceptual figures or review packets.
+      - Use EPS or an appropriate raster export when content or verified delivery requirements call for it; inspect final-size quality.
     selection_factors: [figure_type, venue_format, grayscale_requirement]
     avoid: [raster-only numeric plots, color-only distinctions]
     report_when: A precise plot cannot be exported as vector or fails grayscale reading.
@@ -629,12 +692,13 @@ rules:
     scope: [figures, workflow]
     artifacts: [figure]
     phases: [draft, polish, submission, camera_ready]
-    default: Use one generation script per semantic figure and assemble composite panels in LaTeX.
+    default: Prefer a focused generation entrypoint per semantic figure; assemble panels in the plotting tool or LaTeX according to the layout.
     allowed_variants:
       - Use a single script for tightly coupled panels that share data and axes.
+      - Reuse a notebook or shared pipeline with explicit figure-specific inputs, parameters and output mapping.
     selection_factors: [panel_coupling, data_source, reproducibility]
-    avoid: [one monolithic script for unrelated figures]
-    report_when: Multiple semantic figures share one script.
+    avoid: [untraceable mixing of figure inputs and outputs]
+    report_when: The figure-to-entrypoint mapping is unclear or a shared pipeline needs an execution note.
     decision_refs: [I15, I16]
     source: {origin: user-decision, note: 'Artifact traceability preference.'}
 
@@ -668,3 +732,287 @@ rules:
     report_when: The proposed fix changes experimental scope or author commitments.
     decision_refs: [K01, K02, K03]
     source: {origin: local-house-policy, note: 'Review triage preference.'}
+
+  - id: STRUCT.TRADITIONAL_HEADINGS
+    title: Prefer traditional concise top-level headings
+    force: soft
+    scope:
+    - writing
+    - review
+    artifacts:
+    - tex
+    - paper_outline
+    phases:
+    - outline
+    - draft
+    - polish
+    - submission
+    - camera_ready
+    default: Use traditional concise section names that make each section function easy to identify.
+    allowed_variants:
+    - Use a precise topic-specific or question heading when it improves navigation or follows the selected venue structure.
+    selection_factors:
+    - paper_type
+    - venue
+    - argumentative structure
+    avoid:
+    - Decorative titles that obscure section function
+    report_when: A substantial departure from the personal heading convention affects navigation.
+    decision_refs:
+    - E01
+    - E02
+    source:
+      origin: user-decision
+      note: '2026-09-08: preserve the personal structural preference as adaptable soft guidance; it does not independently
+        block readiness. Historical rule ID retained for traceability.'
+  - id: STRUCT.CONCLUSION_SINGLE_PARAGRAPH
+    title: Prefer a compact single-paragraph conclusion
+    force: soft
+    scope:
+    - writing
+    - review
+    artifacts:
+    - prose
+    - tex
+    phases:
+    - draft
+    - polish
+    - submission
+    - camera_ready
+    features:
+    - conclusion
+    default: Use one substantive conclusion paragraph when the contribution, findings, and scope boundary fit clearly.
+    allowed_variants:
+    - Use multiple concise paragraphs when needed to separate distinct findings or follow an explicit venue requirement.
+    selection_factors:
+    - paper_type
+    - venue
+    - conclusion complexity
+    avoid:
+    - Padding or compressing distinct ideas solely to meet a paragraph count
+    report_when: The conclusion uses multiple paragraphs for a substantive structural reason.
+    decision_refs:
+    - E18
+    - E19
+    - X08
+    source:
+      origin: user-decision
+      note: '2026-09-08: preserve the personal structural preference as adaptable soft guidance; it does not independently
+        block readiness. Historical rule ID retained for traceability.'
+  - id: STRUCT.CONCLUSION_INTEGRATES_LIMITATIONS
+    title: Prefer a concise scope boundary in the conclusion
+    force: soft
+    scope:
+    - writing
+    - review
+    artifacts:
+    - prose
+    - tex
+    phases:
+    - draft
+    - polish
+    - submission
+    - camera_ready
+    features:
+    - conclusion
+    default: "State the conclusion directly with conditions needed to understand it. Discuss material limitations where the argument or venue requires them; do not add a disclaimer solely to satisfy a preferred conclusion shape."
+    allowed_variants: ["Use a separate Limitations, Discussion or Threats section when useful or required.", "Finish with a supported finding or implication when its scope is already clear."]
+    selection_factors:
+    - venue
+    - argumentative structure
+    - extent of limitation analysis
+    avoid:
+    - Removing or hiding a material limitation to satisfy a placement preference
+    report_when: Limitation placement differs materially from the personal default; substantive claim boundaries remain
+      hard requirements.
+    decision_refs:
+    - B06
+    - E07
+    - E19
+    - X25
+    source:
+      origin: user-decision
+      note: '2026-09-08: preserve the personal structural preference as adaptable soft guidance; it does not independently
+        block readiness. Historical rule ID retained for traceability.'
+  - id: RELATED.COMPARISON_REQUIRED
+    title: Prefer an axis-based comparison table when it adds value
+    force: soft
+    scope:
+    - writing
+    - review
+    - tables
+    artifacts:
+    - prose
+    - table
+    phases:
+    - draft
+    - polish
+    - submission
+    - camera_ready
+    features:
+    - related_work
+    - related_work_table
+    default: Plan an axis-based comparison table when it makes the paper gap and fair high-signal differences easier
+      to assess; prefer three to four dimensions and single-column placement after pruning.
+    allowed_variants:
+    - Use explicit axis-based prose when a table would repeat the text, imply unsupported comparability, or add little
+      value.
+    - Use a justified wider or layered table profile when the evidence needs it.
+    selection_factors:
+    - paper_type
+    - venue
+    - evidence comparability
+    - table_profile
+    avoid:
+    - Creating a table solely to clear readiness
+    - Choosing comparison axes only to favor the proposed method
+    report_when: A full Related Work uses prose instead of the default table plan, or adapts its layout or dimensions.
+    decision_refs:
+    - G03
+    - G04
+    - G05
+    - G08
+    - H04
+    - H05
+    - X27
+    source:
+      origin: user-decision
+      note: '2026-09-08: preserve the personal structural preference as adaptable soft guidance; it does not independently
+        block readiness. Historical rule ID retained for traceability.'
+
+  - id: CONTRIB.CONCRETE
+    title: Name concrete new knowledge or artifacts
+    force: soft
+    scope:
+    - writing
+    - review
+    artifacts:
+    - prose
+    phases:
+    - outline
+    - draft
+    - polish
+    - submission
+    - rebuttal
+    - camera_ready
+    features:
+    - contribution_list
+    default: Describe the new knowledge or concrete artifact contributed, with the evidence that supports
+      it.
+    allowed_variants:
+    - A measured finding, replication, negative result, or systematic synthesis may be a contribution without
+      a new artifact.
+    selection_factors:
+    - task_scope
+    - paper_type
+    - venue
+    - reader_risk
+    avoid:
+    - Activity-only contribution claims
+    - Requiring a performance advantage for every contribution
+    report_when: Explain only a material adaptation that affects the argument or requested artifact.
+    decision_refs:
+    - B12
+    - B13
+    source:
+      origin: user-decision
+      note: '2026-09-09: author preferences guide open academic workflows without style-readiness gates.'
+  - id: PROSE.PUNCTUATION
+    title: Choose punctuation for clear academic prose
+    force: soft
+    scope:
+    - writing
+    - review
+    artifacts:
+    - prose
+    - tex
+    phases:
+    - outline
+    - draft
+    - polish
+    - submission
+    - rebuttal
+    - camera_ready
+    features:
+    - paper_prose
+    default: Prefer direct sentences and restrained punctuation. Use words for direction when clearer than
+      symbols.
+    allowed_variants:
+    - Retain an em dash, arrow, or other punctuation when it carries useful meaning and renders correctly.
+    selection_factors:
+    - task_scope
+    - paper_type
+    - venue
+    - reader_risk
+    avoid:
+    - Changing scientific meaning to avoid a character
+    - Treating punctuation as evidence of authorship
+    report_when: Explain only a material adaptation that affects the argument or requested artifact.
+    decision_refs:
+    - F11
+    - F27
+    source:
+      origin: user-decision
+      note: '2026-09-09: author preferences guide open academic workflows without style-readiness gates.'
+  - id: FIG.CONCEPT_PRESENTATION
+    title: Choose conceptual figure presentation for its scientific purpose
+    force: soft
+    scope:
+    - figures
+    - review
+    artifacts:
+    - figure
+    phases:
+    - outline
+    - draft
+    - polish
+    - submission
+    - rebuttal
+    - camera_ready
+    features:
+    - conceptual_figure
+    default: Prefer a clean background, readable manuscript-compatible labels, and a renderer suited to
+      the topology and editing needs.
+    allowed_variants:
+    - Use code-native or vector diagrams for precise editable structure; use image generation when suited
+      to the requested asset.
+    - Use other backgrounds, fonts, panel headings, or tool-supported editing methods when they improve
+      clarity or meet a venue requirement.
+    selection_factors:
+    - task_scope
+    - paper_type
+    - venue
+    - reader_risk
+    avoid:
+    - Invented components or corrupted mathematical labels
+    - A specific font or image model as a universal quality requirement
+    report_when: Explain only a material adaptation that affects the argument or requested artifact.
+    decision_refs:
+    - I04
+    - I06
+    - I21
+    - I22
+    - I09
+    source:
+      origin: user-decision
+      note: '2026-09-09: author preferences guide open academic workflows without style-readiness gates.'
+
+  - id: WORKFLOW.COMPLEX_TASK_STATE
+    title: Preserve useful task continuity without mandatory workflow files
+    force: soft
+    scope: [workflow, writing, review]
+    artifacts: [policy]
+    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
+    default: Reuse a concise brief, claim-to-source mapping, and open decisions when they help substantial paper work; revisit dependent claims after source changes.
+    allowed_variants:
+      - Keep a short task's working context in the conversation without extra files.
+      - Reuse existing notes or manuscript annotations instead of creating parallel ledgers.
+      - Persist compact records for resumed work, collaboration, or an explicit user request.
+    selection_factors: [task_scope, evidence_maturity, manuscript_state]
+    avoid:
+      - Blocking readiness because a preferred brief, ledger, or stage-state file is absent
+      - Treating informal notes as admissible compliance evidence or stale source snapshots as current
+      - Creating empty documents solely to satisfy a workflow template
+    report_when: Explain a material continuity gap; ordinary choices of note format require no compliance report.
+    decision_refs: [A10, K09, K10, K11, M03, M04, M05]
+    source: {origin: user-decision, note: '2026-09-09 batch 2: task-proportionate workflow; source-bound compliance evidence remains governed separately.'}

@@ -7,22 +7,23 @@ Use this file to resolve conflicts among local writing sources.
 1. Core integrity rules from the sibling `paper-policy` skill.
 2. User-provided paper facts, approved evidence, author intent, and explicit task constraints.
 3. Verified venue or template requirements with source and freshness date.
-4. Hard rules from explicitly activated policy sets.
-5. Public academic defaults and enabled optional house guidance in `style-profile.md`.
+4. Applicable hard rules from the shared academic workflow.
+5. Active soft guidance and adaptable author preferences in `style-profile.md`.
 6. Task-specific writing references in this skill.
 7. Generic academic or domain advice.
 
-Apply hard rules before soft guidance. The public academic defaults govern the
-remaining freedom unless the context explicitly enables `strict-house-style`.
+Resolve policy through `paper-policy`; local and public defaults agree. Apply
+each rule according to its declared force. Task references and examples must
+not turn a soft preference into a hard requirement.
 
 ## Conflict Rules
 
 - Narrow unsupported claims regardless of style profile; claim integrity is not a house preference.
 - If a verified venue requires a section or checklist, satisfy the venue. Apply
-  Apply traditional section naming only when its strict rule is enabled.
+  `STRUCT.TRADITIONAL_HEADINGS` as an adaptable naming preference otherwise.
 - If a prose cleanup rule would make text casual, keep academic density and remove only the formulaic pattern.
-- If a table or figure style question appears, produce a writing-level spec and hand off artifact rendering.
-- Citation source of truth is declared by the user or project; local `.bib` entries, manuscript keys, and supplied notes are the default. Automatic search or verification remains out of scope unless explicitly requested as a separate task.
+- If an artifact is part of the requested deliverable, pass its content and evidence to the owning figure/table skill and complete it within the same task. Return only a spec when that is the requested output.
+- Citation scope follows the request: local polish uses existing sources; a closed corpus stays closed; literature completion/verification permits the necessary public primary-source lookup and supported local updates. Follow `citation-integration.md` without requiring another task invocation.
 - If venue, anonymity, or submission state is inferred or lacks provenance, do
   not activate its hard rules. Report the unresolved context instead.
 

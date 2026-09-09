@@ -2,6 +2,10 @@
 
 Use this for prose cleanup, AI-pattern removal, and section-level rewriting.
 
+When the user explicitly asks to reduce AI-associated or formulaic writing
+patterns, also load `prose-pattern-audit.md`. Use it to diagnose reader-facing
+prose problems, never to infer authorship or optimize a detector score.
+
 ## Goal
 
 Improve academic clarity, density, rhythm, and author voice. Do not optimize for
@@ -10,27 +14,29 @@ personal merely to avoid an AI-associated pattern.
 
 ## Hard Boundaries
 
-- Preserve scientific meaning. Do not change claim strength, causal status,
-  evidence scope, limitations, terminology, citation attachment, quantitative
-  facts, or the author's evidence-bound position to improve style.
+- Preserve scientific meaning during style edits. When correcting an overclaim
+  or implementing an authorized substantive revision, make the supported change
+  explicitly; do not preserve a known error merely to match the original wording.
+  Retain quantitative facts, technical identity, citation support and material conditions.
 - Do not use detector, perplexity, authenticity, or human-likeness scores as a
   compliance, readiness, or authorship gate. Do not rewrite to evade a detector
   or claim that prose is AI-authored from style alone.
 - Keep intensifiers and attributions evidence-bound. Delete or ground
   `significantly`, `research shows`, `experts argue`, and equivalent language.
-- When `PROSE.EM_DASH_FORBIDDEN` is active, use no em dash in paper prose,
-  including Unicode em dash and LaTeX triple hyphen used as an em dash.
-  Otherwise treat em-dash frequency as ordinary style judgment. Preserve
-  hyphens, numeric ranges, mathematical minus signs, and non-prose table tokens.
 - Keep technical terms stable. Do not introduce elegant variation that changes
   the identity of a method, variable, class, threat, or artifact.
 - Keep author voice academic. Allow measured judgment tied to evidence or a
   design choice; do not inject casual humanizer language, decorative humor, or
   evidence-free opinion.
+- Do not add fabricated specifics, autobiographical detail, intentional errors,
+  false starts, self-interruptions, emotional punctuation, or fractured
+  discourse as evidence of human authorship.
 
 ## Soft Diagnostics
 
 Treat these as revision candidates, not automatic violations:
+
+- Excessive punctuation or arrows under `PROSE.PUNCTUATION`. Retain useful em dashes and correctly rendered symbols; preserve ranges, minus signs, and technical notation.
 
 - Filler or inflated phrasing such as `It is important to note that`, `plays a
   crucial role`, `pivotal`, or `groundbreaking`.
@@ -46,9 +52,9 @@ Treat these as revision candidates, not automatic violations:
 - Gerund-fragment litanies that lack a clear grammatical subject.
 - Repeated conjunctive openers or metronomic sentence lengths.
 
-Revise a soft pattern when it repeats, reduces precision, adds no information,
-or conflicts with the target section's academic register. Record it as adapted
-or skipped when preserving it is the better choice.
+Revise a soft pattern when it reduces precision, adds no information, or conflicts
+with the target section's academic register. Repetition invites contextual review;
+it does not establish a defect. Ordinary edits need no per-pattern compliance log.
 
 ## Allowed Exceptions
 
@@ -103,11 +109,11 @@ The benchmark separates tool-selection errors from execution errors, which lets 
 When editing LaTeX:
 
 - Preserve citation commands, labels, references, equations, and macros.
-- Do not rewrite display equations into `$$...$$` or `\[...\]`.
+- Preserve existing display-math delimiters during prose-only edits. If equation formatting is in scope, choose syntax compatible with the document and venue; delimiter choice alone is not a style failure.
 - Prefer `\begin{equation}...\end{equation}` for displayed equations that should be referenced.
 - If a long descriptive token appears inside math mode, use `\text{...}` instead of treating it as a multi-letter variable.
 - Explain displayed equations in nearby prose. Do not leave a formula as an isolated block.
-- Do not remove `\textbf{RQ1:}` or contribution-list structure unless asked.
+- Preserve RQ anchors and contribution-list structure during local polish; adapt them when an authorized structural revision calls for it, keeping their information and references recoverable.
 - Keep technical terms consistent even when repetition feels stylistically plain.
 
 ## Reference And Number Style
@@ -115,7 +121,7 @@ When editing LaTeX:
 - Introduce abbreviations at first use and use them consistently afterward.
 - Keep cross-references woven into sentences: `Table~\ref{...} reports ...`, not `See Table~\ref{...}` as a standalone crutch.
 - Use numerals for measured values, dataset sizes, model counts, and section/page references. Spell out small non-technical counts only when it reads more naturally.
-- Do not use Unicode arrows in paper prose or table headers. Use prose for directionality unless mathematical notation requires an arrow.
+- Use prose or clear, correctly rendered arrows for directionality according to the context. Avoid decorative symbols; preserve useful technical notation under the soft `PROSE.PUNCTUATION` guidance.
 
 ## Typography Cleanup
 
@@ -137,8 +143,11 @@ If prose sounds like an internal validation report, move that content out of the
 3. Delete filler and replace inflated phrases with precise language.
 4. Restore direct subject-verb-object claims without forcing surface variation.
 5. Add scope or evidence where a claim is too broad.
+   For repeated disclaimers or self-undermining, use `over-defensive-writing.md`;
+   do not attach a new caveat to every sentence.
 6. Compare source and revision for claim strength, causality, scope, values,
    citations, terminology, and caveats.
-7. Report any soft pattern intentionally preserved and why.
+7. Explain substantive changes or unresolved facts; do not report every retained
+   stylistic choice unless an audit was requested.
 
 Return rewritten text, not a long diagnosis, unless the user asks for explanation.

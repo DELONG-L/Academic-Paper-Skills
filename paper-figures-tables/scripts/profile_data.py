@@ -239,25 +239,25 @@ def _suggest_charts(info: dict) -> list[str]:
     if dt and cont:
         suggestions.append(
             f"时间序列存在：用折线图 ({dt[0]} 作 x 轴，"
-            f"{cont[0]}{'/' + cont[1] if len(cont) > 1 else ''} 作 y 轴) + 误差带")
+            f"{cont[0]}{'/' + cont[1] if len(cont) > 1 else ''} 作 y 轴)；仅在设计和数据支持时加入误差带")
 
     # 1 个分类 + 1 个连续：经典对比场景
     if cats and cont:
         if group and group.get("small_groups_flag"):
             suggestions.append(
                 f"分类 vs 连续，小样本（每组 n<10）→ "
-                "**箱线图/小提琴图 + stripplot 叠加原始点**；"
-                "**避免**只画均值柱状图，会掩盖分布。")
+                "考虑观测点、汇总或分布图；选择取决于分析单位和需要表达的信息，"
+                "阈值不是图型或统计有效性的硬门槛。")
         else:
             suggestions.append(
-                f"分类 vs 连续，样本量充足 → 箱线图 / 小提琴图，"
+                f"分类 vs 连续 → 可考虑箱线图 / 小提琴图，"
                 "或带误差棒的柱状图（误差棒说明 SD/SEM/CI）")
 
     # 两个或更多连续 → 散点或散点矩阵
     if len(cont) >= 2:
         if len(cont) == 2:
             suggestions.append(
-                f"两连续变量 {cont[0]} vs {cont[1]} → 散点图（含回归拟合 + r 值）")
+                f"两连续变量 {cont[0]} vs {cont[1]} → 散点图；回归或相关分析仅在问题和设计支持时加入")
         else:
             suggestions.append(
                 f"≥3 个连续变量 → 相关性热力图（{cont[:5]}）或 pairplot 散点矩阵")
@@ -275,14 +275,14 @@ def _suggest_charts(info: dict) -> list[str]:
         if n_combo > 12:
             suggestions.append(
                 f"分类维度组合数 = {n_combo}（{', '.join(cats)} 全交叉），"
-                "**一张图塞不下**——建议按某一维拆成多面板，或选择子集。")
+                "考虑分面或其他清楚编码；不能仅为减少类别而删除必要比较。")
 
     # 偏度大 → 提示对数轴
     for c in cont:
         m = cols[c]
         if m.get("needs_log_axis"):
             suggestions.append(
-                f"{c} 跨数个量级（{m['min']:.3g} ~ {m['max']:.3g}）→ 用对数 y 轴")
+                f"{c} 跨数个量级（{m['min']:.3g} ~ {m['max']:.3g}）→ 检查对数轴是否符合表达目标")
         elif m.get("skew_label") == "highly skewed":
             suggestions.append(
                 f"{c} 高度偏态（skew={m['skewness']:.2f}）→ "
@@ -348,8 +348,8 @@ def profile_data(source, group_cols: list[str] | None = None) -> dict:
             entry.update(_profile_categorical(s))
             if entry.get("small_groups_flag"):
                 warnings.append(
-                    f"列 {c!r} 至少有一个类别 n<10 — 小样本必须展示原始数据点，"
-                    "不要只画均值柱状图。")
+                    f"列 {c!r} 至少有一个类别 n<10 — 考虑显示实际观测或清楚标注汇总与样本量；"
+                    "先核对分析单位，勿自动更换图型。")
         elif ctype == TYPE_DATETIME:
             non_null = pd.to_datetime(s, errors="coerce").dropna()
             if len(non_null) > 0:
@@ -395,7 +395,7 @@ def render_report(info: dict) -> str:
             if m.get("n_outliers_iqr", 0):
                 summary += f"; outliers={m['n_outliers_iqr']} (IQR)"
             if m.get("needs_log_axis"):
-                summary += "; -> log axis"
+                summary += "; consider log axis if scientifically appropriate"
         elif m["type"] in (TYPE_CATEGORICAL, TYPE_BOOLEAN, TYPE_ORDINAL):
             cats = m.get("categories", [])[:5]
             cats_str = ", ".join(f"{k}({v})" for k, v in cats)
@@ -416,11 +416,11 @@ def render_report(info: dict) -> str:
         lines.append(f"- Group size: min={gs['min_n_per_group']}, "
                      f"median={gs['median_n_per_group']}, max={gs['max_n_per_group']}")
         if gs["tiny_groups_flag"]:
-            lines.append("- **WARN**: at least one group has n<3 — statistics unreliable; "
-                         "must show all raw points.")
+            lines.append("- **WARN**: at least one group has n<3 — inspect the sampling unit and available observations; "
+                         "do not invent variability or infer invalidity from this threshold alone.")
         elif gs["small_groups_flag"]:
-            lines.append("- **WARN**: at least one group has n<10 — use box/violin + stripplot "
-                         "rather than mean-only bar chart.")
+            lines.append("- **WARN**: at least one group has n<10 — consider raw points or an appropriate summary; "
+                         "the threshold does not prescribe a chart or additional runs.")
         lines.append("")
 
     # 相关性

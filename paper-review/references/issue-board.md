@@ -1,6 +1,6 @@
 # Issue Board
 
-Use issue cards for both manuscript audits and external review analysis. The goal is to prevent vague critique and ensure every concern is traceable.
+Use issue cards when an audit or external review has enough concerns to benefit from tracking. A small critique can use a concise list with location, consequence, and concrete action. Preserve evidence and coverage; no particular file or schema is required for every review.
 
 ## Atomicity
 
@@ -29,8 +29,8 @@ Merge issues when they share the same core objection and same response:
 - Type: <logic | novelty | related-work | empirical-support | baseline | ablation | statistics | theory | clarity | reproducibility | ethics | formatting | citation | figure-table | other>
 - Severity: <critical | major | minor>
 - Nature: <substance | misread-risk | polish>
-- Response mode: <accept | clarify | defend | experiment | narrow-concession | scope-boundary | manual-bibtex-needed | handoff-writing | handoff-figures-tables>
-- Evidence status: <in-paper | user-confirmed | local-bib | needs-user-input | missing>
+- Response mode: <accept | clarify | defend | experiment | narrow-concession | scope-boundary | citation-verification | manual-bibtex-needed | handoff-writing | handoff-figures-tables>
+- Evidence status: <in-paper | user-confirmed | local-bib | source-verified | needs-user-input | missing>
 - Commitment status: <none | already-done | approved-for-rebuttal | future-work-only | blocked>
 - Owner route: <review | paper-writing | paper-figures-tables | user | experiment>
 - Status: <open | answered | deferred | needs-user-input>
@@ -67,7 +67,7 @@ After the issue cards, include:
 - Major: <n>
 - Minor: <n>
 - Needs user input: <n>
-- Needs manual BibTeX update: <n>
+- Unresolved citation support: <n>
 - Handoff to paper-writing: <n>
 - Handoff to paper-figures-tables: <n>
 ```

@@ -1,133 +1,94 @@
 # Citation Integration
 
-Use this for manual-BibTeX-first citation writing and local citation hygiene.
+Choose the source workflow from the user's request and applicable project
+constraints. Reuse existing authorization; do not require a separate
+"citation audit" invocation for work already requested.
 
-## Core Rule
+## Source modes
 
-Use only citation and evidence sources declared by the user or project. By
-default, trust the user-maintained `.bib`, supplied notes, reading lists,
-related-work matrices, and manuscript text; add other sources only through an
-explicitly authorized verification workflow.
+| Task | Sources and actions |
+|---|---|
+| Pure prose polish or an ordinary manuscript review | Use existing manuscript keys, `.bib`, supplied papers and notes. Flag unsupported claims; do not expand the bibliography merely to polish wording. |
+| Explicit closed-corpus/local-only task | Stay inside the declared corpus. Record missing support rather than searching outside it. |
+| Complete Related Work, find missing literature, check novelty, verify or repair citations | Read relevant public primary sources, verify metadata, and produce the requested grounded text or assessment. When local edits are requested, update the relevant bibliography and citations and show the diff. No second authorization is needed for those scoped steps. |
 
-Do not search for, fetch, invent, externally verify, or complete references by default. Do not create BibTeX entries. Do not infer authors, venues, years, DOIs, arXiv IDs, or citation keys from memory.
+Honor an explicit propose-only, read-only, manual-BibTeX, or approval-before-editing
+instruction. If a newer request clearly changes the source scope, use it; ask
+only about a material unresolved conflict. A request to find candidates permits
+lookup but does not automatically authorize editing an existing manuscript.
 
-## What Codex May Do
+## Grounding and metadata
 
-Codex may:
+- Never invent authors, titles, years, venues, DOI/arXiv identifiers, or BibTeX
+  from memory. Obtain metadata from a primary publication record or the relevant
+  registration service and verify that it identifies the intended work/version.
+- Read the actual source content before using it to support a specific empirical,
+  theoretical, novelty, or comparative claim. Metadata and title similarity alone
+  are insufficient; an existing manuscript sentence is a claim to verify, not
+  independent evidence that its citation is correct.
+- Record the source URL/identifier, version, access date, and relevant page,
+  section, table, or quoted span in the project's existing evidence record.
+  Distinguish discovery candidates, verified metadata, and verified claim support.
+- Keep local references as the default starting point. A requested public-source
+  verification workflow can add verified sources to the task's evidence record
+  without a separate manual approval ceremony. Where `paper_context.yaml` exists,
+  record that source scope in `approved_citation_sources` (for example
+  `verified_primary_sources`) with its authorization and locators in the evidence
+  record. Do not overwrite an explicitly closed-corpus policy.
+- Preserve source-supplied identifiers when a lookup fails; report the unresolved
+  check. A 404, timeout, or inaccessible publisher page does not prove fabrication.
 
-- Reuse citation keys already present in the manuscript or `.bib` file.
-- Check that every `\cite{...}` key in `.tex` exists in the local `.bib`.
-- Check for duplicate BibTeX keys.
-- Preserve and move existing citation commands while rewriting prose.
-- Mark missing citation needs with `[citation needed: ...]`.
-- Prompt the user to manually add BibTeX when the writing workflow reveals a needed citation family or specific missing work.
-- Help organize user-provided BibTeX entries, notes, and related-work matrices into prose.
-- Improve citation placement so claims and citations stay close.
-- Flag claims that lack a nearby citation or user-provided note.
+## Verify the Level of Support Needed
 
-Codex may not:
+For a citation audit, distinguish these checks and record their separate results:
 
-- Add a new citation key that is not already in the `.bib` or explicitly supplied by the user.
-- Generate BibTeX from memory.
-- Claim that a paper supports a statement unless the user supplied notes, quotes, a sidecar, or nearby manuscript context indicating that support.
-- Treat web search, Semantic Scholar, Google Scholar, CrossRef, or arXiv lookup as reliable citation verification unless the user explicitly asks for an exploratory check.
+| Check | Evidence needed | What it cannot establish |
+|---|---|---|
+| Key and format | Used keys and actual bibliography records | Whether a paper exists |
+| Identity and version | Primary publication/registration record matched to title, authors and identifier | Whether the paper supports a claim |
+| Content support | Relevant source passage, table, proof or method plus a locator | Claims outside the inspected content |
+| Publication status | Available publisher correction/retraction notice or relevant current metadata | Absence of a notice when no reliable check was possible |
 
-## Writing With Existing Keys
+For direct quotes, compare exact wording; for paraphrases, compare meaning,
+conditions and strength. A citation merely identifying a work's topic needs
+enough verified content to establish that topic, but not an invented result span.
+Do not treat citation counts, an API hit, or a similar title as content support.
+Do not silently combine a preprint's content with a different version's metadata.
 
-When drafting prose with local citation keys:
+Record `key | manuscript claim | source/version | locator | check result | action`
+in an existing evidence note for a substantial audit. Inspect authoritative
+corrections when publication status matters; lack of access remains an unresolved
+check, not evidence that a paper is fabricated or retracted. If a source fails
+to support a statement, repair that association using verified evidence, narrow
+the statement, or report the gap. Do not invent which paper the author intended.
 
-- Use keys already present in `.bib` or the manuscript.
-- Place citations near the claim they support.
-- Avoid dumping many citations at the end of a long paragraph.
-- Prefer grouped citations only when all papers support the same sentence.
-- Keep uncertain citation needs as placeholders.
+## Privacy and action scope
 
-Use this placeholder when no approved key exists:
+Use public metadata or generic topic queries for public searches. Never upload
+unpublished manuscripts, review text, confidential excerpts, or private data to
+external services merely because citation checking is requested. Continue with
+permitted public information and local material; ask only when a necessary
+disclosure falls outside the existing authorization. Do not publish, push, or
+submit manuscript changes without the applicable authorization.
 
-```latex
-[citation needed: prior work on X]
-```
+## Local edits and hygiene
 
-Use a LaTeX-shaped placeholder only when the user needs compilable shape and accepts a temporary key:
+For authorized citation fixes, preserve existing BibTeX keys and unrelated
+entries. Add a new stable, project-consistent key only for a source actually
+retrieved and verified. Move or edit citation commands within the requested prose
+scope. If a key must change, update all affected references together. Check
+missing/duplicate keys and relevant compilation; report unused keys rather than
+automatically deleting them.
 
-```latex
-\cite{PLACEHOLDER_user_to_add_bibtex}
-```
+Place citations beside the claims they support. Group papers only when each
+supports the associated statement. For Related Work, synthesize by meaningful
+comparison axes and preserve differences in setting and evidence strength.
 
-## Manual BibTeX Update Prompts
+## Unresolved support
 
-When the workflow indicates that a claim, background statement, or Related Work comparison needs a citation that is not available in the local `.bib`, do not fill it in. Add a concise manual-update prompt for the user.
-
-Use this format:
-
-```text
-Manual BibTeX update needed:
-- Need: prior work on [topic/claim]
-- Why: supports [sentence/paragraph/table axis]
-- Suggested search target: [paper family, author if user mentioned one, or keyword]
-- Current placeholder: [citation needed: ...]
-```
-
-If the user names a specific paper but the key is absent, use:
-
-```text
-Manual BibTeX update needed:
-- Need: BibTeX for [paper title or author/year supplied by user]
-- Why: cited in [section/claim]
-- Current placeholder: \cite{PLACEHOLDER_user_to_add_bibtex}
-```
-
-Keep these prompts short and actionable. Do not provide invented BibTeX or unverified citation keys.
-
-## Claim-Citation Fit
-
-Codex can check fit only against user-provided evidence.
-
-- If the user supplied notes for a paper, use those notes to decide where the citation belongs.
-- If only a `.bib` entry exists, use the citation for broad positioning only when the title/venue/context is sufficient and the user has not asked for claim-level support.
-- For specific empirical claims, require user-provided notes, quoted text, a sidecar, or an existing manuscript sentence that already ties the key to the claim.
-- For first-work or novelty claims, avoid the claim unless the user supplied a curated comparison or explicit instruction.
-
-Do not cite a paper for a claim merely because the title sounds related.
-
-## Local Hygiene Checks
-
-When asked to check citations in a LaTeX project:
-
-1. Find `.bib` files referenced by the manuscript.
-2. Extract BibTeX keys from those `.bib` files.
-3. Extract citation keys from `\cite`, `\citet`, `\citep`, `\citealp`, `\citeauthor`, and related commands.
-4. Report missing keys, duplicate keys, and unused keys if useful.
-5. Do not report that a citation is semantically correct unless user-provided notes support that judgment.
-
-## BibTeX Key Hygiene
-
-When organizing user-supplied BibTeX:
-
-- Preserve existing keys unless the user asks for a key-format migration.
-- Prefer stable, readable keys such as `authorYYYYshorttitle` when creating placeholders for the user to replace.
-- Do not silently rewrite manuscript citation keys without updating every corresponding `\cite{}`.
-- Flag duplicate keys, non-ASCII surprises, broken braces, missing years, and missing titles as local hygiene issues.
-- Keep manual-update prompts outside the paper body unless the user explicitly wants draft placeholders.
-
-## Related Work Use
-
-Related Work should synthesize by axis. Citations support the comparison; they should not become a paper-by-paper list.
-
-Preferred:
-
-```latex
-Prior defenses usually assume [threat model]~\cite{a,b}, while measurement studies evaluate [different unit]~\cite{c,d}. This leaves [gap] unresolved.
-```
-
-Avoid:
-
-```latex
-A proposed X~\cite{a}. B studied Y~\cite{b}. C introduced Z~\cite{c}.
-```
-
-## If The User Explicitly Requests External Checking
-
-Treat external checking as exploratory assistance until its output is approved
-as a project citation source. Return candidates, discrepancies, or unresolved
-questions rather than silently converting search output into claim support.
+Complete all supported portions first. If a source is unavailable or outside a
+closed corpus, explain the exact gap and affected claim. Use a short
+`[citation needed: topic/claim]` marker only in a draft; keep process notes outside
+paper prose. Request a manual source or BibTeX entry only when it is needed and
+cannot be obtained within scope. Do not guess a citation key to make compilation
+succeed, and do not claim final citation completeness while support is missing.

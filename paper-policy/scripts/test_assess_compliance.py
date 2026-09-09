@@ -45,7 +45,6 @@ class ComplianceAssessmentTests(unittest.TestCase):
         return lint_project(
             project,
             stage,
-            "STRUCT.SECTION_COUNT_PROFILE" in active,
             active_rule_ids=active,
         )
 
@@ -73,6 +72,31 @@ class ComplianceAssessmentTests(unittest.TestCase):
             "soft_results": [],
         }
 
+    def test_optional_workflow_notes_do_not_replace_required_evidence(self) -> None:
+        # Synthetic, deliberately workflow-only scope: READY here is not a
+        # manuscript-wide judgment. No brief/ledger or soft outcome is supplied.
+        context = {
+            "version": 1, "submission_stage": "submission",
+            "task_scope": "full_paper", "task_mode": "submission_readiness",
+            "scopes": ["workflow"], "artifacts": ["policy"],
+            "features": ["paper_prose"],
+            "provenance": {"submission_stage": "user"},
+        }
+        resolution = resolve_policy(context, self.hard, self.soft, self.profiles, self.policy_sets)
+        rule_id = "WORKFLOW.COMPLEX_TASK_STATE"
+        self.assertNotIn(rule_id, {x["id"] for x in resolution["active_hard"]})
+        self.assertIn(rule_id, {x["id"] for x in resolution["active_soft"]})
+        evidence = self.complete_evidence(resolution)
+        result = assess_compliance(resolution, self.hard, evidence)
+        self.assertEqual("READY", result["readiness"]["status"])
+        self.assertIn(rule_id, result["unassessed_soft"])
+        evidence["hard_results"] = [
+            x for x in evidence["hard_results"] if x["rule_id"] != "AUTH.INTEGRITY_PRECEDENCE"
+        ]
+        result = assess_compliance(resolution, self.hard, evidence)
+        self.assertEqual("UNVERIFIED", self.result_by_id(result)["AUTH.INTEGRITY_PRECEDENCE"]["status"])
+        self.assertEqual("BLOCKED", result["readiness"]["status"])
+
     def test_draft_readiness_is_not_evaluated(self) -> None:
         resolution = self.resolution("abstract.yaml")
         findings, assessed = self.lint_for_resolution(
@@ -97,13 +121,13 @@ class ComplianceAssessmentTests(unittest.TestCase):
         )
         evidence = {
             "version": 1,
-            "hard_results": [self.pass_record("PROSE.EM_DASH_FORBIDDEN")],
+            "hard_results": [self.pass_record("FINAL.NO_UNRESOLVED_MARKERS")],
             "soft_results": [],
         }
         result = assess_compliance(
             resolution, self.hard, evidence, findings, assessed
         )
-        record = self.result_by_id(result)["PROSE.EM_DASH_FORBIDDEN"]
+        record = self.result_by_id(result)["FINAL.NO_UNRESOLVED_MARKERS"]
         self.assertEqual("FAIL", record["status"])
         self.assertEqual("deterministic_finding", record["basis"])
 
@@ -113,8 +137,9 @@ class ComplianceAssessmentTests(unittest.TestCase):
             resolution, FIXTURES / "project-no-conclusion", "draft"
         )
         result = assess_compliance(resolution, self.hard, findings=findings, assessed_rules=assessed)
-        record = self.result_by_id(result)["STRUCT.CONCLUSION_SINGLE_PARAGRAPH"]
+        record = self.result_by_id(result)["STRUCT.CONCLUSION_NO_NEW_CLAIMS"]
         self.assertEqual("UNVERIFIED", record["status"])
+        self.assertIn("STRUCT.CONCLUSION_SINGLE_PARAGRAPH", result["unassessed_soft"])
 
     def test_invalid_waiver_is_rejected(self) -> None:
         resolution = self.resolution("conclusion.yaml")
@@ -122,7 +147,7 @@ class ComplianceAssessmentTests(unittest.TestCase):
             "version": 1,
             "hard_results": [
                 {
-                    "rule_id": "PROSE.EM_DASH_FORBIDDEN",
+                    "rule_id": "FACT.NO_FABRICATION",
                     "status": "WAIVED",
                     "artifact": "main.tex",
                     "locator": "global",
@@ -141,20 +166,20 @@ class ComplianceAssessmentTests(unittest.TestCase):
             assess_compliance(resolution, self.hard, evidence)
 
     def test_authorized_venue_waiver_is_accepted(self) -> None:
-        resolution = self.resolution("conclusion.yaml")
+        resolution = self.resolution("submission.yaml")
         evidence = {
             "version": 1,
             "hard_results": [
                 {
-                    "rule_id": "STRUCT.CONCLUSION_SINGLE_PARAGRAPH",
+                    "rule_id": "EXPERIMENT.REPRODUCIBILITY",
                     "status": "WAIVED",
                     "artifact": "main.tex",
-                    "locator": "Conclusion",
-                    "evidence": "Official venue structure requires two paragraphs.",
+                    "locator": "top-level structure",
+                    "evidence": "The venue exempts this submission type from the compute-resource reporting requirement.",
                     "evaluator": "venue",
                     "waiver": {
                         "authority": "venue",
-                        "reason": "Official venue structure",
+                        "reason": "Official venue reporting exception",
                         "recorded_at": "2026-07-11",
                     },
                 }
@@ -164,7 +189,7 @@ class ComplianceAssessmentTests(unittest.TestCase):
         result = assess_compliance(resolution, self.hard, evidence)
         self.assertEqual(
             "WAIVED",
-            self.result_by_id(result)["STRUCT.CONCLUSION_SINGLE_PARAGRAPH"]["status"],
+            self.result_by_id(result)["EXPERIMENT.REPRODUCIBILITY"]["status"],
         )
 
     def test_complete_evidence_can_make_submission_ready(self) -> None:
@@ -179,7 +204,7 @@ class ComplianceAssessmentTests(unittest.TestCase):
         evidence = self.complete_evidence(resolution)
         target = next(
             item for item in evidence["hard_results"]
-            if item["rule_id"] == "STRUCT.SECTION_COUNT_PROFILE"
+            if item["rule_id"] == "EXPERIMENT.REPRODUCIBILITY"
         )
         target["status"] = "NOT_APPLICABLE"
         target["evidence"] = "No automatic fix operation is in scope for this audit."
@@ -198,31 +223,31 @@ class ComplianceAssessmentTests(unittest.TestCase):
     def test_agent_can_record_anchored_semantic_failure(self) -> None:
         resolution = self.resolution("submission.yaml")
         record = {
-            "rule_id": "RESULTS.RQ_EXPLICIT_ANSWER",
+            "rule_id": "RESULTS.CLAIM_MAPPING",
             "status": "FAIL",
             "artifact": "main.tex",
             "locator": "Introduction lines 106-108; Experiments lines 416-418",
-            "evidence": "The manuscript defines three RQs and later replaces them with five Qs without explicit RQ closures.",
+            "evidence": "The manuscript defines three RQs and later replaces them with five Qs without evidence that answers the stated RQs.",
             "evaluator": "agent",
         }
         evidence = {"version": 1, "hard_results": [record], "soft_results": []}
         result = assess_compliance(resolution, self.hard, evidence)
-        assessed = self.result_by_id(result)["RESULTS.RQ_EXPLICIT_ANSWER"]
+        assessed = self.result_by_id(result)["RESULTS.CLAIM_MAPPING"]
         self.assertEqual("FAIL", assessed["status"])
         self.assertEqual("supplied_evidence", assessed["basis"])
 
-    def test_agent_cannot_pass_semantic_rule(self) -> None:
+    def test_agent_cannot_pass_semantic_rule_without_snapshots(self) -> None:
         resolution = self.resolution("submission.yaml")
         record = self.pass_record("CLAIM.EVIDENCE_BOUND")
         record["evaluator"] = "agent"
         evidence = {"version": 1, "hard_results": [record], "soft_results": []}
-        with self.assertRaisesRegex(ValueError, "agent may record anchored FAIL only"):
+        with self.assertRaisesRegex(ValueError, "source_snapshots: required non-empty list"):
             assess_compliance(resolution, self.hard, evidence)
 
     def test_agent_cannot_decide_deterministic_only_rule(self) -> None:
         resolution = self.resolution("submission.yaml")
         record = {
-            "rule_id": "PROSE.EM_DASH_FORBIDDEN",
+            "rule_id": "FINAL.NO_UNRESOLVED_MARKERS",
             "status": "FAIL",
             "artifact": "main.tex",
             "locator": "line 10",
