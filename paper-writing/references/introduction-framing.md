@@ -4,11 +4,12 @@ Use this for Introduction rewrites, research gap extraction, and RQ-driven frami
 
 ## Default Flow
 
-Rebuild the Introduction as:
+Choose the introduction’s content and order from the contribution and its evidence.
+The following functions can help; combine or omit them when already clear:
 
 1. Problem context and motivation.
 2. Explicit research gap.
-3. Formal research questions when the paper is measurement, SoK, benchmark, or evaluation-driven.
+3. Explicit research questions when they help organize distinct evidence or comparisons. Use a claim-to-evidence narrative when RQ labels add no clarity.
 4. Method, system, dataset, or benchmark overview.
 5. Optional conceptual figure handoff when an overview figure would clarify the paper logic.
 6. Short RQ-to-evidence mapping.
@@ -33,7 +34,7 @@ Existing evaluations report aggregate success rates, but they do not separate to
 
 ## RQ Formatting
 
-On first mention, write `research questions (RQs)`. After that, use `RQ` or `RQs`.
+Define `research questions (RQs)` when the abbreviation is unfamiliar or not already introduced in the relevant context.
 
 Use standalone lines when reviewer scanability matters:
 
@@ -51,9 +52,9 @@ Use bold RQ labels when it helps navigation.
 
 ## Response After RQs
 
-Immediately after the RQs, explain the paper's response at a high level:
+Explain the paper’s response near the RQs when it is not already clear:
 
-- what artifact the paper introduces
+- what new knowledge or artifact the paper contributes
 - what the comparison unit is
 - what data, tasks, or dimensions organize the evidence
 - what the reader should expect from the evaluation
@@ -62,7 +63,7 @@ Do not turn this paragraph into a mini-method section.
 
 ## RQ Mapping
 
-Map each RQ to evidence sources in one compact paragraph. The mapping should say where the answer comes from, not restate the contributions.
+Make each RQ’s evidence source easy to locate, using a compact mapping when helpful. The mapping should say where the answer comes from, not restate the contributions.
 
 Example:
 

@@ -6,7 +6,7 @@ Use this order when sources conflict:
 2. User-provided facts, approved evidence, author intent, and explicit task constraints.
 3. Reliable venue/template requirements with a source and freshness date.
 4. Applicable hard rules from the shared academic workflow.
-5. Activated soft guidance.
+5. Task-specific editorial guidance.
 6. Generic academic or domain advice.
 
 ## Conflict Rules
@@ -14,8 +14,8 @@ Use this order when sources conflict:
 - A lower source cannot relax a higher source.
 - Venue requirements may override house formatting or structure, but not integrity rules.
 - User evidence can correct manuscript facts; user preference cannot convert fabricated evidence into acceptable evidence.
-- Specific profiles override generic profiles only for fields they explicitly set.
-- Resolve apparent conflicts from task scope, rule force, specificity and the latest explicit user instruction. Ask only when a consequential ambiguity remains. In a formal assessment, keep the affected requirement `UNVERIFIED` until resolved; continue independent authorized work.
+- Activation profiles are additive applicability selectors; they do not override requirements or establish manuscript compliance.
+- Resolve apparent conflicts from task scope, source authority, specificity and the latest explicit user instruction. Ask only when a consequential ambiguity remains. In a formal assessment, keep the affected requirement `UNVERIFIED` until resolved; continue independent authorized work.
 - Rule content in this repository is authoritative over derivative copies in other projects.
 
 ## Task authorization and internal handoffs
@@ -49,7 +49,7 @@ it does not require a second citation-audit request.
 ## Personal structure preferences
 
 Traditional headings, compact conclusions, limitation placement, comparison
-tables, and visual style are adaptable author preferences in academic-defaults.
+tables, and visual style are adaptable editorial choices in the owning task guides.
 Use them when they improve the paper. Explain a material adaptation in existing
 task notes; do not create a waiver or additional approval gate for a preference.
 Preserve the substance of claims, limitations, and fair evidence comparisons.
@@ -81,6 +81,27 @@ as proof of a required section count, figure tool, font, or table style.
 
 ## Inference Boundary
 
-Task-scoped authorization described above is not a waiver and does not require a new approval for the same action. `AUTOFIX.SAFE_LOSSLESS` governs unattended generic autofix; it does not prohibit user-requested, scoped semantic editing.
+Task-scoped authorization described above is not a waiver and does not require
+a new approval for the same action. Unattended autofix is restricted as described
+below; those restrictions do not prohibit authorized semantic editing.
 
-Inference may select soft variants. It must not silently activate or satisfy hard rules for anonymity, page limits, mandatory venue statements, citation support, experiment provenance, or submission readiness.
+Inference may guide editorial choices. It must not silently activate or satisfy hard rules for anonymity, page limits, mandatory venue statements, citation support, experiment provenance, or submission readiness.
+
+## Assistant execution rules
+
+These instructions govern the assistant's actions, not the manuscript's readiness.
+Never request manuscript PASS records for following a route or obtaining edit scope.
+
+- Use the appropriate writing, author-review or artifact workflow and complete
+  authorized handoffs. Report only work actually performed.
+- A fresh-reader test uses only the supplied manuscript context. Obtain explicit
+  user authorization before invoking an additional agent; reuse authorization
+  already granted for that evaluation. Multiple perspectives in one agent are
+  not independent reader evidence.
+- Restrict unattended generic autofix to deterministic, meaning-preserving
+  replacements with a reversible diff and relevant behavior checks. Requested
+  semantic edits follow the existing scope and preserve scientific meaning.
+- Reading a paper does not authorize changing persistent preferences. An explicit
+  skill or preference update permits the scoped changes and reviewable diff.
+- Do not use AI-detector or human-likeness scores as authorship, quality or
+  readiness evidence. Diagnose actual textual defects instead.

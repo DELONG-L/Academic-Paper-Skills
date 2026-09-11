@@ -89,8 +89,6 @@ PROFILE_MATCH_FIELDS = {
     "experiment_type",
     "measurement_bias_status",
     "evidence_structure",
-    "evaluation_structure",
-    "table_profile",
     "task_scope",
 }
 
@@ -125,8 +123,6 @@ CONTEXT_VALUE_VOCABS = {
         "tiered",
         "validation_and_substantive",
     },
-    "evaluation_structure": {"rq_driven", "claim_driven", "exploratory"},
-    "table_profile": {"layered_capability_matrix"},
     "task_scope": {"short", "section", "artifact", "multi_section", "full_paper", "polish", "submission", "rebuttal"},
 }
 

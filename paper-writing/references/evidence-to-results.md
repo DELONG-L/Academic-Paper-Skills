@@ -69,3 +69,10 @@ disclosures in the manuscript. Internal record-keeping is not a narrative theme.
 Finish with the requested text/artifacts and the relevant checks. Identify
 unresolved evidence precisely without turning a useful local draft into a global
 readiness judgment.
+
+## Evidence mapping and presentation
+
+Use an experiment-to-claim or RQ map when it clarifies the argument. The mapping
+may remain in an outline or be clear from the section order; it does not require
+an extra table, answer box or compliance record. An unsupported claim still needs
+correction under the evidence rules, regardless of how the result is organized.

@@ -40,11 +40,10 @@ Security and systems venues:
 
 SoK or survey submissions:
 
-- State corpus construction and screening criteria.
-- Build an explicit taxonomy.
-- Use a taxonomy-aligned comparison table when it adds value; axis-based prose
-  can be sufficient under the shared soft comparison preference.
-- End with concrete research agenda items.
+Use the synthesis guidance in `section-architecture.md`. Make selection and
+coverage claims assessable; choose taxonomy, comparison and agenda content for
+the actual contribution. Enforce a particular component only when an explicit
+project instruction or verified venue requirement calls for it.
 
 ## Anonymity and Submission
 

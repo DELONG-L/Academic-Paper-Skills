@@ -4,9 +4,10 @@
 
 Lint records distinguish `kind: deterministic` from `kind: review_hint`.
 Definite violations, such as unresolved final placeholders or missing citation
-keys, retain deterministic-failure precedence. A possible internal script name,
-renderer term or repository URL is a located review hint: its scientific role
-or ownership needs context and is not itself a hard failure.
+keys, retain deterministic-failure precedence. A repository URL with unresolved
+ownership or a custom equation reference outside parser coverage is a located
+review hint. Script names and renderer terms are assessed in editorial review,
+not emitted as manuscript compliance findings.
 
 Assessment results retain these in `review_hints`; evidence worklists carry them
 forward. A hint does not establish PASS: mixed semantic/manual rules remain
@@ -19,9 +20,8 @@ failure as a hint merely to clear readiness.
 Use `compliance-evidence.yaml` to record judgments that deterministic checks
 cannot establish. Keep this file separate from the manuscript and bibliography.
 
-The assessment output records `active_policy_sets`, informational
-`policy_set_notes`, and `inactive_profiles` before listing rule results. Only
-rules enabled by the resolved sets enter readiness counts.
+The assessment output records active profiles and only the requirements
+applicable to the declared scope. Editorial choices are outside its evidence schema.
 
 ```yaml
 version: 1
@@ -44,10 +44,6 @@ hard_results:
     locator: "Results, paragraph 3"
     evidence: "Every numerical claim maps to Table 2 or results.csv."
     evaluator: human
-soft_results:
-  - rule_id: STRUCT.SECTION_COUNT
-    status: ADAPTED
-    rationale: "The journal template requires separate Discussion and Ethics sections."
 ```
 
 ## Hard Statuses
@@ -101,9 +97,8 @@ Use `artifact_refs` on figure/table hard results. PASS, WAIVED, or
 NOT_APPLICABLE must cover every artifact governed by that active rule. A missing
 artifact reference is a validation error, not an implicit pass.
 
-The artifact checker may establish file existence, allowed output format,
-booktabs tokens within the exact labeled table environment, canonical marker
-definitions/usage, and declared source/script presence. It cannot establish visual readability,
+The artifact checker may establish file existence, recognized output format,
+a uniquely labeled table source, and declared source/script presence. It cannot establish visual readability,
 component fidelity, row defensibility, value correctness, or accessibility by
 declaration alone.
 
@@ -125,7 +120,6 @@ alternative packages, and alternative marker designs are valid.
 The standalone artifact checker and context-driven assessment use the same
 shared rules. Assessment filters findings to the active hard-rule IDs.
 
-`FIG.SOURCE_FONT_SCALE` records the adaptive source-size choice as soft policy.
 `FIG.FINAL_WIDTH_READABLE` requires human visual inspection at the actual LaTeX
 column or text width and remains a final-figure hard gate.
 
@@ -198,40 +192,20 @@ in `source_verification`; their freshness is not guaranteed. Do not describe
 those records as verified against current files. Evaluator labels record who
 is claimed to have judged the evidence; they do not authenticate identity.
 
-## Soft Outcomes
+## Assessment scope
 
-Record soft outcomes separately:
-
-- `APPLIED`: used the default or selected guidance.
-- `ADAPTED`: used an allowed variant with rationale.
-- `SKIPPED`: intentionally not used, with rationale.
-
-Unrecorded soft rules remain in `unassessed_soft`; they never block readiness.
-
-## Structural preference migration (2026-09-08)
-
-`STRUCT.TRADITIONAL_HEADINGS`, `STRUCT.CONCLUSION_SINGLE_PARAGRAPH`,
-`STRUCT.CONCLUSION_INTEGRATES_LIMITATIONS`, and `RELATED.COMPARISON_REQUIRED`
-retain their historical IDs but now have `force: soft`, including in the local
-strict default. They are reviewed in the soft worklist and cannot produce hard
-FAIL or UNVERIFIED readiness blockers. A missing comparison table, multiple
-conclusion paragraphs, or a separate Limitations section is not by itself a
-hard violation. Claim support and actual sourced requirements remain binding.
-
-Old hard evidence for these IDs must be reassessed into `soft_results` as
-APPLIED, ADAPTED, or SKIPPED with a rationale. The validator rejects a misplaced
-hard record and does not automatically reinterpret PASS, FAIL, or a waiver.
-Previously generated assessment files are historical snapshots; rerun policy
-resolution and validation before claiming current readiness. The explicit
-`standard_conference` section-count profile remains hard; the general
-section-count preference remains soft.
+Only active manuscript requirements contribute hard results. Editing advice
+and internal authorization/routing instructions are not readiness items.
+Retired IDs are rejected in evidence rather than silently treated as PASS;
+reassess current requirements before reusing a historical assessment.
 
 ## Submission Readiness
 
-Apply the gate only when `submission_stage` is `submission` or `camera_ready` and
-the field has trusted provenance.
+Apply the gate only when `submission_stage` is `submission` or `camera_ready`,
+the field has trusted provenance, and there are active manuscript requirements.
+An execution-only scope with no requirements yields `NOT_EVALUATED`, not READY.
 
-- `READY`: every applicable active hard rule is `PASS` or valid `WAIVED`.
+- `READY`: at least one manuscript requirement was assessed, and every applicable active hard rule is `PASS`, valid `WAIVED`, or evidence-backed `NOT_APPLICABLE`.
 - `BLOCKED`: at least one applicable active hard rule is `FAIL` or `UNVERIFIED`.
 - `NOT_EVALUATED`: the manuscript is not at a trusted final stage.
 
@@ -251,7 +225,8 @@ does not rewrite prose, apply semantic fixes, or mutate `.bib` files.
 The project runner reports distinct quantities rather than one ambiguous
 "finding count":
 
-- `finding_instance_count`: all applicable deterministic finding instances;
+- `finding_instance_count`: all applicable finding instances, including review hints;
+- `review_hint_count`: instances requiring contextual inspection, not definite violations;
 - `deterministic_failing_rule_count`: unique active hard rules with at least
   one deterministic finding;
 - `affected_artifact_count`: unique declared figure/table records with a
@@ -273,17 +248,12 @@ upload mirrors, venue examples, archived drafts, and unrelated bibliographies
 outside that boundary must not contribute findings, artifact discovery, unused
 keys, or section groups.
 
-## Review Worklists And Citation Locators
+## Evidence Worklist And Citation Locators
 
-The runner writes `soft-review-worklist.yaml`. It inventories each active soft
-rule once, then groups rule IDs by concrete primary-manuscript sections,
-figure/table inventories, bibliography, whole-manuscript structure, or workflow.
-Generic prose guidance is referenced by every discovered primary section;
-feature-specific rules are attached only to their semantic target. `PENDING` in
-this file is a planning state, not a soft evidence status. Record `APPLIED`,
-`ADAPTED`, or `SKIPPED` only after inspection and with rationale.
-`artifact_inventory_basis` states whether figure/table groups use confirmed
-evidence IDs or guarded auto-discovery IDs; confirmed evidence takes precedence.
+The runner writes `evidence-worklist.yaml` with the active requirements still
+awaiting evidence. Inspect the listed artifacts before recording any judgment.
+Writing and design advice is selected from task guides without a generated
+preference checklist or a status for every editorial choice.
 
 `unused-bibtex-keys.yaml` retains the backward-compatible `keys` list and adds
 `entries`, each containing `key`, project-relative `.bib` `path`, and `line`.

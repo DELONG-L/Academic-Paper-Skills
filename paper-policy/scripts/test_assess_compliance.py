@@ -26,18 +26,10 @@ class ComplianceAssessmentTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.hard = load_yaml(REFS / "hard-rules.yaml")
-        cls.soft = load_yaml(REFS / "soft-rules.yaml")
         cls.profiles = load_yaml(REFS / "profiles.yaml")
-        cls.policy_sets = load_yaml(REFS / "policy-sets.yaml")
 
     def resolution(self, fixture: str) -> dict:
-        return resolve_policy(
-            load_yaml(CONTEXTS / fixture),
-            self.hard,
-            self.soft,
-            self.profiles,
-            self.policy_sets,
-        )
+        return resolve_policy(load_yaml(CONTEXTS / fixture), self.hard, self.profiles)
 
     @staticmethod
     def lint_for_resolution(resolution: dict, project: Path, stage: str):
@@ -69,32 +61,30 @@ class ComplianceAssessmentTests(unittest.TestCase):
             "hard_results": [
                 self.pass_record(item["id"]) for item in resolution["active_hard"]
             ],
-            "soft_results": [],
+
         }
 
     def test_optional_workflow_notes_do_not_replace_required_evidence(self) -> None:
-        # Synthetic, deliberately workflow-only scope: READY here is not a
-        # manuscript-wide judgment. No brief/ledger or soft outcome is supplied.
+        # Synthetic scoped judgment with supplied requirement evidence.
+        # No optional brief or workflow ledger is supplied.
         context = {
             "version": 1, "submission_stage": "submission",
             "task_scope": "full_paper", "task_mode": "submission_readiness",
-            "scopes": ["workflow"], "artifacts": ["policy"],
+            "scopes": ["workflow", "writing"], "artifacts": ["policy", "prose"],
             "features": ["paper_prose"],
             "provenance": {"submission_stage": "user"},
         }
-        resolution = resolve_policy(context, self.hard, self.soft, self.profiles, self.policy_sets)
+        resolution = resolve_policy(context, self.hard, self.profiles)
         rule_id = "WORKFLOW.COMPLEX_TASK_STATE"
         self.assertNotIn(rule_id, {x["id"] for x in resolution["active_hard"]})
-        self.assertIn(rule_id, {x["id"] for x in resolution["active_soft"]})
         evidence = self.complete_evidence(resolution)
         result = assess_compliance(resolution, self.hard, evidence)
         self.assertEqual("READY", result["readiness"]["status"])
-        self.assertIn(rule_id, result["unassessed_soft"])
         evidence["hard_results"] = [
-            x for x in evidence["hard_results"] if x["rule_id"] != "AUTH.INTEGRITY_PRECEDENCE"
+            x for x in evidence["hard_results"] if x["rule_id"] != "CLAIM.EVIDENCE_BOUND"
         ]
         result = assess_compliance(resolution, self.hard, evidence)
-        self.assertEqual("UNVERIFIED", self.result_by_id(result)["AUTH.INTEGRITY_PRECEDENCE"]["status"])
+        self.assertEqual("UNVERIFIED", self.result_by_id(result)["CLAIM.EVIDENCE_BOUND"]["status"])
         self.assertEqual("BLOCKED", result["readiness"]["status"])
 
     def test_draft_readiness_is_not_evaluated(self) -> None:
@@ -122,7 +112,7 @@ class ComplianceAssessmentTests(unittest.TestCase):
         evidence = {
             "version": 1,
             "hard_results": [self.pass_record("FINAL.NO_UNRESOLVED_MARKERS")],
-            "soft_results": [],
+
         }
         result = assess_compliance(
             resolution, self.hard, evidence, findings, assessed
@@ -139,7 +129,6 @@ class ComplianceAssessmentTests(unittest.TestCase):
         result = assess_compliance(resolution, self.hard, findings=findings, assessed_rules=assessed)
         record = self.result_by_id(result)["STRUCT.CONCLUSION_NO_NEW_CLAIMS"]
         self.assertEqual("UNVERIFIED", record["status"])
-        self.assertIn("STRUCT.CONCLUSION_SINGLE_PARAGRAPH", result["unassessed_soft"])
 
     def test_invalid_waiver_is_rejected(self) -> None:
         resolution = self.resolution("conclusion.yaml")
@@ -160,7 +149,7 @@ class ComplianceAssessmentTests(unittest.TestCase):
                     },
                 }
             ],
-            "soft_results": [],
+
         }
         with self.assertRaisesRegex(ValueError, "does not allow waivers"):
             assess_compliance(resolution, self.hard, evidence)
@@ -184,7 +173,7 @@ class ComplianceAssessmentTests(unittest.TestCase):
                     },
                 }
             ],
-            "soft_results": [],
+
         }
         result = assess_compliance(resolution, self.hard, evidence)
         self.assertEqual(
@@ -216,23 +205,23 @@ class ComplianceAssessmentTests(unittest.TestCase):
         resolution = self.resolution("submission.yaml")
         record = self.pass_record("CLAIM.EVIDENCE_BOUND")
         record["evaluator"] = "tool"
-        evidence = {"version": 1, "hard_results": [record], "soft_results": []}
+        evidence = {"version": 1, "hard_results": [record]}
         with self.assertRaisesRegex(ValueError, "tool cannot decide semantic"):
             assess_compliance(resolution, self.hard, evidence)
 
     def test_agent_can_record_anchored_semantic_failure(self) -> None:
         resolution = self.resolution("submission.yaml")
         record = {
-            "rule_id": "RESULTS.CLAIM_MAPPING",
+            "rule_id": "CLAIM.EVIDENCE_BOUND",
             "status": "FAIL",
             "artifact": "main.tex",
             "locator": "Introduction lines 106-108; Experiments lines 416-418",
-            "evidence": "The manuscript defines three RQs and later replaces them with five Qs without evidence that answers the stated RQs.",
+            "evidence": "The Introduction claims improvement on five datasets, but the supplied results report only three; the claimed scope exceeds the inspected evidence.",
             "evaluator": "agent",
         }
-        evidence = {"version": 1, "hard_results": [record], "soft_results": []}
+        evidence = {"version": 1, "hard_results": [record]}
         result = assess_compliance(resolution, self.hard, evidence)
-        assessed = self.result_by_id(result)["RESULTS.CLAIM_MAPPING"]
+        assessed = self.result_by_id(result)["CLAIM.EVIDENCE_BOUND"]
         self.assertEqual("FAIL", assessed["status"])
         self.assertEqual("supplied_evidence", assessed["basis"])
 
@@ -240,7 +229,7 @@ class ComplianceAssessmentTests(unittest.TestCase):
         resolution = self.resolution("submission.yaml")
         record = self.pass_record("CLAIM.EVIDENCE_BOUND")
         record["evaluator"] = "agent"
-        evidence = {"version": 1, "hard_results": [record], "soft_results": []}
+        evidence = {"version": 1, "hard_results": [record]}
         with self.assertRaisesRegex(ValueError, "source_snapshots: required non-empty list"):
             assess_compliance(resolution, self.hard, evidence)
 
@@ -254,7 +243,7 @@ class ComplianceAssessmentTests(unittest.TestCase):
             "evidence": "Agent-reported deterministic issue.",
             "evaluator": "agent",
         }
-        evidence = {"version": 1, "hard_results": [record], "soft_results": []}
+        evidence = {"version": 1, "hard_results": [record]}
         with self.assertRaisesRegex(ValueError, "agent cannot decide deterministic-only"):
             assess_compliance(resolution, self.hard, evidence)
 
@@ -262,7 +251,7 @@ class ComplianceAssessmentTests(unittest.TestCase):
         resolution = self.resolution("submission.yaml")
         record = self.pass_record("FACT.NO_FABRICATION")
         record["status"] = "NOT_APPLICABLE"
-        evidence = {"version": 1, "hard_results": [record], "soft_results": []}
+        evidence = {"version": 1, "hard_results": [record]}
         with self.assertRaisesRegex(ValueError, "always-active"):
             assess_compliance(resolution, self.hard, evidence)
 
@@ -284,20 +273,6 @@ class ComplianceAssessmentTests(unittest.TestCase):
         self.assertEqual(1, completed.returncode, completed.stderr)
         self.assertEqual("BLOCKED", json.loads(completed.stdout)["readiness"]["status"])
 
-    def test_soft_results_are_separate_and_non_blocking(self) -> None:
-        resolution = self.resolution("submission.yaml")
-        evidence = self.complete_evidence(resolution)
-        evidence["soft_results"] = [
-            {
-                "rule_id": "STRUCT.SECTION_COUNT",
-                "status": "ADAPTED",
-                "rationale": "The verified venue template requires separate sections.",
-            }
-        ]
-        result = assess_compliance(resolution, self.hard, evidence)
-        self.assertEqual("READY", result["readiness"]["status"])
-        self.assertEqual("ADAPTED", result["soft_results"][0]["status"])
-        self.assertNotIn("STRUCT.SECTION_COUNT", result["unassessed_soft"])
 
 
 if __name__ == "__main__":

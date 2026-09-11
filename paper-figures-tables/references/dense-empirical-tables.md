@@ -1,6 +1,6 @@
 # Dense Empirical Tables
 
-Use this soft style profile for load-bearing empirical tables whose grouping and
+Use this optional design guide for load-bearing empirical tables whose grouping and
 scan path matter as much as individual values. It adapts the strongest reusable
 patterns identified through reference-paper analysis without reproducing that
 paper's text, values, or paper-specific choices.
@@ -17,7 +17,7 @@ paper's text, values, or paper-specific choices.
 
 ## Selection
 
-Use this profile for:
+Use this guide for:
 
 - multi-axis Related Work matrices;
 - findings-at-a-glance or RQ-to-result indexes;
@@ -28,9 +28,9 @@ Use this profile for:
 Keep the compact default in `tables.md` when the table has one flat header, few
 rows, or no meaningful group hierarchy.
 
-For a Related Work table with eight or more capability dimensions grouped by
+For a Related Work table with capability dimensions grouped by
 the paper's conceptual layers, continue with `layered-capability-matrix.md`.
-That profile adds a comparison-corpus and uniqueness-evidence contract that a
+That guide adds a comparison-corpus and uniqueness-evidence contract that a
 generic dense empirical table does not need.
 
 ## Visual Grammar
@@ -155,9 +155,9 @@ captions as a default.
 
 ## Do Not Generalize
 
-- Do not copy header direction arrows; follow the active table-direction rule.
+- Use consistent metric-direction notation suited to the manuscript; words and correctly rendered arrows are both valid.
 - Do not use `---` for missingness; use explicit semantics from
-  `TABLE.MISSING_VALUE_LABELS`.
+  label missing table values explicitly.
 - Do not repeat package imports or keep empty `threeparttable` wrappers.
 - Do not use color without grayscale and accessibility checks.
 - Do not use `table*`, `\scriptsize`, vertical separators, or `\resizebox`

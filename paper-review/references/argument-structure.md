@@ -43,7 +43,7 @@ unique result is a tightening candidate, not an empty paragraph. No independent
 need for every sentence to assert a new empirical fact: definitions, derivations,
 topic sentences, and useful transitions can all carry the argument.
 
-Apply the existing `REVIEW.ARCHITECTURE_SAFETY`: track the retained information
+During structural editing, track the retained information
 and its location for moves, merges and removals. For empty filler, explicitly
 record that no scientific information needs a surviving location. Material
 caveats remain scientific content; a ritual disclaimer about an unclaimed goal

@@ -9,8 +9,7 @@ and provides a located edit plan at the requested scope.
 
 ## Top-Level Section Names
 
-The soft `STRUCT.TRADITIONAL_HEADINGS` preference favors traditional concise
-names. Adapt them when a precise topic-specific heading improves navigation or
+Use concise names that make the section function clear. Adapt them when a precise topic-specific heading improves navigation or
 follows a venue requirement. The following names are useful defaults:
 
 - Introduction
@@ -43,8 +42,7 @@ The following title forms need a clear navigational purpose; their wording alone
 - long colon titles
 - metaphorical titles
 
-Under `STRUCT.TRADITIONAL_HEADINGS`, retain a precise topic-specific or
-question heading when it clarifies the section function. Revise decorative
+Retain a precise topic-specific or question heading when it clarifies the section function. Revise decorative
 headings that obscure that function or violate a sourced project requirement.
 
 ## Default Structure
@@ -87,9 +85,9 @@ For measurement papers:
 ## Section Discipline
 
 - Keep top-level sections few and predictable.
-- Follow explicit project and sourced venue sectioning requirements. `STRUCT.SECTION_COUNT` is an adaptable starting preference, never a universal conference section-count gate.
+- Follow explicit project and sourced venue sectioning requirements. Choose section count and hierarchy from the explanatory dependencies and navigation needs.
 - Merge thin `Preliminaries` into Background when this improves navigation; retain a distinct section when definitions or the template give it a clear role.
-- Apply `STRUCT.THIN_SUBSECTION` as soft guidance. Retain a short subsection for a distinct formal artifact or a venue requirement; paragraph count alone is not a failure criterion.
+- Retain a short subsection for a distinct formal artifact or a venue requirement; paragraph count alone is not a failure criterion.
 - Prefer a short paragraph heading for a local distinction when it improves navigation, following the manuscript formatting convention.
 - Place material limitation analysis where the venue and argument support it. A compact Conclusion can finish with a supported finding or implication when its scope is clear. Separate Limitations sections and multiple conclusion paragraphs are valid.
 - Keep section numbering consistent with the template. Do not mix numbered and unnumbered main sections unless the venue template requires it.
@@ -114,9 +112,12 @@ or logical dependency merely to make the outline look linear.
 
 For SoK or survey papers:
 
-- State the corpus, search boundary, or screening method when the paper claims coverage.
-- Use a taxonomy or comparison axes that can be audited by the reader.
-- End with concrete research directions rather than a generic future-work list.
+Choose a structure that explains how knowledge is organized and what the synthesis
+establishes. Taxonomies, comparison frameworks, corpus selection methods and a
+research agenda can help, but no particular combination is universally required.
+Make the evidence-selection basis clear enough to assess the stated synthesis;
+retain selection facts needed to interpret conclusions. Apply a mandated section
+or content item only when an explicit project or verified venue source requires it.
 
 For security or protocol papers:
 

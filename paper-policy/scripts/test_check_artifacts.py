@@ -25,18 +25,10 @@ class ArtifactPolicyTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.hard = load_yaml(REFS / "hard-rules.yaml")
-        cls.soft = load_yaml(REFS / "soft-rules.yaml")
         cls.profiles = load_yaml(REFS / "profiles.yaml")
-        cls.policy_sets = load_yaml(REFS / "policy-sets.yaml")
 
     def resolution(self, fixture: str) -> dict:
-        return resolve_policy(
-            load_yaml(CONTEXTS / fixture),
-            self.hard,
-            self.soft,
-            self.profiles,
-            self.policy_sets,
-        )
+        return resolve_policy(load_yaml(CONTEXTS / fixture), self.hard, self.profiles)
 
     @staticmethod
     def by_id(assessment: dict) -> dict[str, dict]:
@@ -143,7 +135,7 @@ class ArtifactPolicyTests(unittest.TestCase):
                 coverage,
             )
 
-    def test_low_source_font_is_soft_but_missing_data_still_fails(self) -> None:
+    def test_source_font_choice_does_not_clear_missing_data(self) -> None:
         root = FIXTURES / "artifact-fail"
         evidence = load_yaml(root / "figure-evidence.yaml")
         findings, assessed, coverage = check_artifacts(root, evidence["artifacts"])

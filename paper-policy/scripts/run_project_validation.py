@@ -13,7 +13,6 @@ from typing import Any
 import yaml
 
 from assess_compliance import assess_compliance
-from build_soft_worklist import build_soft_review_worklist
 from check_artifacts import check_artifacts
 from discover_artifacts import compare_discovery, discover_artifacts
 from lint_project import lint_project, unused_bibtex_entries
@@ -74,18 +73,14 @@ def run_validation(
     output_dir: Path,
     evidence_path: Path | None = None,
 ) -> dict[str, Any]:
+    project = project.resolve()
     script_dir = Path(__file__).resolve().parent
     policy_dir = script_dir.parent
     refs = policy_dir / "references"
     hard_path = refs / "hard-rules.yaml"
-    soft_path = refs / "soft-rules.yaml"
     profiles_path = refs / "profiles.yaml"
-    decisions_path = refs / "decision-baseline.yaml"
-    policy_sets_path = refs / "policy-sets.yaml"
 
-    errors = validate_registry(
-        hard_path, soft_path, profiles_path, decisions_path, policy_sets_path
-    )
+    errors = validate_registry(hard_path, profiles_path)
     if errors:
         raise ValueError("registry validation failed: " + "; ".join(errors))
     if not project.is_dir():
@@ -93,13 +88,7 @@ def run_validation(
 
     hard = load_yaml(hard_path)
     context = load_yaml(context_path)
-    resolution = resolve_policy(
-        context,
-        hard,
-        load_yaml(soft_path),
-        load_yaml(profiles_path),
-        load_yaml(policy_sets_path),
-    )
+    resolution = resolve_policy(context, hard, load_yaml(profiles_path))
     active_hard_ids = {item["id"] for item in resolution["active_hard"]}
     stage = resolution["context"].get("submission_stage", "draft")
     project_files = select_project_files(
@@ -151,35 +140,27 @@ def run_validation(
         ),
     )
     _write_yaml(output_dir / "resolved-policy.yaml", resolution)
-    confirmed_artifacts = evidence.get("artifacts", []) if evidence else []
-    worklist_artifacts = confirmed_artifacts or discovery["artifacts"]
-    soft_worklist = build_soft_review_worklist(
-        resolution,
-        project,
-        worklist_artifacts,
-        "confirmed_evidence" if confirmed_artifacts else "auto_discovery",
-        project_files.primary_tex_paths,
-        project_files.primary_tex,
-    )
-    _write_yaml(output_dir / "soft-review-worklist.yaml", soft_worklist)
     _write_yaml(output_dir / "initial-assessment.yaml", assessment)
     _write_yaml(output_dir / "evidence-worklist.yaml", build_evidence_worklist(assessment, hard))
     _write_yaml(
         output_dir / "deterministic-findings.yaml",
         {"version": 1, "findings": [asdict(item) for item in findings]},
     )
+    # The runner is an explicit project validation. Bibliography maintenance
+    # remains a report and is not activated through a manuscript hard rule.
+    report_unused = bool(project_files.tex_paths and project_files.bib_paths)
     unused_entries = (
         unused_bibtex_entries(
             project, list(project_files.tex_paths), list(project_files.bib_paths)
         )
-        if "CITE.UNUSED_KEYS_REPORTED" in active_hard_ids
+        if report_unused
         else []
     )
     _write_yaml(
         output_dir / "unused-bibtex-keys.yaml",
         {
             "version": 1,
-            "active": "CITE.UNUSED_KEYS_REPORTED" in active_hard_ids,
+            "active": report_unused,
             "keys": sorted({str(item["key"]) for item in unused_entries}),
             "entries": unused_entries,
         },
@@ -187,7 +168,7 @@ def run_validation(
     failing_results = [
         item for item in assessment["hard_results"] if item["status"] == "FAIL"
     ]
-    deterministic_rule_ids = sorted({item.rule_id for item in findings})
+    deterministic_rule_ids = sorted({item.rule_id for item in findings if item.kind == "deterministic"})
     agent_rule_ids = sorted(
         {
             item["rule_id"]
@@ -209,7 +190,7 @@ def run_validation(
         {
             item.path[len("<artifact:") : -1]
             for item in findings
-            if item.path.startswith("<artifact:") and item.path.endswith(">")
+            if item.kind == "deterministic" and item.path.startswith("<artifact:") and item.path.endswith(">")
         }
     )
     manifest = {
@@ -227,6 +208,7 @@ def run_validation(
             path.relative_to(project).as_posix() for path in project_files.bib_paths
         ],
         "finding_instance_count": len(findings),
+        "review_hint_count": sum(item.kind == "review_hint" for item in findings),
         "deterministic_failing_rule_count": len(deterministic_rule_ids),
         "deterministic_failing_rule_ids": deterministic_rule_ids,
         "affected_artifact_count": len(affected_artifacts),
@@ -240,12 +222,6 @@ def run_validation(
         "total_failing_rule_count": len(failing_results),
         "unverified_rule_count": assessment["hard_summary"]["UNVERIFIED"],
         "unused_bibtex_key_count": len(unused_entries),
-        "soft_worklist_active_rule_count": soft_worklist["coverage"][
-            "active_soft_rule_count"
-        ],
-        "soft_worklist_unmapped_rule_count": len(
-            soft_worklist["coverage"]["unmapped_rule_ids"]
-        ),
         "readiness_status": assessment["readiness"]["status"],
     }
     _write_yaml(output_dir / "validation-manifest.yaml", manifest)
@@ -287,11 +263,6 @@ def main() -> int:
         print(f"Total failing rules: {manifest['total_failing_rule_count']}")
         print(f"Unverified rules: {manifest['unverified_rule_count']}")
         print(f"Unused BibTeX keys: {manifest['unused_bibtex_key_count']}")
-        print(
-            "Soft worklist rules: "
-            f"{manifest['soft_worklist_active_rule_count']} "
-            f"({manifest['soft_worklist_unmapped_rule_count']} unmapped)"
-        )
         print(f"Readiness: {manifest['readiness_status']}")
     return 1 if manifest["total_failing_rule_count"] else 0
 

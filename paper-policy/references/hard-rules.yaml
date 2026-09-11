@@ -1,38 +1,6 @@
 version: 1
 registry: paper-policy-hard
 rules:
-  - id: AUTH.INTEGRITY_PRECEDENCE
-    title: Integrity outranks style
-    force: hard
-    scope: [workflow, writing, review, figures, tables, citations]
-    artifacts: [policy, prose, tex, bibtex, figure, table, paper_outline]
-    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
-    activation: {type: always, when: []}
-    requirement: Never relax an academic-integrity rule to satisfy house style, venue rhetoric, or user preference.
-    checks:
-      - {kind: manual, evidence_required: true, description: 'Confirm every conflict resolution preserves truth and evidence boundaries.'}
-    failure: {draft: block, final: block}
-    autofix: none
-    waiver: {allowed: false, authorities: []}
-    decision_refs: [A01, A02, A03, A11, A12, A13, A14, A15]
-    source: {origin: user-decision, note: 'Core authority rule.'}
-
-  - id: ROUTE.SKILL_BOUNDARY
-    title: Preserve skill ownership boundaries
-    force: hard
-    scope: [workflow]
-    artifacts: [policy]
-    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
-    activation: {type: always, when: []}
-    requirement: Route prose, review, artifacts, and evidence work to their owning skills and never claim an unperformed handoff is complete.
-    checks:
-      - {kind: manual, evidence_required: true, description: 'Compare the requested deliverable with the owning skill contract.'}
-    failure: {draft: report, final: block}
-    autofix: none
-    waiver: {allowed: false, authorities: []}
-    decision_refs: [A05, A06, A07, A08, G14]
-    source: {origin: local-house-policy, note: 'Modular architecture boundary.'}
-
   - id: FACT.NO_FABRICATION
     title: No fabricated facts or results
     force: hard
@@ -46,7 +14,6 @@ rules:
     failure: {draft: placeholder, final: block}
     autofix: none
     waiver: {allowed: false, authorities: []}
-    decision_refs: [B01, B09, I02, J03]
     source: {origin: local-house-policy, note: 'Non-waivable integrity rule.'}
 
   - id: CLAIM.EVIDENCE_BOUND
@@ -62,7 +29,6 @@ rules:
     failure: {draft: narrow, final: block}
     autofix: assisted
     waiver: {allowed: false, authorities: []}
-    decision_refs: [B02, B05, B07, B10, J15]
     source: {origin: local-house-policy, note: 'Claim calibration hard core.'}
 
   - id: CLAIM.CAUSALITY_DISCIPLINE
@@ -78,7 +44,6 @@ rules:
     failure: {draft: narrow, final: block}
     autofix: assisted
     waiver: {allowed: false, authorities: []}
-    decision_refs: [B03]
     source: {origin: local-house-policy, note: 'Evidence-language integrity.'}
 
   - id: CLAIM.SECURITY_SCOPE
@@ -94,7 +59,6 @@ rules:
     failure: {draft: narrow, final: block}
     autofix: assisted
     waiver: {allowed: false, authorities: []}
-    decision_refs: [B04]
     source: {origin: local-house-policy, note: 'Security claim boundary.'}
 
   - id: CLAIM.NOVELTY_SUPPORT
@@ -110,7 +74,6 @@ rules:
     failure: {draft: narrow, final: block}
     autofix: assisted
     waiver: {allowed: false, authorities: []}
-    decision_refs: [B11]
     source: {origin: local-house-policy, note: 'Novelty integrity.'}
 
   - id: CLAIM.CAVEAT_PRESERVED
@@ -120,12 +83,11 @@ rules:
     artifacts: [prose]
     phases: [draft, polish, submission, rebuttal, camera_ready]
     activation: {type: always, when: []}
-    requirement: "Preserve material adverse findings, scientifically necessary conditions and applicable disclosure requirements during editing. Correct an overclaim directly; redundant anticipatory defenses may be removed when the resulting claim is accurate without them."
+    requirement: "Preserve material adverse findings, scientifically necessary definitions, reasoning, conditions and applicable disclosures during editing. Correct an overclaim directly; redundant anticipatory defenses may be removed when the resulting claim is accurate without them."
     checks: [{"kind": "semantic", "evidence_required": true, "description": "Check whether removed text carries necessary scientific information. Trace retained information after moves or merges; explain deletion of filler or redundant defenses without inventing a surviving home."}]
     failure: {draft: block, final: block}
     autofix: none
     waiver: {allowed: false, authorities: []}
-    decision_refs: [B06, B15, K06, K07]
     source: {origin: user-decision, note: 'Limitations and structural safety.'}
 
   - id: PROSE.ANTI_AI_MEANING_PRESERVATION
@@ -141,24 +103,7 @@ rules:
     failure: {draft: block, final: block}
     autofix: none
     waiver: {allowed: false, authorities: []}
-    decision_refs: [N07]
     source: {origin: user-decision, note: 'Independently authored integrity boundary informed by comparative review of public Anti-AI guidance.'}
-
-  - id: WORKFLOW.NO_AI_DETECTOR_GATE
-    title: Do not use AI-detector or authorship scores as a gate
-    force: hard
-    scope: [workflow, writing, review]
-    artifacts: [policy, prose]
-    phases: [draft, polish, submission, rebuttal, camera_ready]
-    activation: {type: mode, when: [anti_ai_cleanup, prose_cleanup, writing_anti_ai, authorship_review, detector_review]}
-    requirement: Do not use AI-detector, perplexity, authenticity, human-likeness, or equivalent scores to assign manuscript compliance, submission readiness, or authorship; do not alter prose to evade such detectors. Diagnose concrete textual defects without claiming AI authorship from style alone.
-    checks:
-      - {kind: manual, evidence_required: true, description: 'Inspect the audit rationale and rewrite objective for detector-based gating, evasion tactics, or unsupported authorship inference.'}
-    failure: {draft: block, final: block}
-    autofix: none
-    waiver: {allowed: false, authorities: []}
-    decision_refs: [N08]
-    source: {origin: user-decision, note: 'Independently authored detector-safety rule; no external implementation or text is incorporated.'}
 
   - id: CLAIM.KNOWN_BIAS_DIRECTION
     title: Disclose the direction of known measurement bias
@@ -173,7 +118,6 @@ rules:
     failure: {draft: narrow, final: block}
     autofix: assisted
     waiver: {allowed: false, authorities: []}
-    decision_refs: [N01]
     source: {origin: user-decision, note: 'Conditional hard rule informed by reference-paper evidence architecture; no text or data reproduced.'}
 
   - id: CITE.NO_MEMORY_BIBTEX
@@ -189,7 +133,6 @@ rules:
     failure: {draft: placeholder, final: block}
     autofix: none
     waiver: {allowed: false, authorities: []}
-    decision_refs: [C01, C03, C13]
     source: {origin: local-house-policy, note: 'Citation integrity.'}
 
   - id: CITE.APPROVED_SOURCE_ONLY
@@ -206,7 +149,6 @@ rules:
     failure: {draft: placeholder, final: block}
     autofix: none
     waiver: {allowed: true, authorities: [user]}
-    decision_refs: [C02, C04, X01, X02]
     source: {origin: user-decision, note: 'Local polish and closed-corpus boundaries retained; user-approved 2026-09-08 batch 1 permits scoped primary-source completion without repeat authorization.'}
 
   - id: CITE.NO_INVENTED_SUPPORT
@@ -222,7 +164,6 @@ rules:
     failure: {draft: narrow, final: block}
     autofix: assisted
     waiver: {allowed: false, authorities: []}
-    decision_refs: [C05, C08, C09]
     source: {origin: local-house-policy, note: 'Metadata is not claim support.'}
 
   - id: CITE.SOURCE_LOCATOR_REQUIRED
@@ -238,39 +179,7 @@ rules:
     failure: {draft: placeholder, final: block}
     autofix: none
     waiver: {allowed: false, authorities: []}
-    decision_refs: [C06, C07, C19, M08]
     source: {origin: imported-design, note: 'Claim-span ledger compatible with user-selected evidence workflows.'}
-
-  - id: CITE.UNUSED_KEYS_REPORTED
-    title: Final citation checks report unused keys
-    force: hard
-    scope: [citations, review]
-    artifacts: [bibtex]
-    phases: [submission, camera_ready]
-    activation: {type: profile, when: [final-citation-check]}
-    requirement: Report unused bibliography keys during a final citation check without deleting or renaming them automatically.
-    checks:
-      - {kind: deterministic, evidence_required: false, description: 'Compare local bibliography keys with manuscript citation keys.'}
-    failure: {draft: report, final: report}
-    autofix: none
-    waiver: {allowed: true, authorities: [user]}
-    decision_refs: [C16]
-    source: {origin: user-decision, note: 'Final citation hygiene.'}
-
-  - id: LATEX.PRESERVE_STRUCTURE
-    title: Preserve LaTeX structure during rewriting
-    force: hard
-    scope: [writing, review]
-    artifacts: [tex]
-    phases: [draft, polish, submission, rebuttal, camera_ready]
-    activation: {type: feature, when: [latex_manuscript]}
-    requirement: "Preserve LaTeX citations, labels, references, equations and macros during prose-only cleanup. An authorized structural edit, citation repair or template migration includes necessary coordinated token changes; update consumers and verify meaning and compilation without repeat permission."
-    checks: [{"kind": "manual", "evidence_required": true, "description": "Inspect changed LaTeX tokens against the authorized scope, dependent references and build evidence."}, {"kind": "semantic", "evidence_required": true, "description": "Confirm citation attachment and mathematical meaning remain correct; changes implement the authorized revision."}]
-    failure: {draft: block, final: block}
-    autofix: none
-    waiver: {allowed: true, authorities: [user]}
-    decision_refs: [D01, D02]
-    source: {origin: local-house-policy, note: 'LaTeX preservation contract.'}
 
   - id: LATEX.REFERENCEABLE_DISPLAY
     title: Referenceable displays use structured environments
@@ -285,39 +194,7 @@ rules:
     failure: {draft: block, final: block}
     autofix: assisted
     waiver: {allowed: false, authorities: []}
-    decision_refs: [D03]
     source: {origin: user-decision, note: 'Referenceable display contract.'}
-
-  - id: PROSE.ABBREVIATION_FIRST_USE
-    title: Expand abbreviations on first use
-    force: hard
-    scope: [writing, review]
-    artifacts: [prose, tex]
-    phases: [draft, polish, submission, rebuttal, camera_ready]
-    activation: {type: always, when: []}
-    requirement: Expand each non-standard abbreviation at first use and use it consistently afterward.
-    checks:
-      - {kind: semantic, evidence_required: true, description: 'Locate the first use and later occurrences of each abbreviation.'}
-    failure: {draft: block, final: block}
-    autofix: assisted
-    waiver: {allowed: true, authorities: [user, venue]}
-    decision_refs: [D12]
-    source: {origin: user-decision, note: 'Abbreviation hygiene.'}
-
-  - id: PROSE.NO_INTERNAL_PROVENANCE
-    title: Keep internal provenance out of paper prose
-    force: hard
-    scope: [writing, review, figures, tables]
-    artifacts: [prose, tex, figure, table]
-    phases: [draft, polish, submission, rebuttal, camera_ready]
-    activation: {type: always, when: []}
-    requirement: "Keep irrelevant internal workflow bookkeeping out of manuscript prose and captions. Retain scientifically necessary implementation details, artifact identifiers and truthful synthetic-data disclosures. A path, script name or renderer term alone does not establish a violation."
-    checks: [{"kind": "deterministic", "evidence_required": false, "description": "Locate possible workflow markers as review hints, not conclusive violations."}, {"kind": "semantic", "evidence_required": true, "description": "Determine whether each occurrence is irrelevant bookkeeping or scientifically necessary content from its actual context."}]
-    failure: {draft: report, final: block}
-    autofix: assisted
-    waiver: {allowed: true, authorities: [user, venue]}
-    decision_refs: [D08, D10, F22]
-    source: {origin: local-house-policy, note: 'Originated in Academic-Paper-Skills.'}
 
   - id: PROSE.EVIDENCE_BOUND_LANGUAGE
     title: Evidence-bound intensifiers and attributions
@@ -332,24 +209,7 @@ rules:
     failure: {draft: narrow, final: block}
     autofix: assisted
     waiver: {allowed: false, authorities: []}
-    decision_refs: [F07, F08]
     source: {origin: local-house-policy, note: 'Evidence-language guardrail.'}
-
-  - id: PROSE.ACADEMIC_VOICE_BOUNDARY
-    title: Keep author voice academic and evidence-bound
-    force: hard
-    scope: [writing, review]
-    artifacts: [prose]
-    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
-    activation: {type: always, when: []}
-    requirement: Allow measured author judgment without casual humanizer language, evidence-free opinion, or humor substituting for analysis.
-    checks:
-      - {kind: semantic, evidence_required: true, description: 'Confirm judgment is tied to a design choice, evidence boundary, or explicit author position.'}
-    failure: {draft: narrow, final: block}
-    autofix: assisted
-    waiver: {allowed: true, authorities: [user, venue]}
-    decision_refs: [F20, X16]
-    source: {origin: user-decision, note: 'Measured voice allowed; casual humanization is not.'}
 
   - id: PROSE.TERMINOLOGY_AND_FORMATTING
     title: "Preserve technical identity and meaning"
@@ -358,28 +218,12 @@ rules:
     artifacts: [prose, tex]
     phases: [draft, polish, submission, rebuttal, camera_ready]
     activation: {type: always, when: []}
-    requirement: "Preserve the identity of technical terms and meaning-bearing notation. Coordinated renaming is valid within the authorized edit when definitions and consumers remain consistent. Typography frequency alone is a soft presentation concern."
-    checks: [{"kind": "semantic", "evidence_required": true, "description": "Check term identity, definitions and notation semantics; assess typography preferences under soft guidance."}]
+    requirement: "Preserve the identity of technical terms and meaning-bearing notation. Coordinated renaming is valid within the authorized edit when definitions and consumers remain consistent. Typography frequency alone is an editorial concern."
+    checks: [{"kind": "semantic", "evidence_required": true, "description": "Check term identity, definitions and notation semantics; assess typography preferences in editorial review."}]
     failure: {draft: report, final: block}
     autofix: assisted
     waiver: {allowed: true, authorities: [user, venue]}
-    decision_refs: ["F14"]
     source: {origin: local-house-policy, note: 'Terminology and typography discipline.'}
-
-  - id: STRUCT.INTRO_CONCRETE_GAP
-    title: Introduction states a concrete gap
-    force: hard
-    scope: [writing, review]
-    artifacts: [prose]
-    phases: [draft, polish, submission, camera_ready]
-    activation: {type: feature, when: [introduction]}
-    requirement: "Make the research question and contribution rationale concrete. Ground claims about prior work in identified evidence. Replication, measurement, synthesis or theory may be motivated by uncertainty or a knowledge need without claiming that previous methods fail."
-    checks: [{"kind": "semantic", "evidence_required": true, "description": "Identify the question, its importance and the supported relation to prior work; do not require a fixed deficit narrative."}]
-    failure: {draft: narrow, final: block}
-    autofix: assisted
-    waiver: {allowed: false, authorities: []}
-    decision_refs: [E12]
-    source: {origin: local-house-policy, note: 'Gap standard.'}
 
   - id: STRUCT.CONCLUSION_NO_NEW_CLAIMS
     title: Conclusion introduces no new claims or evidence
@@ -393,24 +237,7 @@ rules:
     failure: {draft: block, final: block}
     autofix: assisted
     waiver: {allowed: false, authorities: []}
-    decision_refs: [E17]
     source: {origin: local-house-policy, note: 'Conclusion closure rule.'}
-
-  - id: THREATS.CLAIM_MITIGATION_RESIDUAL
-    title: Threats map to claims, mitigations, and residual boundaries
-    force: hard
-    scope: [writing, review]
-    artifacts: [prose, tex]
-    phases: [draft, polish, submission, rebuttal, camera_ready]
-    activation: {type: feature, when: [threats_to_validity, limitations_content]}
-    requirement: For every load-bearing threat or limitation, identify the affected claim, research question, or inference; state the mitigation or existing check; and preserve the residual risk after mitigation. If no mitigation exists, say so explicitly rather than implying resolution.
-    checks:
-      - {kind: semantic, evidence_required: true, description: 'Map each load-bearing threat or limitation to an affected claim or RQ, a supported mitigation or explicit absence, and a surviving residual boundary.'}
-    failure: {draft: block, final: block}
-    autofix: assisted
-    waiver: {allowed: false, authorities: []}
-    decision_refs: [N05]
-    source: {origin: user-decision, note: 'Hard threat-analysis core informed by reference-paper analysis; no text or data reproduced.'}
 
   - id: TABLE.PROPOSED_ROW_GROUNDED
     title: Ground proposed rows and uniqueness highlights
@@ -426,8 +253,7 @@ rules:
     failure: {draft: block, final: block}
     autofix: none
     waiver: {allowed: false, authorities: []}
-    decision_refs: [G09]
-    source: {origin: local-house-policy, note: 'Proposed-row grounding and meaning-bearing uniqueness claims remain factual hard constraints; row granularity and visual emphasis remain soft.'}
+    source: {origin: local-house-policy, note: 'Proposed-row grounding and meaning-bearing uniqueness claims remain factual hard constraints; row granularity and visual emphasis remain editorial choices.'}
 
   - id: TABLE.VALUES_GROUNDED
     title: Table values are grounded
@@ -443,7 +269,6 @@ rules:
     failure: {draft: block, final: block}
     autofix: none
     waiver: {allowed: false, authorities: []}
-    decision_refs: [H08, H09, H10, H17]
     source: {origin: local-house-policy, note: 'Data and presentation integrity.'}
 
   - id: FIG.SOURCE_DATA_REQUIRED
@@ -460,7 +285,6 @@ rules:
     failure: {draft: block, final: block}
     autofix: none
     waiver: {allowed: false, authorities: []}
-    decision_refs: [I01, I02, J01]
     source: {origin: local-house-policy, note: 'Data-figure integrity.'}
 
   - id: FIG.NO_INVENTED_COMPONENTS
@@ -476,7 +300,6 @@ rules:
     failure: {draft: block, final: block}
     autofix: none
     waiver: {allowed: false, authorities: []}
-    decision_refs: [I03]
     source: {origin: local-house-policy, note: 'Conceptual-figure fidelity.'}
 
   - id: FIG.FINAL_WIDTH_READABLE
@@ -492,8 +315,7 @@ rules:
     failure: {draft: block, final: block}
     autofix: assisted
     waiver: {allowed: false, authorities: []}
-    decision_refs: [I13, I19]
-    source: {origin: user-decision, note: 'Perceptual final-width gate retained after the 24pt source minimum became soft.'}
+    source: {origin: user-decision, note: 'Readability is assessed at actual final placement; source font size alone does not establish it.'}
 
   - id: FIG.FINAL_EXPORT_ACCESSIBILITY
     title: Final figures use suitable exports and accessible encodings
@@ -509,7 +331,6 @@ rules:
     failure: {draft: report, final: block}
     autofix: assisted
     waiver: {allowed: true, authorities: [venue]}
-    decision_refs: [I05, I14]
     source: {origin: user-decision, note: 'Final-figure profile hard core.'}
 
   - id: FIG.TRACEABLE_SCRIPT
@@ -526,7 +347,6 @@ rules:
     failure: {draft: report, final: block}
     autofix: none
     waiver: {allowed: true, authorities: [user]}
-    decision_refs: [I15]
     source: {origin: user-decision, note: 'Final artifact traceability.'}
 
   - id: RESULTS.FABRICATED_DISCLOSURE
@@ -542,51 +362,7 @@ rules:
     failure: {draft: block, final: block}
     autofix: none
     waiver: {allowed: false, authorities: []}
-    decision_refs: [D09, J10]
     source: {origin: local-house-policy, note: 'Result-provenance integrity.'}
-
-  - id: RESULTS.CLAIM_MAPPING
-    title: Experiments map to claims or research questions
-    force: hard
-    scope:
-    - writing
-    - review
-    - workflow
-    artifacts:
-    - prose
-    - figure
-    - table
-    phases:
-    - draft
-    - polish
-    - submission
-    - rebuttal
-    - camera_ready
-    activation:
-      type: feature
-      when:
-      - evaluation_section
-    requirement: Map every load-bearing experiment to a claim or research question. Answer stated RQs clearly
-      from the available evidence, or identify what remains unresolved; narrow claims when evaluation is
-      incomplete. Answer placement and sentence count are not prescribed.
-    checks:
-    - kind: semantic
-      evidence_required: true
-      description: Trace claim or RQ to experiment, result artifact, and interpretation.
-    failure:
-      draft: narrow
-      final: block
-    autofix: assisted
-    waiver:
-      allowed: false
-      authorities: []
-    decision_refs:
-    - J14
-    - J15
-    - J12
-    source:
-      origin: local-house-policy
-      note: '2026-09-09: preserve claim-evidence closure without fixed RQ answer placement.'
 
   - id: FINAL.NO_UNRESOLVED_MARKERS
     title: Final manuscripts contain no unresolved markers
@@ -601,7 +377,6 @@ rules:
     failure: {draft: report, final: block}
     autofix: none
     waiver: {allowed: false, authorities: []}
-    decision_refs: [C14, C15]
     source: {origin: user-decision, note: 'Final-stage gate.'}
 
   - id: VENUE.CONSTRAINT_PROVENANCE
@@ -611,13 +386,12 @@ rules:
     artifacts: [policy]
     phases: [outline, draft, polish, submission, rebuttal, camera_ready]
     activation: {type: venue, when: [specified]}
-    requirement: Apply page limits, anonymity, mandatory statements, section numbering, and appendix rules only from user-provided or current official sources with an as-of date.
+    requirement: Identify and satisfy the applicable submission requirements from user-provided or current official sources with an as-of date. These may include page limits, anonymity, mandatory content, numbering, formats and supplements. A generic paper-type convention does not establish a requirement.
     checks:
-      - {kind: manual, evidence_required: true, description: 'Inspect source URL, venue identity, track, year, and freshness date.'}
+      - {kind: manual, evidence_required: true, description: 'Verify the source, venue, track, year, date and applicability; inspect the manuscript against each applicable requirement, rather than treating source presence as compliance.'}
     failure: {draft: report, final: block}
     autofix: none
     waiver: {allowed: false, authorities: []}
-    decision_refs: [A04, D11, E08, L01, L02, L03, L05, L07, L09]
     source: {origin: local-house-policy, note: 'No permanent venue hardcoding.'}
 
   - id: ANON.DOUBLE_BLIND
@@ -634,24 +408,7 @@ rules:
     failure: {draft: report, final: block}
     autofix: assisted
     waiver: {allowed: false, authorities: []}
-    decision_refs: [L04]
     source: {origin: local-house-policy, note: 'Activated only by a reliable double-blind profile.'}
-
-  - id: SOK.REQUIRED_CONTENT
-    title: SoK papers include taxonomy, methodology, and agenda
-    force: hard
-    scope: [writing, review, tables]
-    artifacts: [prose, table]
-    phases: [draft, polish, submission, camera_ready]
-    activation: {type: profile, when: [sok]}
-    requirement: Include an explicit taxonomy, corpus/search/screening boundary, and concrete research agenda in a SoK paper.
-    checks:
-      - {kind: semantic, evidence_required: true, description: 'Locate and assess the taxonomy, methodology, and agenda artifacts.'}
-    failure: {draft: block, final: block}
-    autofix: none
-    waiver: {allowed: false, authorities: []}
-    decision_refs: [E20, E21, E22]
-    source: {origin: user-decision, note: 'SoK profile hard content.'}
 
   - id: EXPERIMENT.STOCHASTIC_UNCERTAINTY
     title: Stochastic experiments report uncertainty
@@ -666,7 +423,6 @@ rules:
     failure: {draft: block, final: block}
     autofix: none
     waiver: {allowed: true, authorities: [user, venue]}
-    decision_refs: [J05, J06, J07, X12]
     source: {origin: user-decision, note: 'Conditional replacement for universal error bars.'}
 
   - id: METHOD.EVIDENCE_ROLE_BOUNDARY
@@ -682,7 +438,6 @@ rules:
     failure: {draft: block, final: block}
     autofix: assisted
     waiver: {allowed: false, authorities: []}
-    decision_refs: [N02]
     source: {origin: user-decision, note: 'Conditional evidence-role integrity rule informed by reference-paper analysis; no text or data reproduced.'}
 
   - id: EXPERIMENT.REPRODUCIBILITY
@@ -698,7 +453,6 @@ rules:
     failure: {draft: report, final: block}
     autofix: none
     waiver: {allowed: true, authorities: [venue]}
-    decision_refs: [J08, J09]
     source: {origin: imported-design, note: 'Profile-scoped reproducibility requirements.'}
 
   - id: EXPERIMENT.ACTUAL_RUN_CONFIRMATION
@@ -714,103 +468,7 @@ rules:
     failure: {draft: report, final: block}
     autofix: none
     waiver: {allowed: false, authorities: []}
-    decision_refs: [J11, M04, M05]
     source: {origin: imported-design, note: 'Lightweight paper-run provenance gate.'}
-
-  - id: REVIEW.ARCHITECTURE_SAFETY
-    title: Structural deletion is conservative and traceable
-    force: hard
-    scope: [review, workflow]
-    artifacts: [prose, policy]
-    phases: [polish, submission]
-    activation: {type: profile, when: [architecture-review]}
-    requirement: "Preserve information needed to understand and assess the manuscript. Track destinations for moves and merges. Delete empty, redundant, irrelevant or unsupported text when the supported argument remains intact; do not hide adverse evidence. Resolve only consequential uncertain author decisions with the user."
-    checks: [{"kind": "semantic", "evidence_required": true, "description": "Inspect affected source and destination passages, retained information and evidence. A concise edit record suffices; no relocation target is required for content properly removed."}]
-    failure: {draft: block, final: block}
-    autofix: none
-    waiver: {allowed: false, authorities: []}
-    decision_refs: [K04, K05, K06, K07, K08, M01]
-    source: {origin: imported-design, note: 'Claim Architecture Review safety contract.'}
-
-  - id: REVIEW.NO_UNNECESSARY_EXPERIMENTS
-    title: Do not prescribe experiments for wording-only problems
-    force: hard
-    scope: [review]
-    artifacts: [prose, policy]
-    phases: [polish, submission, rebuttal]
-    activation: {type: mode, when: [self_review, formal_review, external_review_analysis, rebuttal]}
-    requirement: Do not recommend new experiments when narrowing or clarifying wording resolves the identified misread risk.
-    checks:
-      - {kind: semantic, evidence_required: true, description: 'Classify the issue as substance or misread risk before proposing an experiment.'}
-    failure: {draft: block, final: report}
-    autofix: none
-    waiver: {allowed: false, authorities: []}
-    decision_refs: [K03]
-    source: {origin: user-decision, note: 'Review proportionality.'}
-
-  - id: WORKFLOW.COLD_READER_AUTHORIZATION
-    title: Cold-reader mode isolates context and requires agent authorization
-    force: hard
-    scope: [review, workflow]
-    artifacts: [policy, prose]
-    phases: [polish, submission]
-    activation: {type: profile, when: [cold-reader]}
-    requirement: Test comprehension using only the manuscript; obtain explicit user authorization before invoking a fresh agent.
-    checks:
-      - {kind: manual, evidence_required: true, description: 'Inspect the reader context and any user authorization for fresh-agent use.'}
-    failure: {draft: block, final: block}
-    autofix: none
-    waiver: {allowed: false, authorities: []}
-    decision_refs: [K13, K14, M09]
-    source: {origin: imported-design, note: 'Cold-reader boundary.'}
-
-  - id: AUTOFIX.SEMANTIC_APPROVAL
-    title: Semantic changes require scope authorization
-    force: hard
-    scope: [writing, review, workflow]
-    artifacts: [prose, tex, bibtex]
-    phases: [draft, polish, submission, rebuttal, camera_ready]
-    activation: {type: mode, when: [semantic_mutation, architecture_review, citation_audit, bibliography_rewrite]}
-    requirement: Reuse valid user authorization for the specified semantic prose, structure, citation, or bibliography edits. Complete authorized reversible local changes and show the result and diff without repeat approval or a separate skill invocation. Audit-only requests remain read-only. Obtain the missing decision before an out-of-scope action, a new research conclusion or frozen-experiment change, or an action explicitly reserved for prior approval; external submission and sharing retain their authorization boundaries.
-    checks:
-      - {kind: manual, evidence_required: true, description: 'Check the request or still-valid authorization against the actual changed files and resulting diff; preserve audit-only and explicit approval-before-editing instructions. Do not demand a second approval for the same scope.'}
-    failure: {draft: block, final: block}
-    autofix: none
-    waiver: {allowed: false, authorities: []}
-    decision_refs: [C18, K12, K15, X23]
-    source: {origin: user-decision, note: 'User-approved 2026-09-08 batch 1 reuses action/scope authorization across turns and internal skill handoffs; external and frozen-evidence boundaries retained.'}
-
-  - id: AUTOFIX.SAFE_LOSSLESS
-    title: Unattended autofix is deterministic and lossless
-    force: hard
-    scope: [workflow]
-    artifacts: [policy, prose, tex]
-    phases: [draft, polish, submission, rebuttal, camera_ready]
-    activation: {type: mode, when: [autofix]}
-    requirement: Use unattended autofix only for closed, deterministic, meaning-preserving replacements with a reversible diff.
-    checks:
-      - {kind: manual, evidence_required: true, description: 'Inspect the autofix declaration, reversible diff, and pass/fail/idempotency fixture results before unattended use.'}
-    failure: {draft: block, final: block}
-    autofix: none
-    waiver: {allowed: false, authorities: []}
-    decision_refs: [K16, X23]
-    source: {origin: user-decision, note: 'Autofix integrity.'}
-
-  - id: STYLE.MINING_APPROVAL
-    title: Style mining cannot silently change house style
-    force: hard
-    scope: [writing, workflow]
-    artifacts: [policy, prose]
-    phases: [outline, draft, polish, submission, rebuttal, camera_ready]
-    activation: {type: mode, when: [style_mining]}
-    requirement: "Ordinary analysis of external papers does not authorize persistent preference changes. When the user requests skill or style-profile updates, reuse that authorization, apply supported scoped changes and deliver a diff. Obtain only a missing consequential decision; do not require repeat approval for the authorized update."
-    checks:
-      - {kind: manual, evidence_required: true, description: 'Inspect source papers, proposed diff, conflicts, and approval.'}
-    failure: {draft: block, final: block}
-    autofix: none
-    waiver: {allowed: false, authorities: []}
-    decision_refs: [K17, X22, M13]
-    source: {origin: local-house-policy, note: 'Controlled style learning.'}
 
   - id: TABLE.FINAL_READABLE
     title: Final tables have verifiable sources and readable content
@@ -846,10 +504,6 @@ rules:
     waiver:
       allowed: false
       authorities: []
-    decision_refs:
-    - H02
-    - H11
-    - H12
     source:
       origin: user-decision
       note: '2026-09-09: retain artifact correctness while removing mandatory table styling.'

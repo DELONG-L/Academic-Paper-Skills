@@ -13,14 +13,14 @@ protocol flows, and method intuition. Exact data plots belong to data-figures.md
 
 ## Presentation Preferences
 
-`FIG.CONCEPT_PRESENTATION` favors a clean background, sparse labels, and visual
-grouping that explains the paper's claim. A white background is a useful default.
-Other backgrounds, fonts, panel headings, and layouts are valid when they improve
-clarity or satisfy a venue requirement. Mathematical labels must remain accurate.
+Use a clean background, readable manuscript-compatible labels and visual grouping
+that explains the figure’s scientific purpose. Choose orientation and aspect ratio
+from topology, label space and target placement; wide layouts suit some flows but
+are not a general rule. Keep mathematical labels accurate.
 
-Prefer a small number of purposeful figures under `FIG.CONCEPT_COUNT`; the
-number is a planning aid, not a submission gate. Overview figures may use wide
-layouts when that makes the flow easier to follow.
+Add a conceptual figure when it explains something readers need to see. Combine or
+separate views according to their explanatory jobs and readability; there is no
+figure-count budget or automatic requirement for an overview figure.
 
 ## Renderer Selection
 

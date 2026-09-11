@@ -16,5 +16,5 @@ rules:
     failure: {draft: block, final: block}
     autofix: none
     waiver: {allowed: false, authorities: []}
-    decision_refs: [A01]
+
     source: {origin: local-house-policy, note: Test fixture.}

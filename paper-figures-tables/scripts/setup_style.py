@@ -34,100 +34,88 @@ import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 
 
-# 默认使用 3x source scale：24pt 源字号导入论文后约对应 8pt 最终字号。
-# 24pt 是可调整的 soft 默认；最终可读性必须在实际栏宽人工检查。
-SOURCE_SCALE = 3.0
-JOURNAL_PRESETS = {
-    "nature": {
-        "figure.figsize": (10.5, 7.875),
-        "figure.dpi": 150,
-        "savefig.dpi": 300,
-        "font.family": "sans-serif",
-        "font.sans-serif": ["Helvetica", "Arial", "DejaVu Sans"],
-        "font.size": 24,
-        "axes.labelsize": 27,
-        "axes.titlesize": 27,
-        "xtick.labelsize": 24,
-        "ytick.labelsize": 24,
-        "legend.fontsize": 24,
-        "lines.linewidth": 3.0,
-        "lines.markersize": 12,
-        "axes.linewidth": 1.8,
-        "xtick.major.width": 1.8,
-        "ytick.major.width": 1.8,
-        "xtick.minor.width": 1.2,
-        "ytick.minor.width": 1.2,
-        "axes.spines.top": False,
-        "axes.spines.right": False,
-        "pdf.fonttype": 42,
-        "ps.fonttype": 42,
-        "svg.fonttype": "none",
-    },
-    "science": {
-        "figure.figsize": (10.5, 7.875),
-        "figure.dpi": 150,
-        "savefig.dpi": 300,
-        "font.family": "sans-serif",
-        "font.sans-serif": ["Helvetica", "Arial", "DejaVu Sans"],
-        "font.size": 24,
-        "axes.labelsize": 24,
-        "axes.titlesize": 27,
-        "xtick.labelsize": 24,
-        "ytick.labelsize": 24,
-        "legend.fontsize": 24,
-        "lines.linewidth": 3.0,
-        "lines.markersize": 12,
-        "axes.linewidth": 1.8,
-        "axes.spines.top": False,
-        "axes.spines.right": False,
-        "pdf.fonttype": 42,
-        "ps.fonttype": 42,
-        "svg.fonttype": "none",
-    },
-    "ieee": {
-        "figure.figsize": (10.5, 7.5),
-        "figure.dpi": 150,
-        "savefig.dpi": 600,
-        "font.family": "serif",
-        "font.serif": ["Times New Roman", "Times", "DejaVu Serif"],
-        "font.size": 24,
-        "axes.labelsize": 24,
-        "axes.titlesize": 27,
-        "xtick.labelsize": 24,
-        "ytick.labelsize": 24,
-        "legend.fontsize": 24,
-        "lines.linewidth": 3.0,
-        "lines.markersize": 12,
-        "axes.linewidth": 2.1,
-        "axes.grid": False,
-        "axes.spines.top": True,
-        "axes.spines.right": True,
-        "pdf.fonttype": 42,
-        "ps.fonttype": 42,
-        "svg.fonttype": "none",
-    },
-    "general": {
-        "figure.figsize": (15.0, 10.5),
-        "figure.dpi": 150,
-        "savefig.dpi": 300,
-        "font.family": "sans-serif",
-        "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans"],
-        "font.size": 27,
-        "axes.labelsize": 30,
-        "axes.titlesize": 33,
-        "xtick.labelsize": 27,
-        "ytick.labelsize": 27,
-        "legend.fontsize": 27,
-        "lines.linewidth": 3.6,
-        "lines.markersize": 15,
-        "axes.linewidth": 2.4,
-        "axes.spines.top": False,
-        "axes.spines.right": False,
-        "pdf.fonttype": 42,
-        "ps.fonttype": 42,
-        "svg.fonttype": "none",
-    },
-}
+# 可编辑的实际尺寸示例；期刊名称仅标识样式，不证明当前投稿要求。
+JOURNAL_PRESETS = {'nature': {'figure.figsize': (3.5, 2.625),
+            'figure.dpi': 150,
+            'savefig.dpi': 300,
+            'font.family': 'sans-serif',
+            'font.sans-serif': ['Helvetica', 'Arial', 'DejaVu Sans'],
+            'font.size': 8.0,
+            'axes.labelsize': 9.0,
+            'axes.titlesize': 9.0,
+            'xtick.labelsize': 8.0,
+            'ytick.labelsize': 8.0,
+            'legend.fontsize': 8.0,
+            'lines.linewidth': 1.0,
+            'lines.markersize': 4.0,
+            'axes.linewidth': 0.6,
+            'xtick.major.width': 0.6,
+            'ytick.major.width': 0.6,
+            'xtick.minor.width': 0.4,
+            'ytick.minor.width': 0.4,
+            'axes.spines.top': False,
+            'axes.spines.right': False,
+            'pdf.fonttype': 42,
+            'ps.fonttype': 42,
+            'svg.fonttype': 'none'},
+ 'science': {'figure.figsize': (3.5, 2.625),
+             'figure.dpi': 150,
+             'savefig.dpi': 300,
+             'font.family': 'sans-serif',
+             'font.sans-serif': ['Helvetica', 'Arial', 'DejaVu Sans'],
+             'font.size': 8.0,
+             'axes.labelsize': 8.0,
+             'axes.titlesize': 9.0,
+             'xtick.labelsize': 8.0,
+             'ytick.labelsize': 8.0,
+             'legend.fontsize': 8.0,
+             'lines.linewidth': 1.0,
+             'lines.markersize': 4.0,
+             'axes.linewidth': 0.6,
+             'axes.spines.top': False,
+             'axes.spines.right': False,
+             'pdf.fonttype': 42,
+             'ps.fonttype': 42,
+             'svg.fonttype': 'none'},
+ 'ieee': {'figure.figsize': (3.5, 2.5),
+          'figure.dpi': 150,
+          'savefig.dpi': 600,
+          'font.family': 'serif',
+          'font.serif': ['Times New Roman', 'Times', 'DejaVu Serif'],
+          'font.size': 8.0,
+          'axes.labelsize': 8.0,
+          'axes.titlesize': 9.0,
+          'xtick.labelsize': 8.0,
+          'ytick.labelsize': 8.0,
+          'legend.fontsize': 8.0,
+          'lines.linewidth': 1.0,
+          'lines.markersize': 4.0,
+          'axes.linewidth': 0.7,
+          'axes.grid': False,
+          'axes.spines.top': True,
+          'axes.spines.right': True,
+          'pdf.fonttype': 42,
+          'ps.fonttype': 42,
+          'svg.fonttype': 'none'},
+ 'general': {'figure.figsize': (5.0, 3.5),
+             'figure.dpi': 150,
+             'savefig.dpi': 300,
+             'font.family': 'sans-serif',
+             'font.sans-serif': ['Arial', 'Helvetica', 'DejaVu Sans'],
+             'font.size': 9.0,
+             'axes.labelsize': 10.0,
+             'axes.titlesize': 11.0,
+             'xtick.labelsize': 9.0,
+             'ytick.labelsize': 9.0,
+             'legend.fontsize': 9.0,
+             'lines.linewidth': 1.2,
+             'lines.markersize': 5.0,
+             'axes.linewidth': 0.8,
+             'axes.spines.top': False,
+             'axes.spines.right': False,
+             'pdf.fonttype': 42,
+             'ps.fonttype': 42,
+             'svg.fonttype': 'none'}}
 
 # 中文字体优先级列表（按可用性 + 期刊接受度排序）
 CJK_FONT_PRIORITY = [
@@ -261,6 +249,7 @@ def setup_style(
     use_sciplots: bool = True,
     serif_for_zh: bool = False,
     constrained_layout: bool = True,
+    rc_overrides: dict | None = None,
 ) -> dict:
     """
     应用出版级样式预设。
@@ -273,9 +262,10 @@ def setup_style(
         constrained_layout: 默认 True——全局开启 constrained_layout 自适应排版，
             从源头减少标题/轴标签被裁、图例压数据、子图互相重叠。需要手动
             subplots_adjust 或某些 colorbar 写法时可传 False 关闭。
+        rc_overrides: 按实际模板覆盖尺寸、字号等参数；最后应用。
     Returns:
         dict 包含 keys: journal / lang / sciplots_used / cjk_font /
-        constrained_layout / source_scale
+        constrained_layout / figure_size_inches
     """
     if journal not in JOURNAL_PRESETS:
         raise ValueError(f"Unknown journal preset: {journal}. "
@@ -301,13 +291,16 @@ def setup_style(
     elif lang != "en":
         raise ValueError(f"lang must be 'en' or 'zh', got {lang!r}")
 
+    if rc_overrides:
+        plt.rcParams.update(rc_overrides)
+
     return {
         "journal": journal,
         "lang": lang,
         "sciplots_used": sciplots_used,
         "cjk_font": cjk_font,
         "constrained_layout": constrained_layout,
-        "source_scale": SOURCE_SCALE,
+        "figure_size_inches": list(plt.rcParams["figure.figsize"]),
     }
 
 

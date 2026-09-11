@@ -1,20 +1,20 @@
 # Layered Capability Matrix
 
-Use this optional profile for a load-bearing Related Work table whose capability
+Use this design guide for a load-bearing Related Work table whose capability
 dimensions follow the paper's own conceptual layers. It is not the default for
 ordinary comparison tables.
 
-## Select This Profile
+## When Grouping Helps
 
-Select `table_profile: layered_capability_matrix` when all of these hold:
+Use semantic column groups when they clarify the comparison:
 
 - the table carries a central positioning argument rather than a literature inventory;
-- eight or more defensible dimensions remain after pruning;
-- the dimensions form two to four named semantic groups;
+- the retained dimensions are defensible and relevant;
+- the groups represent relationships among those dimensions;
 - the grouping mirrors a model, lifecycle, architecture, or analytical split already explained in the manuscript;
-- a double-column layout remains readable at final width.
+- the selected layout remains readable at final width.
 
-Use the compact pattern in `tables.md` for three to five flat dimensions. Use
+Use the compact pattern in `tables.md` for a compact set of flat dimensions. Use
 `dense-empirical-tables.md` for dense result or evidence tables that do not make
 uniqueness claims about a literature corpus.
 
@@ -38,7 +38,7 @@ are valid when their meaning is defined.
 - Keep a `Type` column when it prevents unlike studies, tools, standards, or datasets from being read as interchangeable.
 - Use a fixed-width, ragged-right first column and remove unused outer padding with `@{}`.
 - Start at `\footnotesize`; use `\scriptsize` only after final-width QA shows that it remains comfortably readable.
-- Start with `\tabcolsep` near 3.5--4.0 pt and `\arraystretch` near 1.05--1.10.
+- Adjust cell spacing and row height for the actual content; the skeleton below is an example.
 - Prefer whitespace and `\cmidrule` to vertical rules. Use sparse separators only when they clarify necessary semantic boundaries.
 - Use `threeparttable` only when actual `tablenotes` are present.
 - Keep the caption focused on the table's claim and scope. Put secondary abbreviations, corpus boundaries, and caveats in notes.

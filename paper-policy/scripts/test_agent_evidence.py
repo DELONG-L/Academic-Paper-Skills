@@ -29,16 +29,21 @@ class AgentEvidenceTests(unittest.TestCase):
                                 assessed_rules={rid},source_root=self.root)
         self.assertEqual('UNVERIFIED',self.base.result_by_id(result)[rid]['status'])
 
-    def provenance_hint(self):
-        path=self.root/'main.tex'
-        path.write_text('The renderer is the method evaluated in this paper.\n')
-        self.record.update(rule_id='PROSE.NO_INTERNAL_PROVENANCE',locator='main.tex line 1',
-                           evidence='Renderer names the measured method, not irrelevant workflow bookkeeping.',
-                           source_snapshots=snapshot_sources(self.root,['main.tex']))
-        return lint_tex_file(path,self.root,'submission',{'PROSE.NO_INTERNAL_PROVENANCE'})
+    def semantic_hint(self):
+        self.mixed_evidence_rule()
+        return [Finding(self.record['rule_id'], 'main.tex', 1,
+                        'Synthetic locator: verify the stated mean against source data.',
+                        kind='review_hint')]
+
+    def mixed_evidence_rule(self):
+        # Test the evaluator contract with an explicitly constructed mixed rule.
+        self.hard = deepcopy(self.hard)
+        rule = next(r for r in self.hard['rules'] if r['id'] == self.record['rule_id'])
+        rule['checks'].append({'kind': 'deterministic', 'evidence_required': False,
+                               'description': 'Synthetic source consistency check.'})
 
     def test_review_hint_without_semantic_evidence_is_unverified(self):
-        hints=self.provenance_hint()
+        hints=self.semantic_hint()
         result=assess_compliance(self.resolution,self.hard,findings=hints,
                                 assessed_rules={self.record['rule_id']},source_root=self.root)
         target=self.base.result_by_id(result)[self.record['rule_id']]
@@ -47,19 +52,19 @@ class AgentEvidenceTests(unittest.TestCase):
         self.assertEqual(1,len(target['review_hints']))
 
     def test_current_semantic_evidence_resolves_hint_but_stale_evidence_does_not(self):
-        hints=self.provenance_hint()
+        hints=self.semantic_hint()
         kwargs={'findings':hints,'assessed_rules':{self.record['rule_id']}}
         self.assertEqual('PASS',self.target(**kwargs)['status'])
         (self.root/'main.tex').write_text('Changed scientific context.\n')
         self.assertEqual('UNVERIFIED',self.target(**kwargs)['status'])
 
     def test_definite_failure_still_wins_when_hints_also_exist(self):
-        hints=self.provenance_hint()
+        hints=self.semantic_hint()
         findings=hints+[Finding(self.record['rule_id'],'main.tex',1,'Definite verified violation')]
         self.assertEqual('FAIL',self.target(findings=findings,assessed_rules={self.record['rule_id']})['status'])
 
     def test_evidence_worklist_retains_review_hint_locations(self):
-        hints=self.provenance_hint()
+        hints=self.semantic_hint()
         result=assess_compliance(self.resolution,self.hard,findings=hints,
                                 assessed_rules={self.record['rule_id']},source_root=self.root)
         worklist=build_evidence_worklist(result,self.hard)
@@ -159,7 +164,7 @@ class AgentEvidenceTests(unittest.TestCase):
         self.assertEqual('PASS', self.target()['status'])
 
     def test_manual_and_mixed_manual_rules_cannot_be_passed_by_agent(self):
-        for rule_id in ['AUTH.INTEGRITY_PRECEDENCE', 'LATEX.PRESERVE_STRUCTURE',
+        for rule_id in ['VENUE.CONSTRAINT_PROVENANCE', 'EXPERIMENT.REPRODUCIBILITY',
                         'CITE.APPROVED_SOURCE_ONLY']:
             with self.subTest(rule=rule_id):
                 self.record['rule_id'] = rule_id
@@ -178,14 +183,14 @@ class AgentEvidenceTests(unittest.TestCase):
             self.assess()
 
     def test_mixed_deterministic_semantic_pass_requires_checks(self):
-        self.record['rule_id'] = 'PROSE.NO_INTERNAL_PROVENANCE'
+        self.mixed_evidence_rule()
         self.assertEqual('UNVERIFIED', self.target()['status'])
         self.assertEqual('deterministic_checks_not_assessed', self.target()['basis'])
         self.assertEqual('PASS', self.target(assessed_rules={self.record['rule_id']})['status'])
 
     def test_deterministic_failure_wins_over_current_and_stale_pass(self):
-        self.record['rule_id'] = 'PROSE.NO_INTERNAL_PROVENANCE'
-        finding = Finding(self.record['rule_id'], 'main.tex', 1, 'Detected internal provenance')
+        self.mixed_evidence_rule()
+        finding = Finding(self.record['rule_id'], 'main.tex', 1, 'Verified mismatch between stated mean and source data')
         for stale in [False, True]:
             with self.subTest(stale=stale):
                 if stale:
@@ -220,7 +225,7 @@ class AgentEvidenceTests(unittest.TestCase):
         result = assess_compliance(self.resolution, self.hard)
         items = {x['rule_id']: x for x in build_evidence_worklist(result, self.hard)['items']}
         self.assertEqual('agent_or_human', items['CLAIM.EVIDENCE_BOUND']['suggested_evaluator'])
-        self.assertEqual('human_or_user', items['AUTH.INTEGRITY_PRECEDENCE']['suggested_evaluator'])
+        self.assertEqual('human_or_user', items['CITE.APPROVED_SOURCE_ONLY']['suggested_evaluator'])
 
     def test_runner_and_cli_recheck_sources_and_report_agent_passes(self):
         project = FIXTURES / 'project-submission-clean'

@@ -14,8 +14,7 @@ require a global readiness assessment. Scope the context to the actual judgment.
 - Optional `compliance-evidence.yaml` containing agent, human, user, or venue judgments with their evidence.
 - Active policy registries in the sibling `paper-policy` skill.
 
-Omit `policy_sets` or select `[integrity-core, academic-defaults]` for the
-shared defaults. Never use author preferences as rejection criteria for another author.
+Never use author preferences as rejection criteria for another author.
 
 For a full manuscript, put generic kinds such as `prose`, `tex`, `bibtex`,
 `figure`, and `table` in `artifacts`. Put semantic selectors such as
@@ -38,7 +37,7 @@ python3 ../paper-policy/scripts/resolve_policy.py paper_context.yaml
 
 For the first project-local pass, prefer the development-bundle runner. It
 creates a resolution, deterministic findings, initial assessment, unused-key
-report, a hard evidence worklist, and a section-aware soft worklist without
+report and an evidence worklist without
 inventing PASS records:
 
 ```bash
@@ -52,10 +51,9 @@ not evidence; do not confirm them without checking type, claim, label, files,
 source data, and scripts. Use a list-valued `artifact_mode` when final figure
 and final table profiles must be audited together.
 
-Inspect `soft-review-worklist.yaml` by section. Its `PENDING` state is only a
-review prompt; write APPLIED, ADAPTED, or SKIPPED to compliance evidence only
-after inspection. Use the `entries` in `unused-bibtex-keys.yaml` for exact
-`.bib` cleanup locators. Do not delete an entry merely because it is unused.
+Inspect `evidence-worklist.yaml` for unresolved requirements. Use the `entries`
+in `unused-bibtex-keys.yaml` for exact cleanup locators; unused status alone does
+not authorize deletion. Apply editorial guidance directly during manuscript review.
 
 Keep `venue_sources` records separate by source type and declared constraint.
 A supplied template can support formatting checks while a current official URL
@@ -84,9 +82,7 @@ When the evidence file contains figure/table artifact records, the assessor also
 runs the artifact checker. Inspect `artifact_coverage`; a PASS, WAIVED, or
 NOT_APPLICABLE artifact result must name every governed ID in `artifact_refs`.
 
-4. Confirm `active_policy_sets` and distinguish hard findings from soft recommendations.
-   Treat `policy_set_notes` and `inactive_profiles` as explanatory rather than
-   readiness blockers.
+4. Confirm the assessed scope and active requirements.
 5. Inspect every `FAIL` and `UNVERIFIED` hard result. Add an atomic issue card
    with the rule ID, artifact locator, finding or missing-evidence reason, and
    required action.
@@ -94,7 +90,7 @@ NOT_APPLICABLE artifact result must name every governed ID in `artifact_refs`.
    supplied artifacts, user confirmation, or verified venue requirements.
 7. Re-run assessment after evidence or manuscript changes. Never edit status
    output directly to force readiness.
-8. Report soft outcomes separately as APPLIED, ADAPTED, or SKIPPED.
+8. Explain material editorial changes when useful; do not register preference outcomes.
 
 ## Status Discipline
 
@@ -117,10 +113,10 @@ NOT_APPLICABLE artifact result must name every governed ID in `artifact_refs`.
 ## Readiness Gate
 
 - `READY`: trusted submission/camera-ready context, no context blockers, and
-  every applicable active hard rule is PASS or authorized WAIVED.
+  at least one requirement is active, with each PASS, authorized WAIVED, or an evidenced NOT_APPLICABLE exclusion.
 - `BLOCKED`: at least one applicable hard rule is FAIL or UNVERIFIED, or final
   context has unresolved warnings.
-- `NOT_EVALUATED`: draft/polish work or an untrusted submission-stage inference.
+- `NOT_EVALUATED`: draft/polish work, an untrusted submission-stage inference, or no active requirements.
 
 Do not describe a manuscript as submission-ready when the assessor returns
 BLOCKED or NOT_EVALUATED.
@@ -133,6 +129,6 @@ Include:
 2. Blocking hard rules, grouped into FAIL and UNVERIFIED.
 3. Evidence or context needed to clear each blocker.
 4. Authorized waivers and justified NOT_APPLICABLE exclusions.
-5. Soft adaptations, residual risks, and owning-skill handoffs.
+5. Relevant editorial recommendations and owning-skill handoffs.
 
 Assessment itself is read-only. When the current task already authorizes prose, figure/table, or bibliography fixes, continue through the owning skill internally and show the scoped changes; a separate user invocation or repeat approval is unnecessary. Preserve audit-only instructions.

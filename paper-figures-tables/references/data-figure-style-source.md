@@ -1,16 +1,13 @@
 # Style Guide
 
-Use restrained, high-contrast scientific plotting. The default target is a two-column ML, AI, systems, or security conference paper.
+Use restrained, high-contrast scientific plotting suited to the manuscript.
 
 ## Sizes
 
-- Single column: about 3.25 inches wide.
-- Double column: about 6.9 inches wide.
-- Main multi-panel figure: double column unless the manuscript clearly needs a compact single-column plot.
-- Prefer at least 24pt text on the 3x source canvas. After controlled placement
-  at final width, verify the venue's effective 7-9pt target visually and through
-  the rendered manuscript. Smaller source text needs an explicit readability
-  rationale rather than an automatic hard failure.
+Read the actual column or text width from the manuscript or supplied template.
+Choose panel layout and text sizes at that placement. The helper presets are
+editable starting examples, not current venue specifications. Change them to fit
+the target and verify the exported figure in the manuscript.
 
 ## Exports
 

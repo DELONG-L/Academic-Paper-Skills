@@ -29,7 +29,7 @@ For missing support, identify the affected claim and continue supported work. Re
 - Validation, calibration, controls, case studies, and exploratory analyses do not silently become substantive evidence.
 - Every characterized systematic measurement error names affected claims and an evidence-backed bias direction or explicit indeterminacy.
 - Dependent RQs follow a stated logical order; independent RQs remain parallel under a common contribution claim.
-- Every load-bearing threat maps to an affected claim or RQ, a mitigation or explicit absence, and a residual boundary.
+- Material limitations are clear enough to interpret the affected claims. Any claimed mitigation is supported, and unresolved effects are not hidden; no fixed sequence of sentences or repeated residual-risk statement is required.
 
 ## Commitment Gate
 
@@ -62,7 +62,7 @@ Flag and revise:
 - Compare source and revision for claim strength, causal status, evidence scope,
   terminology, citation attachment, quantitative facts, and caveats.
 - Treat negative parallelism, sentence-final ing clauses, rhetorical
-  self-answers, repeated openings, fragments, and list rhythm as soft diagnostics
+  self-answers, repeated openings, fragments, and list rhythm as contextual diagnostics
   unless another hard integrity rule is independently violated.
 - Preserve measured author judgment; reject casual humanizer language or humor
   that substitutes for analysis.

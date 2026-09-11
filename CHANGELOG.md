@@ -1,5 +1,24 @@
 # Changes
 
+## Unreleased — focus manuscript requirements
+
+### Separate editorial guidance from compliance
+
+- Move contextual writing and artifact advice into task guides; remove the soft-rule registry, preference outcomes, generated preference worklists and selectable policy bundles.
+- Retain manuscript requirements and their conditional activation, evidence provenance, source freshness and manual-check authority.
+- Choose contribution lists, section structure, comparison dimensions and figure layout from the argument and actual placement rather than numerical style quotas.
+- Use configurable plotting presets at placement size; replace source-font threshold tests with dimension, configuration and export checks.
+
+
+- Move contextual editing guidance and assistant execution instructions out of
+  manuscript compliance. Keep their useful substance in the owning guides.
+- Retain scientific integrity, source verification, artifact validity and sourced
+  submission requirements. Preserve source-snapshot and evaluator checks.
+- Remove historical voting-code dependencies from registry validation.
+- Keep unused bibliography entries as located maintenance notes, and distinguish
+  review hints from deterministic failures in runner counts.
+- A scope with no active manuscript requirements yields `NOT_EVALUATED`.
+
 ## Unreleased — unified academic workflow
 
 The previous public release split default policy from a strict house-style set.

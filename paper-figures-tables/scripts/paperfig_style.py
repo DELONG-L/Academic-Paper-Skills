@@ -2,6 +2,7 @@
 
 This module is intentionally small. Copy or import it into project-local plotting
 scripts, then keep figure-specific data loading in the project repository.
+Numeric defaults are editable plotting examples, not manuscript requirements.
 """
 
 from __future__ import annotations
@@ -44,13 +45,13 @@ DEFAULT_COLORS: Sequence[str] = (
 
 @dataclass(frozen=True)
 class FigureStyle:
-    font_size: float = 24.0
-    label_size: float = 27.0
-    tick_size: float = 24.0
-    legend_size: float = 24.0
-    axes_linewidth: float = 2.4
-    line_width: float = 4.2
-    marker_size: float = 12.0
+    font_size: float = 8.0
+    label_size: float = 9.0
+    tick_size: float = 8.0
+    legend_size: float = 8.0
+    axes_linewidth: float = 0.8
+    line_width: float = 1.4
+    marker_size: float = 4.0
     use_tex: bool = False
     font_family: tuple[str, ...] = ("Arial", "Helvetica", "DejaVu Sans", "sans-serif")
 
@@ -89,18 +90,25 @@ def apply_style(style: FigureStyle | None = None) -> FigureStyle:
     return style
 
 
-def figure_size(target: str = "single", height_ratio: float = 0.62) -> tuple[float, float]:
-    """Return 3x source dimensions; inspect the export at final paper width."""
+def figure_size(
+    target: str = "single", height_ratio: float = 0.62, *, width_inches: float | None = None
+) -> tuple[float, float]:
+    """Return placement-size examples, or use the actual manuscript width.
+
+    Presets are editable conveniences, not verified venue specifications.
+    """
 
     widths = {
-        "single": 9.75,
-        "double": 20.70,
-        "wide": 21.60,
-        "half": 14.40,
+        "single": 3.25,
+        "double": 6.90,
+        "wide": 7.20,
+        "half": 4.80,
     }
-    if target not in widths:
+    if height_ratio <= 0 or (width_inches is not None and width_inches <= 0):
+        raise ValueError("figure dimensions must be positive")
+    if target not in widths and width_inches is None:
         raise ValueError(f"unknown target {target!r}; choose one of {sorted(widths)}")
-    width = widths[target]
+    width = width_inches if width_inches is not None else widths[target]
     return width, width * height_ratio
 
 
@@ -111,6 +119,7 @@ def create_figure(
     target: str = "single",
     height_ratio: float = 0.62,
     style: FigureStyle | None = None,
+    width_inches: float | None = None,
     **kwargs,
 ):
     """Create a styled figure and flattened axes array."""
@@ -119,7 +128,7 @@ def create_figure(
     fig, axes = plt.subplots(
         nrows,
         ncols,
-        figsize=figure_size(target, height_ratio),
+        figsize=figure_size(target, height_ratio, width_inches=width_inches),
         squeeze=False,
         **kwargs,
     )
@@ -130,13 +139,13 @@ def clean_axis(ax, *, grid: str | None = "y") -> None:
     """Apply light axis cleanup."""
 
     if grid == "y":
-        ax.grid(axis="y", color=PALETTE["grid"], linewidth=1.8, zorder=0)
+        ax.grid(axis="y", color=PALETTE["grid"], linewidth=0.6, zorder=0)
     elif grid == "x":
-        ax.grid(axis="x", color=PALETTE["grid"], linewidth=1.8, zorder=0)
+        ax.grid(axis="x", color=PALETTE["grid"], linewidth=0.6, zorder=0)
     elif grid == "both":
-        ax.grid(axis="both", color=PALETTE["grid"], linewidth=1.8, zorder=0)
+        ax.grid(axis="both", color=PALETTE["grid"], linewidth=0.6, zorder=0)
     ax.set_axisbelow(True)
-    ax.tick_params(length=9, width=2.1)
+    ax.tick_params(length=3, width=0.7)
 
 
 def grouped_bar(
@@ -183,9 +192,9 @@ def grouped_bar(
             label=label,
             color=colors[idx % len(colors)],
             edgecolor=PALETTE["ink"],
-            linewidth=1.5,
+            linewidth=0.5,
             yerr=None if err is None else err[idx],
-            capsize=6 if err is not None else 0,
+            capsize=2 if err is not None else 0,
             hatch=hatches[idx],
             zorder=3,
         )
@@ -201,7 +210,7 @@ def grouped_bar(
     return containers
 
 
-def annotate_bars(ax, bars, *, fmt: str = "{:.2f}", fontsize: float = 24.0, padding: float = 4.5) -> None:
+def annotate_bars(ax, bars, *, fmt: str = "{:.2f}", fontsize: float | None = None, padding: float = 1.5) -> None:
     """Annotate bars with their heights."""
 
     for bar in bars:
@@ -213,7 +222,7 @@ def annotate_bars(ax, bars, *, fmt: str = "{:.2f}", fontsize: float = 24.0, padd
             textcoords="offset points",
             ha="center",
             va="bottom",
-            fontsize=fontsize,
+            fontsize=fontsize if fontsize is not None else plt.rcParams["font.size"],
         )
 
 
@@ -288,7 +297,7 @@ def pareto_scatter(
             zorder=4 if is_highlight else 3,
         )
         if labels:
-            ax.annotate(labels[idx], (x_i, y_i), xytext=(9, 9), textcoords="offset points", fontsize=24.0)
+            ax.annotate(labels[idx], (x_i, y_i), xytext=(3, 3), textcoords="offset points", fontsize=plt.rcParams["font.size"])
 
     if xlabel:
         ax.set_xlabel(xlabel)

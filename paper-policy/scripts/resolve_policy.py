@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Resolve active paper-policy hard and soft rules from paper context."""
+"""Resolve active paper-policy manuscript requirements from paper context."""
 
 from __future__ import annotations
 
@@ -32,17 +32,10 @@ CONTEXT_FIELDS = {
     "submission_stage",
     "language",
     "double_blind",
-    "page_pressure",
-    "evidence_maturity",
-    "manuscript_state",
-    "reader_risk",
     "task_scope",
     "task_mode",
     "modes",
-    "policy_sets",
     "artifact_mode",
-    "evaluation_structure",
-    "table_profile",
     "experiment_type",
     "measurement_bias_status",
     "evidence_structure",
@@ -58,7 +51,7 @@ CONTEXT_FIELDS = {
 }
 LIST_FIELDS = {
     "modes", "scopes", "artifacts", "features", "approved_citation_sources",
-    "additional_tex", "policy_sets",
+    "additional_tex",
 }
 SCALAR_OR_LIST_FIELDS = {"artifact_mode"}
 SENSITIVE_FIELDS = {"venue", "double_blind", "submission_stage"}
@@ -113,10 +106,6 @@ def validate_context(context: dict[str, Any]) -> list[str]:
             errors.append(f"context.{field}: expected list")
         elif any(not isinstance(item, str) or not item for item in value):
             errors.append(f"context.{field}: entries must be non-empty strings")
-        elif field == "policy_sets" and not value:
-            errors.append("context.policy_sets: must not be empty")
-        elif field == "policy_sets" and len(value) != len(set(value)):
-            errors.append("context.policy_sets: duplicate set names are not allowed")
 
     for field in SCALAR_OR_LIST_FIELDS:
         value = context.get(field)
@@ -357,74 +346,26 @@ def _hard_activation_reason(
 def _rule_applies(rule: dict[str, Any], context: dict[str, Any]) -> bool:
     scopes = _values(context.get("scopes"))
     artifacts = _values(context.get("artifacts"))
-    features = _values(context.get("features"))
     phase = context.get("submission_stage")
     if not (scopes & _values(rule.get("scope"))):
         return False
     if not (artifacts & _values(rule.get("artifacts"))):
-        return False
-    if rule.get("features") and not (features & _values(rule.get("features"))):
         return False
     if phase is not None and phase not in _values(rule.get("phases")):
         return False
     return True
 
 
-def _resolve_policy_sets(
-    context: dict[str, Any], policy_sets_doc: dict[str, Any]
-) -> tuple[list[str], set[str], set[str], list[str]]:
-    """Expand requested policy sets and return enabled hard/soft rule IDs."""
-    set_docs = {item["id"]: item for item in policy_sets_doc["sets"]}
-    requested = context.get("policy_sets")
-    notes: list[str] = []
-    if requested is None:
-        requested = list(policy_sets_doc["default_sets"])
-        context["policy_sets"] = requested
-        notes.append(
-            "No policy_sets were supplied; applied the installation default policy sets."
-        )
-    unknown = sorted(set(requested) - set(set_docs))
-    if unknown:
-        raise ValueError(f"context.policy_sets: unknown policy set(s) {unknown}")
-
-    expanded: list[str] = []
-    seen: set[str] = set()
-
-    def add(set_id: str) -> None:
-        if set_id in seen:
-            return
-        for included in set_docs[set_id].get("includes", []):
-            add(included)
-        seen.add(set_id)
-        expanded.append(set_id)
-
-    for set_id in requested:
-        add(set_id)
-
-    hard_ids: set[str] = set()
-    soft_ids: set[str] = set()
-    for set_id in expanded:
-        hard_ids.update(set_docs[set_id].get("hard_rules", []))
-        soft_ids.update(set_docs[set_id].get("soft_rules", []))
-    return expanded, hard_ids, soft_ids, notes
-
-
 def resolve_policy(
     context: dict[str, Any],
     hard_doc: dict[str, Any],
-    soft_doc: dict[str, Any],
     profiles_doc: dict[str, Any],
-    policy_sets_doc: dict[str, Any],
 ) -> dict[str, Any]:
     context_errors = validate_context(context)
     if context_errors:
         raise ValueError("; ".join(context_errors))
 
     context, normalization_notes = normalize_context(context)
-
-    active_policy_sets, enabled_hard_ids, enabled_soft_ids, policy_set_notes = (
-        _resolve_policy_sets(context, policy_sets_doc)
-    )
 
     warnings: list[str] = list(normalization_notes)
     unverified: list[dict[str, str]] = []
@@ -440,23 +381,9 @@ def resolve_policy(
                 f"{field} did not activate hard rules or profiles because its provenance is {reason}."
             )
 
-    matched_profile_docs = [
+    active_profile_docs = [
         profile for profile in profiles_doc["profiles"] if _profile_matches(profile, context)
     ]
-    active_profile_docs = [
-        profile
-        for profile in matched_profile_docs
-        if set(profile.get("activate_hard", [])) & enabled_hard_ids
-        or set(profile.get("prefer_soft", [])) & enabled_soft_ids
-    ]
-    inactive_profile_ids = sorted(
-        {profile["id"] for profile in matched_profile_docs}
-        - {profile["id"] for profile in active_profile_docs}
-    )
-    for profile_id in inactive_profile_ids:
-        policy_set_notes.append(
-            f"Profile {profile_id!r} matched context but has no rules in the active policy sets."
-        )
     active_profile_ids = {profile["id"] for profile in active_profile_docs}
 
     if context.get("venue") and _trusted_for_hard(context, "venue"):
@@ -476,8 +403,6 @@ def resolve_policy(
 
     active_hard: list[dict[str, Any]] = []
     for rule in hard_doc["rules"]:
-        if rule["id"] not in enabled_hard_ids:
-            continue
         reason = _hard_activation_reason(rule, context, active_profile_ids)
         if reason is None or not _rule_applies(rule, context):
             continue
@@ -493,44 +418,13 @@ def resolve_policy(
             }
         )
 
-    preferred_by: dict[str, list[str]] = {}
-    for profile in active_profile_docs:
-        for rule_id in profile.get("prefer_soft", []):
-            preferred_by.setdefault(rule_id, []).append(profile["id"])
-
-    active_soft: list[dict[str, Any]] = []
-    for rule in soft_doc["rules"]:
-        if rule["id"] not in enabled_soft_ids:
-            continue
-        if not _rule_applies(rule, context):
-            continue
-        active_soft.append(
-            {
-                "id": rule["id"],
-                "title": rule["title"],
-                "scope": rule["scope"],
-                "artifacts": rule["artifacts"],
-                "features": rule.get("features", []),
-                "default": rule["default"],
-                "allowed_variants": rule["allowed_variants"],
-                "selection_factors": rule["selection_factors"],
-                "avoid": rule["avoid"],
-                "report_when": rule["report_when"],
-                "preferred_by_profiles": sorted(preferred_by.get(rule["id"], [])),
-            }
-        )
-
     return {
-        "resolver_version": 3,
+        "resolver_version": 4,
         "context": context,
-        "active_policy_sets": active_policy_sets,
-        "policy_set_notes": policy_set_notes,
-        "inactive_profiles": inactive_profile_ids,
         "active_profiles": [profile["id"] for profile in active_profile_docs],
         "context_warnings": warnings,
         "unverified_context": unverified,
         "active_hard": active_hard,
-        "active_soft": active_soft,
     }
 
 
@@ -540,10 +434,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("context", type=Path)
     parser.add_argument("--hard", type=Path, default=refs / "hard-rules.yaml")
-    parser.add_argument("--soft", type=Path, default=refs / "soft-rules.yaml")
     parser.add_argument("--profiles", type=Path, default=refs / "profiles.yaml")
-    parser.add_argument("--decisions", type=Path, default=refs / "decision-baseline.yaml")
-    parser.add_argument("--policy-sets", type=Path, default=refs / "policy-sets.yaml")
     parser.add_argument("--format", choices=("yaml", "json"), default="yaml")
     parser.add_argument("--output", type=Path)
     return parser.parse_args()
@@ -551,13 +442,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    registry_errors = validate_registry(
-        args.hard,
-        args.soft,
-        args.profiles,
-        args.decisions,
-        args.policy_sets,
-    )
+    registry_errors = validate_registry(args.hard, args.profiles)
     if registry_errors:
         print("Registry validation failed:", file=sys.stderr)
         for error in registry_errors:
@@ -565,13 +450,7 @@ def main() -> int:
         return 1
     try:
         context = load_yaml(args.context)
-        result = resolve_policy(
-            context,
-            load_yaml(args.hard),
-            load_yaml(args.soft),
-            load_yaml(args.profiles),
-            load_yaml(args.policy_sets),
-        )
+        result = resolve_policy(context, load_yaml(args.hard), load_yaml(args.profiles))
     except ValueError as exc:
         print(f"Policy resolution failed: {exc}", file=sys.stderr)
         return 1

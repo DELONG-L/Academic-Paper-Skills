@@ -7,8 +7,8 @@ description: Draft and revise evidence-grounded academic manuscripts with adapta
 
 Produce the requested manuscript text or revision. Begin at the task's actual
 scope: a supplied paragraph needs a local edit; a full paper needs a coherent
-argument grounded in its available evidence. Use the shared `integrity-core`
-and `academic-defaults`; author preferences remain adaptable.
+argument grounded in its available evidence. Apply relevant manuscript requirements
+and choose editorial guidance for the task; author preferences remain adaptable.
 
 ## Select the Work
 

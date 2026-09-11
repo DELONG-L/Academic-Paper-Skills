@@ -14,21 +14,14 @@ from project_files import select_project_files
 
 
 FINAL_STAGES = {"submission", "camera_ready"}
-TEXT_RULE_IDS = {"PROSE.NO_INTERNAL_PROVENANCE"}
 DEFAULT_RULE_IDS = {
     "CITE.APPROVED_SOURCE_ONLY",
     "FINAL.NO_UNRESOLVED_MARKERS",
-    "PROSE.NO_INTERNAL_PROVENANCE",
 }
 MARKER_PATTERNS = [
     re.compile(r"\[(?:citation needed|claim not verified|quote not verified)[^\]]*\]", re.I),
     re.compile(r"PLACEHOLDER_[A-Za-z0-9_:-]+"),
     re.compile(r"\b(?:TODO|TBD)\b"),
-]
-PROVENANCE_PATTERNS = [
-    re.compile(r"/(?:Users|home|tmp)/[^\s{}]+"),
-    re.compile(r"\b[^\s{}]+\.(?:py|sh|ipynb)\b"),
-    re.compile(r"\b(?:renderer|rendering script|DPI check|artifact bundle)\b", re.I),
 ]
 NON_PROSE_ENV_PATTERN = re.compile(
     r"\\(?P<action>begin|end)\{(?:tabular\*?|tabularx|longtable|verbatim\*?|lstlisting|minted)\}"
@@ -118,11 +111,6 @@ def lint_tex_file(
     for number, line in lines:
         paper_text, excluded_depth = paper_text_outside_nonprose(line, excluded_depth)
         prose = prose_projection(paper_text)
-        if "PROSE.NO_INTERNAL_PROVENANCE" in enabled:
-            for pattern in PROVENANCE_PATTERNS:
-                if pattern.search(prose):
-                    findings.append(Finding("PROSE.NO_INTERNAL_PROVENANCE", relative, number, "possible workflow detail; inspect scientific relevance in context", kind="review_hint"))
-                    break
         if stage in FINAL_STAGES and "FINAL.NO_UNRESOLVED_MARKERS" in enabled:
             for pattern in MARKER_PATTERNS:
                 if pattern.search(prose):
@@ -335,7 +323,6 @@ def assessed_rule_ids(
     assessed: set[str] = set()
     enabled = DEFAULT_RULE_IDS if enabled_rule_ids is None else enabled_rule_ids
     if tex_paths:
-        assessed.update(TEXT_RULE_IDS & enabled)
         if stage in FINAL_STAGES and "FINAL.NO_UNRESOLVED_MARKERS" in enabled:
             assessed.add("FINAL.NO_UNRESOLVED_MARKERS")
         if "LATEX.REFERENCEABLE_DISPLAY" in enabled:
@@ -344,8 +331,6 @@ def assessed_rule_ids(
             assessed.add("ANON.DOUBLE_BLIND")
     if (tex_paths or bib_paths) and "CITE.APPROVED_SOURCE_ONLY" in enabled:
         assessed.add("CITE.APPROVED_SOURCE_ONLY")
-    if tex_paths and bib_paths and "CITE.UNUSED_KEYS_REPORTED" in enabled:
-        assessed.add("CITE.UNUSED_KEYS_REPORTED")
     return assessed
 
 

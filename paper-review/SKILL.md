@@ -7,7 +7,7 @@ description: Review an author's manuscript, its argument and paragraph structure
 
 Support the author in improving a manuscript and answering its reviewers.
 Produce evidence-anchored findings, usable responses, or verified revision
-status according to the request. Author preferences remain soft guidance.
+status according to the request. Author preferences remain editorial guidance.
 Formal assigned peer review is outside this skill and awaits a separate workflow.
 Do not treat an author's request for self-review as a formal reviewer assignment.
 
@@ -72,7 +72,7 @@ Ordinary self-review returns findings without assigning global readiness. Run
 or when that validation is part of the requested delivery. An existing context
 file or a manuscript's submission stage does not itself expand a local task.
 
-Formal compliance uses `integrity-core` and `academic-defaults`. Keep missing
+Formal compliance assesses applicable manuscript requirements. Keep missing
 semantic/manual evidence `UNVERIFIED`; agent semantic PASS requires source-bound
 evidence, and manual checks retain their human/user/venue boundary. Deterministic
 FAIL takes precedence. See `../paper-policy/references/compliance-schema.md`.

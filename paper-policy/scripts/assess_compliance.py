@@ -22,7 +22,6 @@ from validate_registry import load_yaml, validate_registry
 
 
 EVIDENCE_HARD_STATUSES = {"PASS", "FAIL", "NOT_APPLICABLE", "WAIVED"}
-SOFT_STATUSES = {"APPLIED", "ADAPTED", "SKIPPED"}
 EVALUATORS = {"human", "user", "venue", "tool", "agent"}
 
 
@@ -37,7 +36,6 @@ def _record_date(value: Any) -> bool:
 def validate_evidence(
     evidence: dict[str, Any],
     active_hard: dict[str, dict[str, Any]],
-    active_soft: set[str],
     artifact_coverage: dict[str, set[str]] | None = None,
 ) -> list[str]:
     errors: list[str] = []
@@ -45,7 +43,7 @@ def validate_evidence(
     if evidence.get("version") != 1:
         errors.append("evidence.version: expected 1")
     unknown_top = sorted(
-        set(evidence) - {"version", "hard_results", "soft_results", "artifacts"}
+        set(evidence) - {"version", "hard_results", "artifacts"}
     )
     if unknown_top:
         errors.append(f"evidence: unknown fields {', '.join(unknown_top)}")
@@ -75,12 +73,6 @@ def validate_evidence(
         if unknown:
             errors.append(f"{where}: unknown fields {', '.join(unknown)}")
         rule_id = record.get("rule_id")
-        if rule_id in active_soft:
-            errors.append(
-                f"{where}.rule_id: {rule_id} is a soft rule; reassess as "
-                "APPLIED, ADAPTED, or SKIPPED in soft_results, not a hard result"
-            )
-            continue
         if rule_id not in active_hard:
             errors.append(f"{where}.rule_id: rule is not active: {rule_id!r}")
             continue
@@ -166,30 +158,6 @@ def validate_evidence(
         elif waiver is not None:
             errors.append(f"{where}.waiver: allowed only for WAIVED")
 
-    soft_results = evidence.get("soft_results", [])
-    if not isinstance(soft_results, list):
-        errors.append("evidence.soft_results: expected list")
-        soft_results = []
-    seen_soft: set[str] = set()
-    for index, record in enumerate(soft_results):
-        where = f"evidence.soft_results[{index}]"
-        if not isinstance(record, dict):
-            errors.append(f"{where}: expected mapping")
-            continue
-        unknown = sorted(set(record) - {"rule_id", "status", "rationale"})
-        if unknown:
-            errors.append(f"{where}: unknown fields {', '.join(unknown)}")
-        rule_id = record.get("rule_id")
-        if rule_id not in active_soft:
-            errors.append(f"{where}.rule_id: rule is not active: {rule_id!r}")
-            continue
-        if rule_id in seen_soft:
-            errors.append(f"{where}.rule_id: duplicate result for {rule_id}")
-        seen_soft.add(rule_id)
-        if record.get("status") not in SOFT_STATUSES:
-            errors.append(f"{where}.status: invalid value {record.get('status')!r}")
-        if not _nonempty_string(record.get("rationale")):
-            errors.append(f"{where}.rationale: required non-empty string")
     return errors
 
 
@@ -210,7 +178,7 @@ def assess_compliance(
     source_root: Path | None = None,
 ) -> dict[str, Any]:
     evidence = evidence or {
-        "version": 1, "hard_results": [], "soft_results": [], "artifacts": []
+        "version": 1, "hard_results": [], "artifacts": []
     }
     findings = findings or []
     assessed_rules = assessed_rules or set()
@@ -220,10 +188,9 @@ def assess_compliance(
         item["id"]: {**registry_by_id[item["id"]], "activation_reason": item["activation_reason"]}
         for item in resolution["active_hard"]
     }
-    active_soft = {item["id"] for item in resolution["active_soft"]}
     artifact_coverage = artifact_coverage or {}
     evidence_errors = validate_evidence(
-        evidence, active_hard, active_soft, artifact_coverage
+        evidence, active_hard, artifact_coverage
     )
     if evidence_errors:
         raise ValueError("; ".join(evidence_errors))
@@ -304,28 +271,21 @@ def assess_compliance(
         if result["status"] in {"FAIL", "UNVERIFIED"}
     ]
     context_blockers = list(resolution.get("context_warnings", [])) if trusted_final_stage else []
-    if not trusted_final_stage:
+    if not trusted_final_stage or not active_hard:
         readiness_status = "NOT_EVALUATED"
     elif blockers or context_blockers:
         readiness_status = "BLOCKED"
     else:
         readiness_status = "READY"
 
-    supplied_soft = evidence.get("soft_results", [])
-    assessed_soft_ids = {item["rule_id"] for item in supplied_soft}
     return {
-        "assessment_version": 2,
+        "assessment_version": 3,
         "context": resolution["context"],
-        "active_policy_sets": resolution["active_policy_sets"],
-        "policy_set_notes": resolution.get("policy_set_notes", []),
-        "inactive_profiles": resolution.get("inactive_profiles", []),
         "active_profiles": resolution["active_profiles"],
         "context_warnings": resolution["context_warnings"],
         "unverified_context": resolution["unverified_context"],
         "hard_results": hard_results,
         "hard_summary": counts,
-        "soft_results": supplied_soft,
-        "unassessed_soft": sorted(active_soft - assessed_soft_ids),
         "artifact_coverage": {
             rule_id: sorted(artifact_ids)
             for rule_id, artifact_ids in sorted(artifact_coverage.items())
@@ -354,10 +314,7 @@ def parse_args() -> argparse.Namespace:
         help="root for artifact paths; defaults to project or evidence directory",
     )
     parser.add_argument("--hard", type=Path, default=refs / "hard-rules.yaml")
-    parser.add_argument("--soft", type=Path, default=refs / "soft-rules.yaml")
     parser.add_argument("--profiles", type=Path, default=refs / "profiles.yaml")
-    parser.add_argument("--decisions", type=Path, default=refs / "decision-baseline.yaml")
-    parser.add_argument("--policy-sets", type=Path, default=refs / "policy-sets.yaml")
     parser.add_argument("--format", choices=("yaml", "json"), default="yaml")
     parser.add_argument("--output", type=Path)
     return parser.parse_args()
@@ -365,13 +322,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    errors = validate_registry(
-        args.hard,
-        args.soft,
-        args.profiles,
-        args.decisions,
-        args.policy_sets,
-    )
+    errors = validate_registry(args.hard, args.profiles)
     if errors:
         print("Registry validation failed:", file=sys.stderr)
         for error in errors:
@@ -380,13 +331,7 @@ def main() -> int:
     try:
         hard = load_yaml(args.hard)
         context = load_yaml(args.context)
-        resolution = resolve_policy(
-            context,
-            hard,
-            load_yaml(args.soft),
-            load_yaml(args.profiles),
-            load_yaml(args.policy_sets),
-        )
+        resolution = resolve_policy(context, hard, load_yaml(args.profiles))
         evidence = load_yaml(args.evidence) if args.evidence else None
         findings: list[Finding] = []
         assessed: set[str] = set()

@@ -188,7 +188,6 @@ def discover_artifacts(
         ),
         "artifacts": records,
         "hard_results": [],
-        "soft_results": [],
     }
 
 

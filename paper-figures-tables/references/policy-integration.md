@@ -19,10 +19,6 @@ Declare `figure` or `table` in `artifacts`, then declare semantic types in
 - use `artifact_mode: final_figure` or `final_table` for a single final QA
   profile; use `[final_figure, final_table]` when a full-paper run must compose
   both profiles.
-- set `table_profile: layered_capability_matrix` only when a load-bearing
-  Related Work table has eight or more retained dimensions organized into
-  explicit semantic layers. This selects soft design guidance; it does not
-  turn that guidance into hard policy.
 
 Run:
 
@@ -30,10 +26,8 @@ Run:
 python3 ../paper-policy/scripts/resolve_policy.py paper_context.yaml
 ```
 
-Apply active hard rules before soft artifact preferences.
-Confirm `active_policy_sets` first. Omitted `policy_sets` selects
-`[integrity-core, academic-defaults]`. Choose renderer, font, and marker
-style for accuracy, readability, and explicit venue requirements.
+Choose renderer, font and marker style for accuracy, readability and explicit
+venue requirements. Apply the requirements selected for the actual artifact.
 
 ## Record Artifact Evidence
 
@@ -83,26 +77,17 @@ checker establishes file presence and recognizes common formats; suitability,
 resolution and venue acceptance require inspection. An unfamiliar extension is
 a `review_hint`, not a definite violation or an automatic PASS.
 
-## Source Font Preference And Final-Width Rule
+## Final-Width Readability
 
-For paper figures:
+Choose source dimensions and text sizes from the actual placement width. If the
+source canvas is enlarged, scale line widths, markers and offsets consistently.
+Export a suitable format, place it at the target width, and inspect clipping,
+density, label readability, grayscale distinctions and alignment.
 
-1. Use a 3x source canvas by default.
-2. Prefer explicit source text at or above 24pt; smaller text is allowed when
-   the source scale and final rendering remain comfortably readable.
-3. Scale line widths, markers, offsets, and panel labels consistently with the
-   source canvas.
-4. Export vector output where appropriate.
-5. Render or place the artifact at the actual target LaTeX width.
-6. Inspect clipping, density, readability, grayscale distinctions and alignment;
-   identify the actual evaluator. Agent inspection supports editing and delivery.
-7. In a formal assessment, `FIG.FINAL_WIDTH_READABLE` retains its manual evidence
-   requirement and all governed `artifact_refs`. Leave it `UNVERIFIED` without
-   admissible human/user/venue evidence; never relabel agent inspection as human.
-
-Record a below-24pt choice as `ADAPTED` for `FIG.SOURCE_FONT_SCALE`, with the
-source scale and final-width rationale. Source points alone never pass the hard
-final-width rule.
+Agent inspection supports editing and delivery. For a formal assessment,
+`FIG.FINAL_WIDTH_READABLE` retains its manual evidence requirement and all governed
+`artifact_refs`; leave it `UNVERIFIED` without admissible human/user/venue evidence.
+Source points alone never establish readability and require no adaptation record.
 
 ## Evidence Boundary
 

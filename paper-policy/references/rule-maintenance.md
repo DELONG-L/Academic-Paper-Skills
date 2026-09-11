@@ -7,7 +7,7 @@ workflows can live in references without becoming new rule IDs.
 ## Make the Decision Reviewable
 
 For a nontrivial rule change, record the actual failure it addresses, its source,
-applicability, hard/soft force, check type, allowed adaptations, and likely false
+applicability, purpose, check type, contextual alternatives, and likely false
 positives. Add an example requiring a fix and one that must survive unchanged.
 Use an existing change record; do not require a new file for every preference.
 
@@ -19,8 +19,8 @@ reference already owns the decision.
 ## Trace the Impact
 
 Search the exact rule ID and the old wording across the affected skills,
-references, examples, policy sets, profiles, tests and output templates. Record
-the relevant consumer locations. When semantics or force changes, update the
+references, examples, activation profiles, tests and output templates. Record
+the relevant consumer locations. When semantics or applicability changes, update the
 actual advice as well as the ID; a valid reference can still repeat an obsolete
 prohibition. Remove contradictory examples rather than adding another exception.
 
@@ -52,7 +52,7 @@ decide. A regex locator finds candidates, not semantic violations. No hits can
 mean the target text was omitted or a pattern missed the wording. Verify a known
 positive and a legitimate negative before trusting a new scanner.
 
-Check all three consumers of a decision: registry requirement/default, task
+Check all three consumers of a decision: registry requirement where applicable, task
 guidance and examples, and executable diagnostics. An entrypoint can be correct
 while a deep checklist or CLI still enforces an obsolete preference. Do not
 label the system consistent from path/ID validation alone. Keep uncertain
@@ -71,3 +71,13 @@ Keep deterministic failure precedence, manual-check authority and source-snapsho
 invalidation intact. Reuse unchanged results only for unchanged dependencies.
 Deliver the patch, relevant checks and precise remaining limits; stop adding
 unrelated rules once the authorized change is complete.
+
+## Deciding whether a requirement belongs here
+
+Use hard assessment for manuscript integrity, verifiable evidence and applicable
+submission requirements. Keep contextual editing decisions in the owning guide
+and assistant authorization/routing in the authority model. Split mixed clauses:
+preserve scientific obligations while removing a prescribed presentation shape.
+When retiring a hard rule, remove activation and executable consumers, retain
+its useful guidance, and test that it no longer creates readiness blockers.
+Current source notes and Git history replace historical voting-code validation.

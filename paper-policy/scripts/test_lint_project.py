@@ -44,14 +44,13 @@ class ProjectLintTests(unittest.TestCase):
             self.assertEqual(['deterministic','review_hint'],[f.kind for f in findings])
             self.assertIn("'b'",findings[0].message)
 
-    def test_scientific_renderer_and_script_are_review_hints(self):
+    def test_scientific_renderer_and_script_are_not_compliance_items(self):
         with TemporaryDirectory() as directory:
             root=Path(directory)
             path=root/'main.tex'
             path.write_text('The renderer implements the measured operator. We evaluate reference.py.\n')
             findings=lint_tex_file(path,root,'submission',{'PROSE.NO_INTERNAL_PROVENANCE'})
-            self.assertTrue(findings)
-            self.assertTrue(all(f.kind=='review_hint' for f in findings))
+            self.assertEqual([], findings)
 
     def test_repository_identity_requires_context_but_author_field_is_definite(self):
         with TemporaryDirectory() as directory:
@@ -87,7 +86,6 @@ class ProjectLintTests(unittest.TestCase):
         rule_ids = {finding.rule_id for finding in findings}
         self.assertTrue(
             {
-                "PROSE.NO_INTERNAL_PROVENANCE",
                 "FINAL.NO_UNRESOLVED_MARKERS",
                 "CITE.APPROVED_SOURCE_ONLY",
             }.issubset(rule_ids),
@@ -97,7 +95,7 @@ class ProjectLintTests(unittest.TestCase):
     def test_public_default_lint_does_not_enforce_house_rules(self) -> None:
         findings, _ = lint_project(FIXTURES / "project-fail", "submission")
         rule_ids = {finding.rule_id for finding in findings}
-        self.assertIn("PROSE.NO_INTERNAL_PROVENANCE", rule_ids)
+        self.assertNotIn("PROSE.NO_INTERNAL_PROVENANCE", rule_ids)
         self.assertNotIn("PROSE.EM_DASH_FORBIDDEN", rule_ids)
         self.assertNotIn("LATEX.NO_BRACKET_DISPLAY", rule_ids)
         self.assertNotIn("STRUCT.CONCLUSION_SINGLE_PARAGRAPH", rule_ids)
@@ -203,7 +201,7 @@ class ProjectLintTests(unittest.TestCase):
                 active_rule_ids={"CITE.UNUSED_KEYS_REPORTED"},
             )
             self.assertEqual([], findings)
-            self.assertIn("CITE.UNUSED_KEYS_REPORTED", assessed)
+            self.assertNotIn("CITE.UNUSED_KEYS_REPORTED", assessed)
 
     def test_bibtex_meta_entries_are_not_reported_as_keys(self) -> None:
         with TemporaryDirectory() as directory:

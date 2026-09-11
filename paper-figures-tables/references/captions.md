@@ -29,7 +29,8 @@ Define markers or metric directions only when the table would otherwise be ambig
 \caption{Comparison of related approaches by boundary mechanism. \cmark{} denotes explicit support and \pmark{} partial support.}
 ```
 
-For result tables, include metric meanings when needed, but do not use up/down arrows in headers by default:
+For result tables, explain metric meanings and directions when needed. Words or
+conventional, correctly rendered header arrows can provide that information:
 
 ```latex
 \caption{Main results across four task domains. Higher success and plan quality are better; lower leakage and cost are better.}

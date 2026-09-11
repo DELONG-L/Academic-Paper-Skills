@@ -32,11 +32,11 @@ personal merely to avoid an AI-associated pattern.
   false starts, self-interruptions, emotional punctuation, or fractured
   discourse as evidence of human authorship.
 
-## Soft Diagnostics
+## Editorial Diagnostics
 
 Treat these as revision candidates, not automatic violations:
 
-- Excessive punctuation or arrows under `PROSE.PUNCTUATION`. Retain useful em dashes and correctly rendered symbols; preserve ranges, minus signs, and technical notation.
+- Excessive punctuation or arrows. Retain useful em dashes and correctly rendered symbols; preserve ranges, minus signs, and technical notation.
 
 - Filler or inflated phrasing such as `It is important to note that`, `plays a
   crucial role`, `pivotal`, or `groundbreaking`.
@@ -48,11 +48,11 @@ Treat these as revision candidates, not automatic violations:
 - Generic colon-led inline lists and repeated rule-of-three structures.
 - Rhetorical self-answer forms such as `The result? X.` and dramatic standalone
   fragments.
-- Three or more consecutive sentences or bullets with the same opening.
+- Repeated openings that make the passage monotonous or obscure the logical relation.
 - Gerund-fragment litanies that lack a clear grammatical subject.
 - Repeated conjunctive openers or metronomic sentence lengths.
 
-Revise a soft pattern when it reduces precision, adds no information, or conflicts
+Revise a pattern when it reduces precision, adds no information, or conflicts
 with the target section's academic register. Repetition invites contextual review;
 it does not establish a defect. Ordinary edits need no per-pattern compliance log.
 
@@ -82,7 +82,7 @@ it does not establish a defect. Ordinary edits need no per-pattern compliance lo
 
 ## Academic Rhythm
 
-Use compact paragraphs with a clear job. Vary sentence length, but do not insert dramatic short sentences.
+Use paragraphs with a clear job. Judge sentence length by comprehension, grammatical attachment and the placement of conditions. Split an overloaded sentence when it improves clarity; retain a long sentence when splitting would detach a qualifier. Do not use a word-count warning or manufacture rhythmic variation.
 
 Keep paragraph structure direct:
 
@@ -108,7 +108,10 @@ The benchmark separates tool-selection errors from execution errors, which lets 
 
 When editing LaTeX:
 
-- Preserve citation commands, labels, references, equations, and macros.
+- Preserve citation attachment, notation meaning and working cross-references.
+  During prose-only polish, retain the relevant LaTeX structure. Authorized
+  structural, citation or template edits may change commands and labels together
+  with their dependent uses; verify the resulting source and affected render.
 - Preserve existing display-math delimiters during prose-only edits. If equation formatting is in scope, choose syntax compatible with the document and venue; delimiter choice alone is not a style failure.
 - Prefer `\begin{equation}...\end{equation}` for displayed equations that should be referenced.
 - If a long descriptive token appears inside math mode, use `\text{...}` instead of treating it as a multi-letter variable.
@@ -118,10 +121,12 @@ When editing LaTeX:
 
 ## Reference And Number Style
 
-- Introduce abbreviations at first use and use them consistently afterward.
+- Expand abbreviations when the intended reader needs the definition. Common
+  disciplinary abbreviations or ones already defined in the relevant context
+  can remain; review ambiguity rather than counting first-use expansions.
 - Keep cross-references woven into sentences: `Table~\ref{...} reports ...`, not `See Table~\ref{...}` as a standalone crutch.
 - Use numerals for measured values, dataset sizes, model counts, and section/page references. Spell out small non-technical counts only when it reads more naturally.
-- Use prose or clear, correctly rendered arrows for directionality according to the context. Avoid decorative symbols; preserve useful technical notation under the soft `PROSE.PUNCTUATION` guidance.
+- Use prose or clear, correctly rendered arrows for directionality according to the context. Avoid decorative symbols; preserve useful technical notation when they help the reader.
 
 ## Typography Cleanup
 
@@ -139,7 +144,7 @@ If prose sounds like an internal validation report, move that content out of the
 ## Cleanup Workflow
 
 1. Preserve a source copy and identify the paragraph's job.
-2. Mark hard-boundary risks separately from soft style candidates.
+2. Mark hard-boundary risks separately from editorial candidates.
 3. Delete filler and replace inflated phrases with precise language.
 4. Restore direct subject-verb-object claims without forcing surface variation.
 5. Add scope or evidence where a claim is too broad.

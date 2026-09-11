@@ -50,7 +50,7 @@ Flag:
 - Mitigations named without evidence that they address the stated threat.
 - Mitigations presented as eliminating risk when a residual boundary remains.
 - A fixed validity taxonomy that hides domain-specific failure modes.
-- Missing substantive limitations or unsupported conclusion claims remain evidence problems. Treat paragraph count and limitation placement as soft structural preferences unless an explicit project or sourced venue requirement applies.
+- Missing substantive limitations or unsupported conclusion claims remain evidence problems. Treat paragraph count and limitation placement as editorial choices unless an explicit project or sourced venue requirement applies.
 
 ### Contribution and Positioning
 
@@ -63,14 +63,14 @@ Flag:
 - Scope too narrow for the stated claim.
 
 Personal comparison preference:
-- `RELATED.COMPARISON_REQUIRED` favors an axis-based table when useful; sufficient axis-based prose is a valid soft adaptation and does not block readiness.
+- Use a comparison table when it clarifies the argument; sufficient axis-based prose is equally valid.
 
 ### Writing and Structure
 
 Check whether readers can follow the manuscript accurately and efficiently.
 
 Flag:
-- Top-level section names that cause a concrete clarity problem or violate a sourced venue requirement; traditional names remain a soft preference.
+- Top-level section names that cause a concrete clarity problem or violate a sourced venue requirement; traditional names remain a editorial preference.
 - Paragraphs whose function or relation to the argument is unclear; a fixed
   first-sentence formula is not required.
 - Overclaims, promotional adjectives, filler, repeated formulaic structures, or other concrete prose defects.

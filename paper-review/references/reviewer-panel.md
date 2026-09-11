@@ -7,7 +7,7 @@ Use this reference for author-side simulated review or red-team review. These ar
 Every criticism must include one of:
 
 - Section, figure, table, equation, appendix, or line number.
-- Short manuscript quote of at most 15 words.
+- A brief manuscript quote that locates the issue.
 - Reviewer quote if responding to external reviews.
 - `MISSING: <expected content>` when the absence is the finding.
 - `UNLOCATED: <concern>` only for a tentative concern that must not be treated as a hard finding.
@@ -77,7 +77,7 @@ Focus:
 ### Reviewer: <Champion / Skeptic / Novelty-AC>
 
 **Summary.**
-<2-4 sentences proving the paper was understood.>
+<A concise account of the contribution and evidence demonstrating accurate understanding.>
 
 **Strengths.**
 - <specific strength> [anchor].

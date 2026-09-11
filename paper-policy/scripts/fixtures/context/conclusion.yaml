@@ -4,9 +4,15 @@ submission_stage: draft
 language: en
 task_scope: section
 task_mode: writing
-policy_sets: [integrity-core, academic-defaults]
-scopes: [writing]
-artifacts: [prose, tex]
-features: [paper_prose, latex_manuscript, conclusion, limitations_content]
+scopes:
+- writing
+artifacts:
+- prose
+- tex
+features:
+- paper_prose
+- latex_manuscript
+- conclusion
+- limitations_content
 provenance:
   submission_stage: user

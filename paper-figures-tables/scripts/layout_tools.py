@@ -141,7 +141,7 @@ def add_panel_labels(
         )
 
     if fontsize is None:
-        fontsize = plt.rcParams.get("axes.labelsize", 24)
+        fontsize = plt.rcParams.get("axes.labelsize", "medium")
 
     placed = []
     for ax, lab in zip(axes, labels):

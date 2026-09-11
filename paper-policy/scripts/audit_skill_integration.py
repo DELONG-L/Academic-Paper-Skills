@@ -24,7 +24,7 @@ EXPLICIT = re.compile(r"^(?:(?:\.\.?/)+|references/|scripts/|assets/)[^\s<>*{}]+
 def audit(root: Path) -> dict:
     root = root.resolve()
     rules = set()
-    for name in ("hard-rules.yaml", "soft-rules.yaml"):
+    for name in ("hard-rules.yaml",):
         data = yaml.safe_load((root / "paper-policy/references" / name).read_text())
         rules.update(row["id"] for row in data["rules"])
     errors, references, consumers = [], [], {}
