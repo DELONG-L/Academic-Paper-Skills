@@ -1,6 +1,0 @@
-version: 1
-rules:
-  A01: H
-  A09: S
-conflicts: {}
-fusion: {}

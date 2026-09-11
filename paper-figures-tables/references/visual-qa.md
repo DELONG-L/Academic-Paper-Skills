@@ -28,4 +28,4 @@
 
 记录实际查看的文件、放置尺寸、检查结果与执行者。模型查看渲染图是 agent 检查，不能填写为 human evidence 或宣称独立审阅。正式评估时，`policy-integration.md` 及共享 compliance schema 决定哪类证据可满足 manual 项。
 
-普通出图无需创建空 `compliance-evidence.yaml`；正式记录可以复用现有证据文件。源字号和 3x 画布偏好不能替代最终可读性，`check_figure.py` 的退出码也不能证明语义或完整投稿合规。
+普通出图无需创建空 `compliance-evidence.yaml`；正式记录可以复用现有证据文件。源字号和画布缩放不能替代最终可读性，`check_figure.py` 的退出码也不能证明语义或完整投稿合规。

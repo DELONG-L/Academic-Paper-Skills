@@ -36,7 +36,6 @@ class ProjectValidationRunnerTests(unittest.TestCase):
                 "unused-bibtex-keys.yaml",
                 "artifact-manifest-skeleton.yaml",
                 "artifact-discovery-summary.yaml",
-                "soft-review-worklist.yaml",
                 "validation-manifest.yaml",
             ):
                 self.assertTrue((output / name).is_file(), name)
@@ -54,7 +53,6 @@ class ProjectValidationRunnerTests(unittest.TestCase):
             self.assertEqual(0, manifest["finding_instance_count"])
             self.assertEqual(0, manifest["deterministic_failing_rule_count"])
             self.assertEqual(0, manifest["total_failing_rule_count"])
-            self.assertEqual(0, manifest["soft_worklist_unmapped_rule_count"])
             self.assertEqual("BLOCKED", manifest["readiness_status"])
             assessment = yaml.safe_load((output / "initial-assessment.yaml").read_text())
             self.assertGreater(assessment["hard_summary"]["UNVERIFIED"], 0)
@@ -99,7 +97,7 @@ class ProjectValidationRunnerTests(unittest.TestCase):
                             }
                         ],
                         "hard_results": [],
-                        "soft_results": [],
+
                     },
                     sort_keys=False,
                 ),

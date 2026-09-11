@@ -25,7 +25,7 @@ whole-paper readiness audit.
 1. Read `../../paper-policy/references/context-schema.md`. Reuse or create context
    from current user statements and supplied materials. Confirm that its scope
    matches the requested judgment and that hard-sensitive fields have provenance.
-2. Use shared defaults `[integrity-core, academic-defaults]`. Record applicable
+2. Resolve requirements for the actual task. Record applicable
    project/venue requirements with their source. Keep generic artifact kinds in
    `artifacts` and semantic selectors in `features`. Include load-bearing threats,
    limitations, known systematic bias, and distinct evidence roles when present.
@@ -36,7 +36,7 @@ python3 /path/to/skills/paper-policy/scripts/resolve_policy.py /path/to/paper_co
 ```
 
 4. Inspect active rules and unresolved context. Apply hard constraints and adapt
-   soft guidance to the manuscript. Resolver warnings do not establish compliance.
+   editorial guidance to the manuscript. Resolver warnings do not establish compliance.
 
 For formal readiness assessment, load the policy compliance schema and use
 `paper-policy/scripts/run_project_validation.py` for the project-local first

@@ -17,15 +17,9 @@ venue: ExampleConf 2027
 submission_stage: draft
 language: en
 double_blind: true
-page_pressure: medium
-evidence_maturity: partial
-manuscript_state: section_draft
-reader_risk: medium
 task_scope: multi_section
 task_mode: writing
-policy_sets: [integrity-core, academic-defaults]
 artifact_mode: [final_figure, final_table]
-evaluation_structure: rq_driven
 experiment_type: stochastic
 measurement_bias_status: known_systematic
 evidence_structure: multi_role
@@ -56,14 +50,8 @@ Unknown fields and unknown controlled values are rejected to catch
 misspellings. Optional scalar fields may be omitted. `scopes` and `artifacts`
 are required non-empty lists because they control applicability.
 `approved_citation_sources` and `modes` are optional lists of non-empty strings.
-`policy_sets` defaults to `[integrity-core, academic-defaults]` for all
-installations. Author style preferences remain soft within those shared sets.
-Describe explicit project and venue constraints with their source in the task
-context; there is no universal conference section-count profile.
-`table_profile` is optional. Set it to `layered_capability_matrix` only for a
-load-bearing comparison table whose dimensions form explicit semantic layers.
-The profile prefers the relevant soft table guidance; it does not promote that
-guidance to hard rules or make wide matrices the default.
+Writing state, page pressure and layout choices can stay in the task context or
+working notes; they require no policy profile.
 `features` is optional only for genuinely short, untyped work; section,
 artifact, multi-section, full-paper, polish, submission, and rebuttal scopes
 must declare at least one semantic selector.
@@ -72,8 +60,7 @@ Use `primary_tex` to identify the authoritative main manuscript when the project
 contains flattened submission copies, Overleaf mirrors, venue examples,
 archived drafts, or multiple independent TeX documents. `additional_tex` may
 list independent supplementary/checklist roots that should also be linted and
-included in artifact discovery; they do not control the main-paper section
-count or section-aware soft worklist. Input/include descendants are followed
+included in artifact discovery. Input/include descendants are followed
 automatically, and only bibliographies referenced by the selected TeX trees are
 audited. If `primary_tex` is omitted, the runner uses root-level `main.tex` or a
 single unambiguous document root; multiple roots otherwise produce an error
@@ -161,16 +148,12 @@ source; the resolver reports that gap as a context warning.
 
 ## Resolution Semantics
 
-1. Validate all registries and the manual-decision baseline.
-2. Validate the context mapping.
-3. Resolve default or explicitly requested policy sets and expand dependencies.
-4. Match profiles by exact value; list-valued context intersects `any_of`.
-5. Refuse hard-sensitive profile matches from missing or inferred provenance.
-6. Activate enabled hard rules from `always`, trusted profiles, or exact conditional
-   matches for stage, mode, paper type, venue, and feature.
-7. Apply the same phase, scope, and generic-artifact applicability predicate
-   to hard and soft rules.
-8. Annotate profile-preferred soft rules without turning them into hard rules.
+1. Validate the requirement registry, activation profiles and context.
+2. Match profiles by exact value; list-valued context intersects `any_of`.
+3. Refuse provenance-sensitive matches from missing or inferred provenance.
+4. Activate requirements from `always`, trusted profiles or exact conditional
+   matches for stage, mode, paper type, venue and feature.
+5. Filter by phase, scope and artifact applicability.
 
 Resolver output lists active rules and activation reasons only. It does not
 claim manuscript compliance, assign PASS, or apply fixes.
@@ -183,5 +166,5 @@ Resolve context in this order:
 2. Supplied manuscript, template, checklist, and official venue files.
 3. Cautious inference.
 
-Inference may guide soft-rule selection. It must not silently activate venue,
+Inference may guide editorial choices. It must not silently activate venue,
 anonymity, or submission hard rules.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate paper-policy hard, soft, and profile registries."""
+"""Validate paper-policy requirement and activation-profile registries."""
 
 from __future__ import annotations
 
@@ -23,8 +23,6 @@ from policy_vocab import (
 )
 
 ID_RE = re.compile(r"^[A-Z][A-Z0-9]*(?:\.[A-Z][A-Z0-9_]*)+$")
-DECISION_RE = re.compile(r"^[A-NX]\d{2}$")
-POLICY_SET_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 ACTIVATION_TYPES = {"always", "stage", "mode", "paper_type", "venue", "feature", "profile"}
 CHECK_KINDS = {"deterministic", "semantic", "manual"}
 HARD_STATUSES = {"block", "placeholder", "narrow", "report"}
@@ -63,7 +61,7 @@ def require_list(value: Any, where: str, errors: list[str], *, nonempty: bool = 
 
 
 def validate_common(rule: dict[str, Any], where: str, expected_force: str, errors: list[str]) -> None:
-    required = {"id", "title", "force", "scope", "artifacts", "phases", "decision_refs", "source"}
+    required = {"id", "title", "force", "scope", "artifacts", "phases", "source"}
     missing = sorted(required - rule.keys())
     if missing:
         errors.append(f"{where}: missing fields {', '.join(missing)}")
@@ -85,11 +83,6 @@ def validate_common(rule: dict[str, Any], where: str, expected_force: str, error
         if invalid:
             errors.append(f"{where}.{field}: invalid values {invalid}")
 
-    refs = require_list(rule.get("decision_refs"), f"{where}.decision_refs", errors, nonempty=True)
-    for ref in refs:
-        if not isinstance(ref, str) or not DECISION_RE.fullmatch(ref):
-            errors.append(f"{where}.decision_refs: invalid reference {ref!r}")
-
     source = require_mapping(rule.get("source"), f"{where}.source", errors)
     unknown_source = sorted(set(source) - {"origin", "note"})
     if unknown_source:
@@ -109,7 +102,7 @@ def validate_hard_document(doc: dict[str, Any]) -> tuple[list[str], set[str]]:
         allowed_rule_fields = {
             "id", "title", "force", "scope", "artifacts", "phases",
             "activation", "requirement", "checks", "failure", "autofix",
-            "waiver", "decision_refs", "source",
+            "waiver", "source",
         }
         unknown_rule = sorted(set(rule) - allowed_rule_fields)
         if unknown_rule:
@@ -218,59 +211,9 @@ def validate_hard_document(doc: dict[str, Any]) -> tuple[list[str], set[str]]:
     return errors, ids
 
 
-def validate_soft_document(doc: dict[str, Any]) -> tuple[list[str], set[str]]:
-    errors: list[str] = []
-    rules = require_list(doc.get("rules"), "soft.rules", errors, nonempty=True)
-    ids: set[str] = set()
-
-    for index, raw_rule in enumerate(rules):
-        where = f"soft.rules[{index}]"
-        rule = require_mapping(raw_rule, where, errors)
-        allowed_rule_fields = {
-            "id", "title", "force", "scope", "artifacts", "phases",
-            "features",
-            "default", "allowed_variants", "selection_factors", "avoid",
-            "report_when", "decision_refs", "source",
-        }
-        unknown_rule = sorted(set(rule) - allowed_rule_fields)
-        if unknown_rule:
-            errors.append(f"{where}: unknown fields {', '.join(unknown_rule)}")
-        validate_common(rule, where, "soft", errors)
-        if "features" in rule:
-            features = require_list(
-                rule.get("features"), f"{where}.features", errors, nonempty=True
-            )
-            invalid_features = (
-                sorted(set(features) - FEATURES)
-                if all(isinstance(item, str) for item in features)
-                else features
-            )
-            if invalid_features:
-                errors.append(f"{where}.features: invalid values {invalid_features}")
-        rule_id = rule.get("id")
-        if isinstance(rule_id, str):
-            if rule_id in ids:
-                errors.append(f"{where}.id: duplicate ID {rule_id}")
-            ids.add(rule_id)
-
-        if not isinstance(rule.get("default"), str) or not rule.get("default"):
-            errors.append(f"{where}.default: required non-empty string")
-        require_list(rule.get("allowed_variants"), f"{where}.allowed_variants", errors, nonempty=True)
-        require_list(rule.get("selection_factors"), f"{where}.selection_factors", errors, nonempty=True)
-        require_list(rule.get("avoid"), f"{where}.avoid", errors)
-        if not isinstance(rule.get("report_when"), str) or not rule.get("report_when"):
-            errors.append(f"{where}.report_when: required non-empty string")
-        for forbidden in ("activation", "failure", "autofix", "waiver"):
-            if forbidden in rule:
-                errors.append(f"{where}.{forbidden}: not allowed for soft rules")
-
-    return errors, ids
-
-
 def validate_profiles_document(
     doc: dict[str, Any],
     hard_ids: set[str],
-    soft_ids: set[str],
     hard_activation: dict[str, dict[str, Any]],
 ) -> tuple[list[str], set[str]]:
     errors: list[str] = []
@@ -281,7 +224,7 @@ def validate_profiles_document(
         where = f"profiles.profiles[{index}]"
         profile = require_mapping(raw_profile, where, errors)
         unknown_profile = sorted(
-            set(profile) - {"id", "match", "activate_hard", "prefer_soft", "source"}
+            set(profile) - {"id", "match", "activate_hard", "source"}
         )
         if unknown_profile:
             errors.append(f"{where}: unknown fields {', '.join(unknown_profile)}")
@@ -319,7 +262,6 @@ def validate_profiles_document(
                 errors.append(f"{where}.match.any_of: invalid values {invalid}")
 
         active = require_list(profile.get("activate_hard"), f"{where}.activate_hard", errors)
-        preferred = require_list(profile.get("prefer_soft"), f"{where}.prefer_soft", errors)
         for rule_id in active:
             if rule_id not in hard_ids:
                 errors.append(f"{where}.activate_hard: unknown hard rule {rule_id!r}")
@@ -333,10 +275,6 @@ def validate_profiles_document(
                 errors.append(
                     f"{where}.activate_hard: {rule_id!r} does not accept profile {profile_id!r}"
                 )
-        for rule_id in preferred:
-            if rule_id not in soft_ids:
-                errors.append(f"{where}.prefer_soft: unknown soft rule {rule_id!r}")
-
         source = require_mapping(profile.get("source"), f"{where}.source", errors)
         unknown_source = sorted(set(source) - {"kind", "url", "as_of"})
         if unknown_source:
@@ -350,191 +288,32 @@ def validate_profiles_document(
     return errors, ids
 
 
-def validate_policy_sets_document(
-    doc: dict[str, Any], hard_ids: set[str], soft_ids: set[str]
-) -> list[str]:
-    """Validate public defaults, opt-in sets, dependencies, and full rule coverage."""
-    errors: list[str] = []
-    unknown_top = sorted(set(doc) - {"version", "registry", "default_sets", "sets"})
-    if unknown_top:
-        errors.append(f"policy_sets: unknown fields {', '.join(unknown_top)}")
-    if doc.get("version") != 1:
-        errors.append("policy_sets.version: expected 1")
-    if doc.get("registry") != "paper-policy-sets":
-        errors.append("policy_sets.registry: expected 'paper-policy-sets'")
-
-    default_sets = require_list(
-        doc.get("default_sets"), "policy_sets.default_sets", errors, nonempty=True
-    )
-    if any(not isinstance(set_id, str) for set_id in default_sets):
-        errors.append("policy_sets.default_sets: entries must be strings")
-    elif len(default_sets) != len(set(default_sets)):
-        errors.append("policy_sets.default_sets: duplicate set IDs are not allowed")
-    raw_sets = require_list(doc.get("sets"), "policy_sets.sets", errors, nonempty=True)
-    set_docs: dict[str, dict[str, Any]] = {}
-    memberships = {"hard_rules": {}, "soft_rules": {}}
-
-    for index, raw_set in enumerate(raw_sets):
-        where = f"policy_sets.sets[{index}]"
-        policy_set = require_mapping(raw_set, where, errors)
-        unknown = sorted(
-            set(policy_set)
-            - {"id", "description", "includes", "hard_rules", "soft_rules"}
-        )
-        if unknown:
-            errors.append(f"{where}: unknown fields {', '.join(unknown)}")
-        set_id = policy_set.get("id")
-        if not isinstance(set_id, str) or not POLICY_SET_RE.fullmatch(set_id):
-            errors.append(f"{where}.id: invalid policy-set ID {set_id!r}")
-        elif set_id in set_docs:
-            errors.append(f"{where}.id: duplicate policy-set ID {set_id}")
-        else:
-            set_docs[set_id] = policy_set
-        if not isinstance(policy_set.get("description"), str) or not policy_set.get(
-            "description"
-        ):
-            errors.append(f"{where}.description: required non-empty string")
-        require_list(policy_set.get("includes"), f"{where}.includes", errors)
-        for field, known_ids in (("hard_rules", hard_ids), ("soft_rules", soft_ids)):
-            rule_ids = require_list(policy_set.get(field), f"{where}.{field}", errors)
-            for rule_id in rule_ids:
-                if rule_id not in known_ids:
-                    errors.append(f"{where}.{field}: unknown rule {rule_id!r}")
-                memberships[field].setdefault(rule_id, []).append(set_id)
-
-    known_set_ids = set(set_docs)
-    for set_id in default_sets:
-        if set_id not in known_set_ids:
-            errors.append(f"policy_sets.default_sets: unknown set {set_id!r}")
-    for set_id, policy_set in set_docs.items():
-        for included in policy_set.get("includes", []):
-            if included not in known_set_ids:
-                errors.append(
-                    f"policy_sets.sets.{set_id}.includes: unknown set {included!r}"
-                )
-
-    visiting: set[str] = set()
-    visited: set[str] = set()
-
-    def visit(set_id: str, trail: list[str]) -> None:
-        if set_id in visited or set_id not in set_docs:
-            return
-        if set_id in visiting:
-            errors.append(
-                "policy_sets.includes: dependency cycle "
-                + " -> ".join(trail + [set_id])
-            )
-            return
-        visiting.add(set_id)
-        for included in set_docs[set_id].get("includes", []):
-            visit(included, trail + [set_id])
-        visiting.remove(set_id)
-        visited.add(set_id)
-
-    for set_id in sorted(known_set_ids):
-        visit(set_id, [])
-
-    for field, known_ids in (("hard_rules", hard_ids), ("soft_rules", soft_ids)):
-        member_map = memberships[field]
-        for rule_id in sorted(known_ids - set(member_map)):
-            errors.append(f"policy_sets.{field}: unassigned rule {rule_id!r}")
-        for rule_id, owners in sorted(member_map.items()):
-            if len(owners) > 1:
-                errors.append(
-                    f"policy_sets.{field}: rule {rule_id!r} assigned to multiple sets {owners}"
-                )
-    return errors
-
-
-def validate_decision_coverage(
-    doc: dict[str, Any], hard_doc: dict[str, Any], soft_doc: dict[str, Any]
-) -> list[str]:
-    errors: list[str] = []
-    rules = require_mapping(doc.get("rules"), "decisions.rules", errors)
-    conflicts = require_mapping(doc.get("conflicts"), "decisions.conflicts", errors)
-    fusion = require_mapping(doc.get("fusion"), "decisions.fusion", errors)
-
-    force_by_ref: dict[str, set[str]] = {}
-    for registry_doc, force in ((hard_doc, "hard"), (soft_doc, "soft")):
-        for rule in registry_doc.get("rules", []):
-            if not isinstance(rule, dict):
-                continue
-            for ref in rule.get("decision_refs", []):
-                force_by_ref.setdefault(ref, set()).add(force)
-
-    known_refs = set(rules) | set(conflicts) | set(fusion)
-    for ref in sorted(force_by_ref):
-        if ref not in known_refs:
-            errors.append(f"decisions: registry references unknown decision {ref!r}")
-        elif ref in rules and rules[ref] == "D":
-            errors.append(
-                f"decisions.rules.{ref}: excluded decisions cannot support active rules"
-            )
-
-    for ref, decision in rules.items():
-        if decision not in {"H", "P", "S", "D"}:
-            errors.append(f"decisions.rules.{ref}: invalid value {decision!r}")
-            continue
-        forces = force_by_ref.get(ref, set())
-        if decision in {"H", "P"} and "hard" not in forces:
-            errors.append(f"decisions.rules.{ref}: {decision} requires a hard-rule mapping")
-        if decision == "S" and "soft" not in forces:
-            errors.append(f"decisions.rules.{ref}: S requires a soft-rule mapping")
-
-    for ref, decision in conflicts.items():
-        if decision not in {"A", "B", "C", "D"}:
-            errors.append(f"decisions.conflicts.{ref}: invalid value {decision!r}")
-    for ref, decision in fusion.items():
-        if decision not in {"Y", "N", "Later"}:
-            errors.append(f"decisions.fusion.{ref}: invalid value {decision!r}")
-    return errors
-
-
-def validate_registry(
-    hard_path: Path,
-    soft_path: Path,
-    profiles_path: Path,
-    decisions_path: Path | None = None,
-    policy_sets_path: Path | None = None,
-) -> list[str]:
+def validate_registry(hard_path: Path, profiles_path: Path) -> list[str]:
     try:
         hard_doc = load_yaml(hard_path)
-        soft_doc = load_yaml(soft_path)
         profiles_doc = load_yaml(profiles_path)
     except ValueError as exc:
         return [str(exc)]
-
     errors, hard_ids = validate_hard_document(hard_doc)
-    hard_activation = {
+    activation = {
         rule.get("id"): rule.get("activation", {})
         for rule in hard_doc.get("rules", [])
         if isinstance(rule, dict) and isinstance(rule.get("id"), str)
     }
-    soft_errors, soft_ids = validate_soft_document(soft_doc)
-    errors.extend(soft_errors)
-    duplicates = sorted(hard_ids & soft_ids)
-    for rule_id in duplicates:
-        errors.append(f"registry: rule ID appears in hard and soft registries: {rule_id}")
-    profile_errors, _ = validate_profiles_document(
-        profiles_doc, hard_ids, soft_ids, hard_activation
+    profile_errors, profile_ids = validate_profiles_document(
+        profiles_doc, hard_ids, activation
     )
     errors.extend(profile_errors)
-    if policy_sets_path is not None:
-        try:
-            policy_sets_doc = load_yaml(policy_sets_path)
-        except ValueError as exc:
-            errors.append(str(exc))
-        else:
-            errors.extend(
-                validate_policy_sets_document(policy_sets_doc, hard_ids, soft_ids)
-            )
-    if decisions_path is not None:
-        try:
-            decisions_doc = load_yaml(decisions_path)
-        except ValueError as exc:
-            errors.append(str(exc))
-        else:
-            errors.extend(validate_decision_coverage(decisions_doc, hard_doc, soft_doc))
+    profiles = {p["id"]: p for p in profiles_doc.get("profiles", [])
+                if isinstance(p, dict) and isinstance(p.get("id"), str)}
+    for rule_id, selector in activation.items():
+        if selector.get("type") != "profile":
+            continue
+        for profile_id in selector.get("when", []):
+            if profile_id not in profile_ids:
+                errors.append(f"{rule_id}: unknown activation profile {profile_id!r}")
+            elif rule_id not in profiles[profile_id].get("activate_hard", []):
+                errors.append(f"{rule_id}: profile {profile_id!r} does not activate this rule")
     return errors
 
 
@@ -543,24 +322,13 @@ def parse_args() -> argparse.Namespace:
     default_refs = script_dir.parent / "references"
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--hard", type=Path, default=default_refs / "hard-rules.yaml")
-    parser.add_argument("--soft", type=Path, default=default_refs / "soft-rules.yaml")
     parser.add_argument("--profiles", type=Path, default=default_refs / "profiles.yaml")
-    parser.add_argument("--decisions", type=Path, default=default_refs / "decision-baseline.yaml")
-    parser.add_argument(
-        "--policy-sets", type=Path, default=default_refs / "policy-sets.yaml"
-    )
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    errors = validate_registry(
-        args.hard,
-        args.soft,
-        args.profiles,
-        args.decisions,
-        args.policy_sets,
-    )
+    errors = validate_registry(args.hard, args.profiles)
     if errors:
         print(f"Registry validation failed with {len(errors)} error(s):")
         for error in errors:

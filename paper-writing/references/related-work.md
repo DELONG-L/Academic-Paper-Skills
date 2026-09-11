@@ -18,11 +18,10 @@ mixed or uncertain categories and distinguish absent reporting from absent
 capability. Derive any research agenda from observed gaps and specify what study
 could address them; do not claim exhaustive coverage from a convenient sample.
 
-The soft `RELATED.COMPARISON_REQUIRED` preference favors an axis-based
-comparison-table plan when it improves comparison. Use explicit axis-based
-prose when a table would duplicate the argument or imply unsupported
-comparability. Record material adaptations without a waiver; explicit project
-or sourced venue requirements still apply.
+Use an axis-based comparison table when it clarifies the argument. Prefer prose
+when a table would duplicate the explanation or imply unsupported comparability.
+No preference record is needed; explicit project and sourced venue requirements
+still apply.
 
 ## Organization
 
@@ -52,8 +51,8 @@ When a table is selected for its argumentative value or an explicit project or s
 
 1. Table purpose: what gap or axis the table makes visible.
 2. Row groups: paper families, systems, datasets, threat models, or approaches.
-3. Columns: choose dimensions that carry fair, useful comparisons. Three to four is a compact starting point; use as many as the evidence and readability require. Consider `table_profile: layered_capability_matrix` when semantic grouping helps.
-4. Placement preference: single-column by default after pruning; request `table*` only with an explicit reason.
+3. Columns: choose dimensions that carry fair, useful comparisons. Use semantic grouping when it clarifies the retained dimensions.
+4. Placement: choose column or page width according to the fair comparison and final readability.
 5. Marker semantics: `\cmark` = full support, `\pmark` = partial support, `\xmark` = absent, only when marker symbols are needed.
 6. Proposed row: the paper's method or artifact, only if the manuscript has one.
 7. Compact caption draft. Do not include internal provenance notes, placeholder-citation status, or long marker notes.

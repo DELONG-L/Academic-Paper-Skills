@@ -8,8 +8,6 @@ figure:
   manuscript_target: paper/sections/05_experiments.tex
   placement: main-text
   target_width: double-column
-  source_scale: 3.0
-  source_font_min_pt: 24
   claim: MethodA preserves more allowed task flow than cost-only cover at matched full privacy cover.
   reader_takeaway: Privacy coverage is matched; the difference is semantic utility preservation.
   structural_reference: figures/semantic-utility-main/structure.svg
@@ -44,24 +42,22 @@ caption:
     MethodA preserves more task-required and overall allowed flow than cost-only cover.
 
 validation:
-  - Source font scale is recorded; below-24pt text includes an adaptation rationale.
   - Values match source files.
   - Labels are readable at target width.
   - Caption does not claim deployable online protection unless the data supports it.
 ```
 
-## Required Decisions
+## Decisions When a Spec Helps
 
 - **Purpose:** the comparison, definition, evidence pattern or mechanism the figure lets the reader inspect.
 - **Source data:** exact local paths or generated `source_data.csv`.
 - **Panel map:** panel IDs, plot type, metric, method/condition order, and message.
-- **Structural reference:** for Figure 1, system overview, pipeline, architecture, and threat-model figures, path to `structure.svg` or a reason it is unnecessary.
+- **Structural reference:** include a wireframe when it helps preserve topology; reuse an existing editable diagram source when sufficient.
 - **Typography:** identify text and mathematical roles; verify readable, accurate, manuscript-compatible rendering.
 - **Production record:** preserve source files and record transformations; follow the selected tools' constraints.
 - **Conditions:** assumptions or settings needed to interpret the figure; do not manufacture a list of unclaimed capabilities.
 - **Caption boundary:** what belongs in the paper caption versus artifact audit notes.
-- **Source scale:** use 3x by default so 24pt source text maps to approximately
-  8pt at final placement; record any smaller-source or venue-specific adaptation.
+- **Placement:** identify final dimensions and any source-to-placement scaling needed to reproduce the figure.
 - **Final-width evidence:** record the preview and actual evaluator; agent inspection must not be labeled human evidence. Formal manual checks remain governed by the compliance schema.
 
 ## Conceptual Figure Structure Policy

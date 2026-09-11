@@ -4,7 +4,7 @@ Use this for drafting academic prose sections after loading `style-profile.md`.
 
 ## Abstract
 
-Use `ABSTRACT.FIVE_MOVES` as an adaptable content guide. The functions below do not prescribe five sentences or a fixed order; combine them as appropriate to the paper type and word limit without inventing evidence:
+Choose abstract content for the paper and its audience. The functions below do not prescribe five sentences or a fixed order; combine them as appropriate to the paper type and word limit without inventing evidence:
 
 1. Field pressure or task importance.
 2. Specific gap, mismatch, or missing boundary.
@@ -24,7 +24,7 @@ Use `introduction-framing.md` when RQs or gap structure matter. Otherwise use th
 4. Evidence preview.
 5. Contributions.
 
-Contributions should name artifacts, not paper sections.
+Contributions should identify new knowledge or artifacts, with their support.
 
 ## Background
 
@@ -59,10 +59,10 @@ using it. State which claim or RQ it supports; keep detailed non-support mapping
 in the working evidence record when useful. Do not silently use a validation-only or calibration-only sample
 as substantive evidence.
 
-Prefer a compact evidence-role ledger with these fields:
+When evidence roles are difficult to follow, organize the source record around:
 
 ```text
-source/tier | scale and selection | role | supports | does not support
+source/tier | scale and selection | role | supported claim
 ```
 
 Use prose or a table according to complexity. Keep load-bearing roles and conditions
@@ -78,7 +78,7 @@ from intuition alone.
 
 Writing handles interpretation, not artifact rendering.
 
-Use the adaptable `RESULTS.FOUR_MOVE` guidance from `style-profile.md`. This example illustrates information relationships, not a required sentence count or fixed paragraph template:
+Use the result-prose guidance in `style-profile.md`. This example illustrates information relationships, not a required sentence count or fixed paragraph template:
 
 ```latex
 Table~\ref{tab:main} reports [metric] across [scope]. [Main observed value or ranking].
@@ -100,47 +100,29 @@ two differ.
 
 ### RQ Closure
 
-Under `RESULTS.CLAIM_MAPPING`, make each stated RQ answer clear and traceable
+Make each stated RQ answer clear and traceable
 to the presented evidence, or explain why it remains unresolved. Avoid adding
 new claims or results in a summary. Placement and sentence count are adaptable.
 
-When `RESULTS.RQ_ANSWER_BOX` is enabled, prefer this soft presentation for a long, evidence-dense RQ block:
-
-```latex
-\takeawaybox[Answer to RQ1 (short thesis)]{[Direct scoped answer].
-\textbf{[Load-bearing bounded implication].}}
-```
-
-Aim for two sentences and roughly 40--60 English words. Keep exact value lists
-in the preceding table, figure, or prose. Under page pressure or venue/template
-constraints, replace the visual box with a compact labeled paragraph:
-
-```latex
-\noindent\textbf{Answer to RQ1.} [Direct scoped answer and bounded implication.]
-```
-
-Avoid repetitive closures for individual experiments; avoid new
-citations, repeated findings-table text, decorative icons, bright fills, and
-bolding the entire answer.
+Use an answer box or a labeled paragraph when it helps readers find the answer
+inside a long result block. Integrate it into ordinary Results prose when that is
+clearer. Choose length and placement from the explanation; avoid repeated closures,
+new unsupported claims and duplicate value lists.
 
 ## Discussion and Limitations
 
-A discussion should:
-
-1. Restate the strongest bounded implication.
-2. Explain why it matters for the target community.
-3. Identify residual risks, missing validation, or deployment constraints.
-4. Translate those limits into future work or usage boundaries.
+Discuss what the strongest supported implications mean for the target community.
+Include material constraints and future directions where they clarify those
+implications. Do not add a limitation or future-work slot merely to complete a pattern.
 
 Discuss limitations that materially affect the stated contribution. Do not
 enumerate every untested setting, apologize, or add a compensating defense of
 the paper's value after each limitation.
 
-For each load-bearing threat or limitation, write:
-
-```text
-threat -> affected claim/RQ -> mitigation or no mitigation -> residual boundary
-```
+Explain a material limitation where it changes interpretation. Identify the
+affected inference and any supported check or mitigation when useful. Do not
+invent mitigation or imply an unresolved issue is solved. A separate residual-risk
+sentence and a fixed sequence of moves are not required when the passage is clear.
 
 Add bias direction only when it is supported. Choose the grouping that matches
 the paper: construct/internal/external/statistical for suitable measurement
@@ -162,11 +144,7 @@ Preferred conclusion structure:
 3. Retain conditions needed to understand the conclusion; omit a separate disclaimer when its scope is already clear.
 4. Close with a bounded implication or future direction.
 
-Apply `STRUCT.CONCLUSION_SINGLE_PARAGRAPH` and
-`STRUCT.CONCLUSION_INTEGRATES_LIMITATIONS` as soft preferences. Prefer one
-concise paragraph when the findings and scope fit clearly; use multiple
-paragraphs when distinct findings need separation. A standalone Limitations
-or Threats section is valid when it supports the argument or is required by
-the venue. Keep conclusion claims bounded without duplicating limitations
-already clear from the wording. Never remove or hide a material limitation
-to satisfy a paragraph-count or placement preference.
+Choose paragraph count and limitation placement for the argument. Use separate
+paragraphs for distinct ideas and a standalone Limitations or Threats section when
+useful or required. Finish with a supported finding or implication when its scope
+is clear. Do not duplicate or hide limitations to satisfy a preferred shape.

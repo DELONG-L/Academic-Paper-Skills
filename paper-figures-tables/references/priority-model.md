@@ -22,12 +22,11 @@ Use this file to resolve conflicts among artifact sources and routes.
 ## Conflict Rules
 
 - Use explicit numerical values in supplied prose, tables or files, retaining their units and conditions. A statement that a result exists without the needed values is insufficient; request the missing data or return a spec when no supported plot can be made.
-- Apply verified venue and explicit project requirements; adapt soft preferences to the artifact and explain material departures briefly.
+- Apply verified venue and explicit project requirements; adapt editorial preferences to the artifact and explain material departures briefly.
 - If the chart-selection references recommend a different chart from the user request, explain the concern and propose the safer option before proceeding.
 - If a venue template imposes stricter layout rules, satisfy the venue while preserving the artifact's claim and readability.
 - If the user asks for quick drafting with placeholder values, label placeholders explicitly and do not present them as actual results.
-- Prefer source text at or above 24pt on the 3x source canvas. Below-24pt text is
-  a reportable soft adaptation and must still pass the final-width hard gate.
+- Choose text size for final placement and inspect the rendered artifact at that width.
 
 ## Source of Truth
 

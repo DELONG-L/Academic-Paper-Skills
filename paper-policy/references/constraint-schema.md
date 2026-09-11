@@ -1,15 +1,5 @@
 # Constraint Schema
 
-## Contents
-
-1. Common fields
-2. Hard rules
-3. Soft rules
-4. Policy sets
-5. Profiles
-6. Status and audit records
-7. Validation invariants
-
 ## Common Fields
 
 Every rule has:
@@ -17,17 +7,16 @@ Every rule has:
 ```yaml
 id: NAMESPACE.RULE_NAME
 title: Short human-readable title
-force: hard | soft
+force: hard
 scope: [writing, review, figures, tables, citations, workflow]
 artifacts: [prose, tex, bibtex, figure, table, policy, paper_outline]
 phases: [outline, draft, polish, submission, rebuttal, camera_ready]
-decision_refs: [A01, X01]
 source:
-  origin: local-house-policy | user-decision | venue | imported-design
+  origin: local-policy | user-decision | venue | imported-design
   note: Optional provenance note
 ```
 
-IDs are uppercase dot-separated identifiers and are unique across all registries.
+IDs are uppercase dot-separated identifiers and are unique in the requirement registry.
 
 ## Hard Rules
 
@@ -57,45 +46,9 @@ Semantic or manual checks must set `evidence_required: true`. Semantic checks ma
 
 `autofix: safe` is limited to deterministic, closed, meaning-preserving replacements. Semantic prose changes use `assisted` or `none`.
 
-## Soft Rules
-
-Soft rules additionally require:
-
-```yaml
-default: Default behavior
-allowed_variants:
-  - Allowed alternative
-selection_factors:
-  - paper_type
-avoid:
-  - Undesired behavior
-report_when: When adaptation needs to be surfaced
-```
-
-Soft rules do not use `failure`, `autofix`, or `waiver`.
-They may add an optional non-empty `features` list when the guidance belongs to
-a specific manuscript section or artifact subtype. Rules without `features`
-remain generic within their phase, scope, and artifact applicability.
-
-## Policy Sets
-
-`policy-sets.yaml` is the canonical selection registry:
-
-```yaml
-default_sets: [integrity-core, academic-defaults]
-```
-
-`academic-defaults` includes `integrity-core`. Every rule belongs to exactly
-one set, and included sets expand transitively. A task-specific reference must
-not promote an active soft rule into a hard requirement. Disabled rules are
-unavailable; they are not automatically waived or satisfied.
-
-Author preferences live in the shared soft guidance and writing references.
-There is no separate house-style set or local-default override registry.
-
 ## Profiles
 
-Profiles activate hard rules and can bias soft rules:
+Profiles activate requirements from verified context:
 
 ```yaml
 id: profile-id
@@ -104,8 +57,6 @@ match:
   any_of: [submission, camera_ready]
 activate_hard:
   - FINAL.NO_UNRESOLVED_MARKERS
-prefer_soft:
-  - STRUCT.SECTION_COUNT
 source:
   kind: local | user | venue
   url: null
@@ -117,7 +68,7 @@ Venue profiles require a non-empty URL and `as_of` date before they can activate
 ## Status And Audit Records
 
 Read `compliance-schema.md` for the complete evidence-file, deterministic
-precedence, waiver, soft-outcome, and readiness-gate contract.
+precedence, waiver and readiness contract.
 
 Hard-rule result:
 
@@ -130,28 +81,18 @@ evidence: "Table 2 / results.csv"
 waiver: null
 ```
 
-Soft-rule result:
-
-```yaml
-rule_id: STRUCT.SECTION_COUNT
-status: APPLIED | ADAPTED | SKIPPED
-rationale: "Journal profile and complete Discussion require eight sections."
-```
-
 ## Validation Invariants
 
-- Rule IDs are unique across hard and soft registries.
-- Hard registry entries use `force: hard`; soft entries use `force: soft`.
+- Requirement IDs are unique; registry entries use `force: hard`.
 - Every profile rule reference exists.
-- Every hard and soft rule belongs to exactly one policy set.
-- Policy-set defaults, dependencies, and rule references exist and contain no cycles.
+- Conditional profile references exist and agree in both directions.
+- Editorial advice belongs in task guides, without registration or compliance statuses.
 - Integrity rules cannot allow waivers.
 - Semantic/manual hard checks require evidence.
 - Safe autofix requires at least one deterministic check and no semantic/manual check.
-- Every rule has at least one manual-decision reference.
-- `decision_refs` identify adopted or qualified support for the active rule.
-  Excluded (`D`) decisions are retained only in the decision baseline as rejected
-  alternatives and are not attached to active rules.
+- Every rule retains a source origin and an explanatory note where needed.
+  Current requirements and their sources govern validation; historical voting
+  codes are available in Git history and do not constrain active rule membership.
 - Scope, artifact, phase, feature, profile field, and task-mode values come from
   the shared controlled vocabulary and reject unknown spellings.
 - Registry validation checks structure only; manuscript compliance requires separate lint, semantic evidence, and human review for applicable manual checks.

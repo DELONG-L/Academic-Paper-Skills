@@ -32,7 +32,7 @@ Use this to choose between tables, precise data figures, and conceptual figures.
 For Related Work, choose an axis-based table when it adds comparative value or
 is explicitly required. Sufficient axis-based prose does not need a redundant table.
 
-Before choosing a wide table, ask whether the table can make its point with fewer columns. Prefer a single-column table when 3--4 dimensions carry the claim; choose `table*` only when the additional dimensions are essential and still readable.
+Before choosing a wide table, ask whether the table can make its point with fewer columns. Prefer a single-column table when the relevant dimensions fit clearly; choose `table*` only when the additional dimensions are essential and still readable.
 
 ## Use A Precise Data Figure When
 

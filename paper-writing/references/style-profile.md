@@ -54,17 +54,10 @@ disclaimer or recap when the paragraph is already clear and complete.
 
 ## Contribution Lists
 
-Under the soft `CONTRIB.COUNT` preference, start with 3 to 5 distinct contributions; use fewer or more when that better represents the actual work. Never split or inflate contributions to meet a count.
-
-Under `CONTRIB.CONCRETE`, name the new knowledge or artifact in each contribution, including measurement findings, replication, negative results, or systematic synthesis when supported. Avoid activity-only claims. Concrete artifacts may include:
-
-- dataset or benchmark
-- formalization, taxonomy, lifecycle, threat model, or specification
-- mechanism, protocol, algorithm, or architecture
-- evaluation with clear dimensions
-- release, tool, or validation harness
-
-Avoid contribution bullets that only say `we propose a method` or `we conduct experiments`.
+List distinct contributions according to the work itself. Name new knowledge or
+concrete artifacts with their support: a measured finding, replication, negative
+result or systematic synthesis can be a contribution. Avoid activity-only bullets
+such as “we conduct experiments,” and do not split one contribution to fill a count.
 
 ## Boundary Setting
 
@@ -112,7 +105,7 @@ Keep the paper-facing narrative separate from internal provenance records.
 
 ## Result Prose
 
-Under the soft `RESULTS.FOUR_MOVE` guidance, cover the information needed to interpret the result. These are functions, not a four-sentence requirement; combine or expand them as needed and avoid repeating a boundary already explicit nearby:
+Cover the information needed to interpret the result. These are functions, not a four-sentence requirement; combine or expand them as needed and avoid repeating a boundary already explicit nearby:
 
 1. Scope: name the table/figure, setting, metric, or workload boundary.
 2. Observation: state the main numerical or visual fact.
@@ -124,6 +117,6 @@ Make the result's meaning clear where interpretation is needed. If the scoped
 observation is already self-explanatory, do not add a formulaic final interpretation
 or disclaimer solely to give the subsection a prescribed ending.
 
-Under `RESULTS.CLAIM_MAPPING`, give clear evidence-grounded answers to the
+Give clear evidence-grounded answers to the
 stated RQs or identify unresolved questions. An answer box is an optional
-presentation under `RESULTS.RQ_ANSWER_BOX`; no fixed placement or count is required.
+presentation; use it when it makes an answer easier to find.

@@ -16,9 +16,8 @@ Use this for precise, reproducible plots from data artifacts or explicit numeric
 4. Choose the plot family from the claim and data shape using `chart-selection.md`, `visual-pitfalls.md`, and `plot-patterns.md`.
 5. Reuse existing source/encoding notes; use `figure-contract.md` for a complex figure when a spec helps.
 6. Use or write a reproducible plotting script, notebook or shared-pipeline entrypoint; record its inputs and execution command.
-7. Use `scripts/paperfig_style.py` for house plot helpers when it fits the plot.
-8. Use a 3x source canvas with explicit source fonts near or above 24pt by
-   default; scale strokes and markers consistently and record smaller choices.
+7. Use `scripts/paperfig_style.py` for reusable plot helpers when it fits the plot.
+8. Derive canvas dimensions and text sizes from final placement; scale strokes and markers consistently if working on an enlarged source canvas.
 9. Prefer PDF/SVG for precise plots; export the format required by the actual delivery and inspect its final-size quality.
 10. Export and inspect the actual artifact at final paper width, record the
     actual evaluator and relevant evidence, and update the caption.
@@ -55,20 +54,17 @@ Actively warn before producing a chart that hides distribution, sample size, unc
 ## Implementation Rules
 
 - Avoid redundant in-figure titles. Retain panel headings or annotations that make the comparison clearer.
-- Preserve the intended final aspect ratio on a 3x source canvas. Use one
-  controlled placement scale to the target paper width.
+- Choose aspect ratio from the comparison and target paper width. Track any placement scaling.
 - Keep axis labels short and readable.
 - Use semantic color roles: proposed method, baseline, boundary or negative result, neutral reference.
 - Use hatching, marker shape, or line style when the distinction must survive grayscale print.
 - Use a colorblind-safe palette for categorical distinctions. Do not encode the key comparison with color alone.
-- Prefer every explicit source text size at or above 24pt. At final placement,
-  revise labels or layout first; if smaller source text is retained, record why
-  the rendered result remains comfortably readable.
+- Judge text in the exported artifact at actual placement width. Revise labels or layout when dense content impairs reading.
 - Include error bars or confidence intervals when the result is averaged over runs and the data supports it.
 - Explain error type in the caption: SD, SEM, 95% CI, IQR, or other.
 - Keep long interpretation in prose or captions; concise meaning-bearing annotations may belong in the plot.
 - Prefer vector output for paper inclusion.
-- Use one semantic figure file per figure. Build multi-panel figures intentionally, not by dumping unrelated plots into one canvas.
+- Keep a clear figure-specific input/output mapping. A focused script, notebook cell or shared pipeline can provide it. Assemble related panels intentionally.
 
 ## Visual QA
 

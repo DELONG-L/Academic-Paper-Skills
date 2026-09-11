@@ -1,7 +1,7 @@
 """
 paper-figures-tables :: export_figure.py
 =========================================
-Unified figure export from a 3x source canvas for controlled final-width placement.
+Unified figure export with explicit dimensions and final-width inspection.
 
 - Vector preferred: PDF / SVG / EPS for line/bar/scatter (lossless, journal-friendly).
 - Raster for photos / micrographs: PNG / TIFF at >= 300 DPI; never JPEG for data figures.
@@ -20,7 +20,7 @@ Usage
         fig,
         basename="figs/fig1_main",
         formats=["pdf", "svg", "png"],
-        size_inches=(10.5, 7.875),  # 3x source canvas for a 3.5in final column
+        size_inches=(3.5, 2.625),  # Example: replace with actual placement dimensions
         dpi=600,
         grayscale_preview=True,
     )
@@ -70,8 +70,7 @@ def export_figure(
         formats: list/tuple of extensions, e.g. ['pdf', 'svg', 'png'].
             Default: ['pdf', 'svg', 'png'].
         dpi: raster 格式分辨率；建议 300（普通）/ 600（IEEE 等）。
-        size_inches: source-canvas (width, height) in inches. Use 3x the target
-            paper dimensions with source text near or above 24pt by default, then inspect the rendered
+        size_inches: source-canvas (width, height) in inches. Choose dimensions and text size for the target placement, then inspect the rendered
             artifact at the actual LaTeX width.
         grayscale_preview: 额外生成一张 _grayscale.png 供色盲安全检查。
         tight: 是否走 bbox_inches='tight'（裁掉留白）。

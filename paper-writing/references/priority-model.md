@@ -8,19 +8,18 @@ Use this file to resolve conflicts among local writing sources.
 2. User-provided paper facts, approved evidence, author intent, and explicit task constraints.
 3. Verified venue or template requirements with source and freshness date.
 4. Applicable hard rules from the shared academic workflow.
-5. Active soft guidance and adaptable author preferences in `style-profile.md`.
+5. Editorial guidance and adaptable author preferences in `style-profile.md`.
 6. Task-specific writing references in this skill.
 7. Generic academic or domain advice.
 
-Resolve policy through `paper-policy`; local and public defaults agree. Apply
-each rule according to its declared force. Task references and examples must
-not turn a soft preference into a hard requirement.
+Resolve applicable requirements through `paper-policy`. Select editorial advice
+from the task guides; examples do not turn preferences into requirements.
 
 ## Conflict Rules
 
 - Narrow unsupported claims regardless of style profile; claim integrity is not a house preference.
 - If a verified venue requires a section or checklist, satisfy the venue. Apply
-  `STRUCT.TRADITIONAL_HEADINGS` as an adaptable naming preference otherwise.
+  concise, informative headings suited to the argument otherwise.
 - If a prose cleanup rule would make text casual, keep academic density and remove only the formulaic pattern.
 - If an artifact is part of the requested deliverable, pass its content and evidence to the owning figure/table skill and complete it within the same task. Return only a spec when that is the requested output.
 - Citation scope follows the request: local polish uses existing sources; a closed corpus stays closed; literature completion/verification permits the necessary public primary-source lookup and supported local updates. Follow `citation-integration.md` without requiring another task invocation.

@@ -10,12 +10,10 @@ to scan rather than store every available dimension.
 
 Do not use dense grid lines. Prefer spacing, grouped headers, and row order to communicate structure. In a load-bearing high-density matrix, one or two sparse vertical separators may mark true column groups when whitespace and `\cmidrule` are insufficient; do not box individual cells.
 
-Use the compact patterns in this file when compatible with active policy. Load
-`dense-empirical-tables.md` only when `TABLE.DENSE_EMPIRICAL_STYLE` is enabled
-or the user explicitly requests that profile. Also load
-`layered-capability-matrix.md` when `table_profile: layered_capability_matrix`
-is selected or when a requested Related Work matrix has eight or more dimensions
-organized into explicit semantic layers.
+Use compact patterns when they fit the comparison. Load
+`dense-empirical-tables.md` when grouping and numeric density need special care;
+load `layered-capability-matrix.md` when the dimensions form meaningful layers.
+Choose these guides from the artifact’s needs, without a registered style profile.
 
 Common packages and macros:
 
@@ -82,7 +80,7 @@ Prefer the smallest layout that preserves a fair, readable comparison.
 
 - Prefer single-column `table` for compact comparison tables, notation tables, and most Related Work comparison tables.
 - Before using `table*`, prune columns to the minimum set that supports the table's claim.
-- A Related Work comparison table should normally use 3--4 high-signal dimensions. Adapt the dimension count to the evidence and final readability; use semantic grouping when useful. A profile is a layout aid, not permission to include an extra column.
+- Retain dimensions that support a fair comparison. Use semantic grouping when it clarifies their relationships; no numerical column budget applies.
 - If a table becomes wide because the column names are verbose, shorten the headers before switching to `table*`.
 - Do not add a Notes block unless the table cannot be read without it.
 
@@ -90,21 +88,20 @@ Prefer the smallest layout that preserves a fair, readable comparison.
 
 Rows should be paper families, systems, datasets, mechanisms, or approaches. Columns should expose the missing comparison axis from the paper.
 
-`RELATED.COMPARISON_REQUIRED` is a soft preference for an axis-based table
-when it adds argumentative value. Axis-based prose is a valid alternative;
-record an adaptation without a waiver. An explicit request to create a table
-or a sourced venue requirement still governs the requested artifact.
+Use an axis-based table when it adds argumentative value. Choose prose when a
+table would repeat the argument or imply unsupported comparability. An explicit
+request or sourced venue requirement still governs the requested artifact.
 
 Choose accessible symbols or text and define their semantics locally. The
 `\cmark`/`\pmark`/`\xmark` macros above are an example, not a required scheme.
 State full, partial, absent, and unreported support accurately, independently
 of the chosen color or glyph.
 
-Prefer rows that are atomic enough for every marker to be directly defensible. A clearly named literature family is an allowed soft adaptation when its membership is coherent and every marker is assigned conservatively across the entire family. Do not use a naked merged citation row such as `\citep{a,b,c}`. Cite representative works in prose or in the row label, and mark partial support explicitly whenever evidence is mixed across the group.
+Prefer rows that are atomic enough for every marker to be directly defensible. A clearly named literature family is useful when its membership is coherent and every marker is assigned conservatively across the entire family. Do not use a naked merged citation row such as `\citep{a,b,c}`. Cite representative works in prose or in the row label, and mark partial support explicitly whenever evidence is mixed across the group.
 
 Do not treat highlighting as proof. A proposed-row background is optional: bold
 the row label, use a light whole-row tint, use sparse cell-level coverage-delta
-highlights, or omit highlighting according to the active soft guidance. Any
+highlights, or omit highlighting according to scanning and accessibility needs. Any
 meaning-bearing color needs a non-color cue. A highlighted cell must be supported
 against a defined comparison corpus; unless that corpus is exhaustive, describe
 the capability as "absent from the compared rows," not universally "unique to
@@ -114,7 +111,7 @@ Represent missing values explicitly. Prefer `N/A`, `Not reported`, or `Not appli
 
 ### Table-1-Style Related Work Matrix
 
-Use this compact single-column pattern for paper-positioning tables that compare prior work against the paper's claimed gap. Use 3--4 dimensions by default; adapt the count to the comparison and readability.
+Use this compact single-column pattern for paper-positioning tables that compare prior work against the paper's claimed gap. Choose dimensions from the comparison and final readability.
 
 ```latex
 \begin{table}[t]
@@ -148,8 +145,8 @@ Use result tables when exact comparisons matter.
 
 Rules:
 
-- When `TABLE.NO_DIRECTION_ARROWS` is enabled, state metric directions in the caption or prose instead of using header arrows.
-- If a table has mixed metric directions, put the direction sentence in the caption instead of repeating symbols in every header.
+- Make metric direction clear with words or conventional arrows that render correctly.
+- Keep direction notation consistent; define symbols locally when their meaning is not obvious.
 - Bold best values or intended operating points, not every good-looking number.
 - Use `\multicolumn` and `\cmidrule(lr){i-j}` for grouped metrics.
 - Use a subtle `\rowcolor{TableHeaderShade}` header band when it improves hierarchy and survives grayscale rendering.

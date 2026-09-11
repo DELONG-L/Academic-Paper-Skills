@@ -32,7 +32,7 @@ Use this before finishing any figure or table task.
 
 ## Precise Data Figure Checks
 
-- Source canvas uses the declared scale; below-24pt text is reported as a soft adaptation with final-width evidence.
+- Source-to-placement scaling is understood, and text remains readable at the actual final width.
 - Generated from source data or explicitly supplied values.
 - No image-generation model was used to create numeric axes, points, bars, lines, trends, error bars, or p-values.
 - Chart choice matches the claim and data shape; bad-chart risks are noted when relevant.
@@ -53,7 +53,7 @@ Use this before finishing any figure or table task.
 - Trust boundaries and transformations are clear.
 - Any structural reference agrees with the final figure or records intentional changes.
 - Fonts, contrast, spacing, and labels remain readable at the actual paper width.
-- Presentation choices follow `FIG.CONCEPT_PRESENTATION` as soft guidance and explicit venue requirements when present.
+- Presentation supports the figure’s scientific purpose and any verified venue requirements.
 - Source and transformations are recorded; a prompt alone does not prove fidelity.
 - Caption explains scope and non-obvious visual semantics.
 

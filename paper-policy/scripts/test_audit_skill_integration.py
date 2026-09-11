@@ -14,7 +14,7 @@ class IntegrationAuditTest(unittest.TestCase):
             folder = self.root / skill
             (folder / "references").mkdir(parents=True)
             (folder / "SKILL.md").write_text("# Skill\n")
-        for name in ("hard", "soft"):
+        for name in ("hard",):
             (self.root / "paper-policy/references" / (name + "-rules.yaml")).write_text(
                 "rules:\n  - id: CLAIM." + name.upper() + "\n")
 
