@@ -12,9 +12,11 @@
 </p>
 
 <p align="center"><a href="README.md">English</a> · <strong>简体中文</strong></p>
-<p align="center"><a href="#choose-a-skill">选择技能</a> · <a href="#quick-start">快速开始</a> · <a href="#try-it">使用示例</a> · <a href="docs/architecture.zh-CN.md">仓库指南</a></p>
+<p align="center"><a href="#choose-a-skill">选择技能</a> · <a href="#how-it-works">技能如何协作</a> · <a href="#quick-start">快速开始</a> · <a href="#try-it">使用示例</a> · <a href="docs/architecture.zh-CN.md">仓库指南</a></p>
 
-提供稿件、研究证据、实验数据或审稿意见，这组技能帮助你完成有依据的正文、清晰的图表和可追溯的修订。按当前任务选择技能；安装时将四个技能一起安装，以便正确读取共享指导。
+Academic Paper Skills 帮助研究者使用 Codex 撰写和修订学术论文：组织论证、让主张与证据对应、呈现方法与结果、回复审稿意见，以及核对投稿要求。
+
+这组技能包含可复用的指令、按任务组织的参考指南和辅助工具。提供稿件与来源材料，按当前任务选择技能，逐步形成可以检查和继续修改的产物。四个技能共享指导，使正文、图表、审稿回复与要求检查保持一致。
 
 <a id="choose-a-skill"></a>
 ## 选择技能
@@ -27,6 +29,21 @@
 | 确定稿件适用要求 | [paper-policy](paper-policy/SKILL.md) | 适用要求、源文件检查、依据证据的评估 |
 
 本项目支持作者侧的自审与修订；受邀为他人论文进行正式同行评审不在这组技能的范围内。
+
+<a id="how-it-works"></a>
+## 技能如何协作
+
+从当前任务进入即可：修改一个段落、制作一张表格、核验一条审稿意见，或者评估整篇稿件。无需按固定顺序依次运行四个技能。
+
+较完整的修订中，`paper-review` 可以识别论证薄弱点和未解决的审稿问题，`paper-writing` 实施正文修改，`paper-figures-tables` 制作相应的视觉材料；`paper-policy` 在这些工作中确定适用要求并检查来源证据。各技能负责自己的任务范围，并在需要时使用其他技能的指导。
+
+它们遵循三个共同原则：
+
+- **以来源为依据。** 主张、引文、数值和图示机制来自提供或核实的材料，缺失证据应明确呈现。
+- **适应具体论文。** 按研究问题、读者、作者偏好与适用的会议要求组织结构和表达。
+- **让结果可以核查。** 保留必要的来源和修订证据，区分自动检查、科学判断与人工签核。
+
+按任务查看上表链接的技能指南，了解具体方法、产物约定和详细检查。
 
 <a id="quick-start"></a>
 ## 快速开始
@@ -53,7 +70,7 @@ python -m pip install -r requirements-policy.txt
 python -m pip install -r requirements-figures.txt
 ```
 
-建议使用 Python 3.10+；CI 使用 Python 3.11 测试。ImageGen 设计阶段需要可用的 `imagegen` 技能和图像生成工具；编译 LaTeX 项目需要相应编译器。详见[安装、升级与排错指南](docs/getting-started.zh-CN.md)。
+建议使用 Python 3.10+；CI 使用 Python 3.11 测试。其他工具按具体任务准备，各工作流的环境要求见[安装、升级与排错指南](docs/getting-started.zh-CN.md)。
 
 <a id="try-it"></a>
 ## 使用示例
@@ -65,12 +82,12 @@ python -m pip install -r requirements-figures.txt
 表述贡献，并指出证据不足的主张。
 ```
 
-**设计论文图**
+**呈现方法与结果**
 
 ```text
-使用 $paper-figures-tables 根据这一节设计跨双栏的方法总览图。
-先确定组件与连接，再用 ImageGen 设计并重建为可编辑 SVG。
-检查信息密度，以及稿件最终刊载尺寸下的可读性。
+使用 $paper-figures-tables 呈现这些实验结果中的比较。
+根据研究问题选择图或表，保留不确定性信息，
+并提供可编辑或可复现的源文件与图表说明。
 ```
 
 **核验修订是否闭环**
@@ -86,19 +103,6 @@ python -m pip install -r requirements-figures.txt
 使用 $paper-policy 依据提供的会议指南检查这份投稿材料。
 区分已经验证的源文件检查，以及仍需人工证据支持的判断。
 ```
-
-<a id="how-it-works"></a>
-## 工作方式
-
-| 范围 | 工作方法 |
-|---|---|
-| 正文写作 | 从问题与证据出发，按论证和投稿要求组织结构。 |
-| 概念图 | 内容与版面定义 → ImageGen 设计 → 可编辑 SVG → 逻辑、视觉与刊载尺寸检查。 |
-| 实验图 | 从真实数据生成；默认**单栏每行至少 2 个子图，跨双栏每行至少 4 个子图**。 |
-| 实验表格 | 单栏小表不设额外密度门槛；跨双栏大表检查信息密度。 |
-| 审阅与要求检查 | 问题与判断可追溯到来源。自动检查和代理检查不等于科学结论成立或人工签核。 |
-
-子图数量是本技能的默认排版规则，不是会议规范。必须保持可读性和比较意义，不能编造证据或重复子图凑数。明确的用户选择和适用的会议要求优先。详见[概念图流程](paper-figures-tables/references/conceptual-figures.md)与[风格指南](paper-figures-tables/references/conceptual-style-reference.md)。
 
 <a id="repository-map"></a>
 ## 仓库结构
@@ -125,4 +129,4 @@ Academic-Paper-Skills/
 
 ## 许可
 
-采用 [MIT 许可](LICENSE)。本项目独立维护，不代表与 OpenAI 存在隶属或背书关系。仓库不分发参考论文截图。工作流致谢与保留的第三方许可见[第三方说明](THIRD_PARTY_NOTICES.md)。
+采用 [MIT 许可](LICENSE)。本项目独立维护，不代表与 OpenAI 存在隶属或背书关系。工作流致谢与保留的第三方许可见[第三方说明](THIRD_PARTY_NOTICES.md)。

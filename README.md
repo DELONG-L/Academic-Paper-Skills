@@ -12,9 +12,11 @@
 </p>
 
 <p align="center"><strong>English</strong> · <a href="README.zh-CN.md">简体中文</a></p>
-<p align="center"><a href="#choose-a-skill">Choose a skill</a> · <a href="#quick-start">Quick start</a> · <a href="#try-it">Examples</a> · <a href="docs/architecture.md">Repository guide</a></p>
+<p align="center"><a href="#choose-a-skill">Choose a skill</a> · <a href="#how-it-works">How they work together</a> · <a href="#quick-start">Quick start</a> · <a href="#try-it">Examples</a> · <a href="docs/architecture.md">Repository guide</a></p>
 
-Bring a manuscript, research evidence, data, or reviewer comments. These skills help turn them into supported prose, readable artifacts, and revisions you can trace back to the source. Use the skill that matches the current task; install the four together so their shared guidance resolves correctly.
+Academic Paper Skills helps researchers develop and revise academic manuscripts with Codex: organize an argument, connect claims to evidence, communicate methods and results, respond to review, and check submission requirements.
+
+The bundle combines reusable instructions, task-specific references, and supporting tools. Bring your manuscript and source material, choose the skill for the task at hand, and work toward an output you can inspect and revise. The four skills share guidance so that prose, figures, reviewer responses, and requirement checks stay consistent.
 
 <a id="choose-a-skill"></a>
 ## Choose a skill
@@ -27,6 +29,21 @@ Bring a manuscript, research evidence, data, or reviewer comments. These skills 
 | Resolve manuscript requirements | [paper-policy](paper-policy/SKILL.md) | Applicable requirements, source checks, evidence-bounded assessment |
 
 Author-side manuscript review is included. Assigned external peer review is outside this bundle.
+
+<a id="how-it-works"></a>
+## How the skills work together
+
+Start with the task you have. You can revise a single paragraph, prepare one table, check a reviewer concern, or assess an entire manuscript. There is no required sequence through all four skills.
+
+For a larger revision, `paper-review` can identify weaknesses in the argument and unresolved reviewer concerns; `paper-writing` implements the prose changes, while `paper-figures-tables` develops the supporting visual artifacts. `paper-policy` resolves applicable requirements and checks source evidence alongside that work. Each skill owns its part of the task and draws on the others when needed.
+
+They share three principles:
+
+- **Work from sources.** Keep claims, citations, values, and depicted mechanisms grounded in the supplied or verified material. Make missing evidence visible.
+- **Adapt to the paper.** Choose structure and presentation for the research question, audience, author preferences, and applicable venue requirements.
+- **Make the result inspectable.** Retain relevant sources and revision evidence, and distinguish automated checks from scientific judgments or human sign-off.
+
+Follow the skill links above for task-specific methods, artifact conventions, and detailed checks.
 
 <a id="quick-start"></a>
 ## Quick start
@@ -53,7 +70,7 @@ python -m pip install -r requirements-policy.txt
 python -m pip install -r requirements-figures.txt
 ```
 
-Python 3.10+ is recommended; CI tests Python 3.11. ImageGen design requires the available `imagegen` skill and image-generation tool. LaTeX project compilation needs an appropriate compiler. See [setup, upgrades, and troubleshooting](docs/getting-started.md) for details.
+Python 3.10+ is recommended; CI tests Python 3.11. Additional tools depend on the task. See [setup, upgrades, and troubleshooting](docs/getting-started.md) for the requirements of each workflow.
 
 <a id="try-it"></a>
 ## Try it
@@ -65,12 +82,12 @@ Use $paper-writing to revise this introduction. Preserve the research question,
 ground the contribution in the supplied results, and flag unsupported claims.
 ```
 
-**Design a figure**
+**Communicate methods and results**
 
 ```text
-Use $paper-figures-tables to design a two-column method overview from this section.
-Define the components and connections, design with ImageGen, then rebuild editable
-SVG. Check information density and readability at the manuscript's final width.
+Use $paper-figures-tables to present the comparisons in these experiment results.
+Choose plots or tables suited to the question, preserve uncertainty, and provide
+editable or reproducible sources with captions.
 ```
 
 **Close a revision**
@@ -86,19 +103,6 @@ Identify what is resolved, what evidence is missing, and what still needs editin
 Use $paper-policy to assess this submission against the supplied venue instructions.
 Separate verified source checks from judgments that still need human evidence.
 ```
-
-<a id="how-it-works"></a>
-## How it works
-
-| Area | Working approach |
-|---|---|
-| Writing | Start from the question and evidence; adapt structure to the argument and venue. |
-| Conceptual figures | Define content and placement → ImageGen design → editable SVG → semantic, visual, and final-size checks. |
-| Experimental plots | Generate from real data; default to **at least 2 panels per row in one column, 4 when spanning both columns**. |
-| Experimental tables | No extra density quota for small single-column tables; review information density for cross-column tables. |
-| Review and requirements | Trace issues and judgments to sources. Automated checks and agent inspection do not establish scientific validity or human sign-off. |
-
-Layout counts are this skill's defaults, not conference rules. Preserve readability and meaningful comparisons; never invent evidence or duplicate panels to fill a grid. Explicit user choices and applicable venue requirements take precedence. See the [conceptual workflow](paper-figures-tables/references/conceptual-figures.md) and [style guide](paper-figures-tables/references/conceptual-style-reference.md).
 
 <a id="repository-map"></a>
 ## Repository map
@@ -125,4 +129,4 @@ Corrections, reproducible bug reports, and concrete workflow improvements are we
 
 ## License
 
-[MIT](LICENSE). Independently maintained; no affiliation with or endorsement by OpenAI is implied. Reference-paper screenshots are not distributed. Workflow acknowledgments and preserved third-party notices are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+[MIT](LICENSE). Independently maintained; no affiliation with or endorsement by OpenAI is implied. Workflow acknowledgments and preserved third-party notices are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

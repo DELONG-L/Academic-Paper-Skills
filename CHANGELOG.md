@@ -4,6 +4,8 @@
 
 ### Repository presentation and navigation
 
+- Present the whole skill bundle and its collaboration model in both READMEs; keep detailed figure-layout rules in the owning task guides.
+
 - Add equivalent English/Chinese homepages, setup guides, repository conventions and contribution guides.
 - Add a generated design reference, editable bilingual SVG banners, a reusable logo, and factual status badges.
 - Add repository documentation/asset checks, collaboration templates and formatting conventions.
