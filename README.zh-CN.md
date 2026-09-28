@@ -43,6 +43,12 @@ python3 -m pip install -r requirements-policy.txt
 
 详细工作流与工具说明见上表链接的各技能指南。
 
+### 图表制作流程
+
+新建概念图先确定稿件支持的内容与版面，再用 ImageGen 进行视觉设计，随后重建为可编辑 SVG，分别检查科学逻辑和视觉还原。设计阶段使用可用的 Codex `imagegen` 技能与内置图像工具；已有矢量图的小修改直接复用源文件。[风格指南](paper-figures-tables/references/conceptual-style-reference.md)提供布局与配色参考，无需额外下载样例截图。
+
+实验图继续从真实数据生成。默认要求单栏每行至少 2 个有效子图，跨双栏每行至少 4 个，同时保证最终刊载尺寸下的可读性。单栏小型结果表不设额外密度门槛；跨栏大表需要检查信息密度。明确的用户要求与适用的会议规定优先。
+
 ## 许可与致谢
 
 本项目使用 MIT 许可，详见 [LICENSE](LICENSE)。

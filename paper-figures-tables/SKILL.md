@@ -51,7 +51,7 @@ Do not let generic artifact advice override user facts, enabled policy rules, or
 | Result table, findings index, sample ledger, taxonomy table, risk matrix | `tables.md`, `captions.md`, `quality-checks.md`; add `dense-empirical-tables.md` when hierarchy or density is high |
 | Precise experiment/data plot from supplied values or artifacts | `data-figures.md`, `captions.md`, `quality-checks.md`; add profiling, chart-selection or recipes only when the task needs those decisions |
 | Journal/venue-specific plot sizing or export | `journal-specs.md`, `visual-qa.md`, `publication-checklist.md`, then the relevant artifact reference |
-| Conceptual figure, Figure 1, architecture, pipeline, threat model | `conceptual-figures.md`, `figure-contract.md`, `captions.md`, `quality-checks.md` |
+| Conceptual figure, Figure 1, architecture, pipeline, threat model | `conceptual-figures.md`, `conceptual-style-reference.md`, `conceptual-vector-rebuild.md`, `captions.md`, `quality-checks.md`; add `figure-contract.md` when a structured spec helps |
 | Statistical summary for artifact creation | `source-data-and-statistics.md`, then `tables.md` or `data-figures.md` |
 | Multi-run result table or plot | `source-data-and-statistics.md` for run validity, comparability and reproducible aggregation, then the relevant artifact reference |
 | Caption-only task | `captions.md` plus the relevant artifact reference |
@@ -69,7 +69,9 @@ artifact feeding submission readiness, also load `policy-integration.md`.
 - Prefer compact tables after pruning dimensions that add little to the claim. Use wider layouts when needed for a fair, readable comparison.
 - Create an axis-based comparison table when useful to the argument or explicitly requested.
 - Precise data figures must be derived from source data with reproducible plotting tools. Do not generate numeric trends or error bars with an image model.
-- Select the conceptual-figure renderer from topology, editability, explicit requirements, and available tools. Use clean, readable design suited to the figure’s scientific purpose.
+- Experimental figures require at least 2 meaningful plot panels per row at single-column placement and at least 4 per row when spanning both columns. Follow `data-figures.md` for panel counting, final-size readability, and conflicts; never fabricate or duplicate evidence to fill the grid.
+- Single-column experimental tables have no added size/density quota. Cross-column experimental tables require an information-density review of supported comparison content, occupied width/height, grouping and readable alternatives; see `tables.md`.
+- For new conceptual figures, default to manuscript/placement definition -> ImageGen visual design -> editable SVG reconstruction -> semantic and visual QA. Classify figure type separately from single-column or two-column-spanning placement; require high effective information content for cross-column space. Follow `conceptual-figures.md` for scoped exceptions, including existing vector edits. Data plots and tables retain their native workflows.
 - Keep mathematical symbols, components, arrows, and boundaries faithful to the manuscript. Inspect the actual output; prompt wording is not evidence of correctness.
 - Follow the active tools' editing constraints. Preserve source and transformation records for generated or edited artifacts; tool choice alone does not pass or fail scientific quality.
 - Prefer captions for interpretation and avoid redundant in-figure titles. Panel labels or headings are valid when they improve navigation.
@@ -88,28 +90,27 @@ For LaTeX tables:
 3. Include `\caption{}` and `\label{}`.
 4. Make metric directions clear and use consistent, correctly rendered notation.
 5. Define markers such as `\cmark`, `\pmark`, and `\xmark` only when needed for readability, preferably in a short caption phrase rather than a separate note.
-6. Choose compact, dense or semantically grouped layouts as needed, then inspect at actual placement width.
+6. Choose compact, dense or semantically grouped layouts as needed, then inspect at actual placement width. For cross-column experimental tables, record the density review from `tables.md`; single-column small tables have no added density quota.
 
 For data figures:
 
 1. Reuse source and encoding notes; write a compact spec when the figure's
    complexity warrants it. Formal compliance records are needed only for that assessment.
 2. Profile unfamiliar raw data when it helps resolve types, grouping or chart selection.
-3. Recommend the chart type from the paper claim and data shape; actively warn when the requested chart hides distribution, uncertainty, or sample size.
+3. Recommend the chart type from the paper claim and data shape; actively warn when the requested chart hides distribution, uncertainty, or sample size. Record the intended column span and panel count for each row; experimental figures must meet the single-column 2 / cross-column 4 minimums and remain readable.
 4. Save or describe outputs: `figure.pdf`, optional `figure.svg`, optional `figure.png`, script, source data path, and caption.
 5. Validate source fonts, inspect the actual export at final paper width, and
    record the actual evaluator. Agent visual inspection is not human sign-off.
 
 For conceptual figures:
 
-1. Read enough manuscript context before designing.
-2. Capture the supported content, placement and caption in existing notes or a concise spec; add a prompt when using image generation.
-3. Select a renderer that suits the figure’s scientific purpose and applicable tool/venue constraints.
-4. Add `generated_conceptual_figure` to context features and artifact types whenever an image model produces the final conceptual artifact.
-5. For topology-sensitive generation, use an explicit component/connection specification or an editable wireframe when it helps preserve the structure. Reuse an existing accurate structural source.
-6. Keep source and editing operations traceable. Code-native diagrams and image-model assets are valid choices when they satisfy the requested output and active tool constraints.
-7. Preserve the manuscript's structure; do not invent components not supported by the paper.
-8. Inspect final typography and semantics. Correct wrong or unreadable content with the selected tools, and leave unresolved requirements unverified when they cannot be checked.
+1. Establish manuscript-supported components, connections, exact labels, boundaries, and the reader takeaway before visual generation.
+2. Record figure type, actual target width, height budget, and an information/layout plan. A wide screenshot does not establish two-column publication placement.
+3. Use the available `imagegen` skill for the design draft, then reconstruct its composition, meaningful icons, color roles, and hierarchy in editable SVG. Treat this as visual design followed by explicit vector reconstruction, not raster auto-tracing.
+4. Deliver the SVG source, paper-ready PDF when supported, and a rendered preview; retain the selected design draft, prompt, source/connection notes, and material deviations in the project working area.
+5. Independently check scientific correctness against the manuscript and visual fidelity against the design draft, then inspect the export at final placement size. Report incomplete reconstruction or unverified checks accurately.
+6. Keep generation provenance through reconstruction. Add `generated_conceptual_figure` when the final artifact contains image-model output; for a fully reconstructed SVG, record the generated design reference and assess applicable venue rules without implying generation was unused.
+7. Reuse existing editable sources for small edits; explicit user/venue requirements take precedence. See the conceptual workflow for tool-unavailable handling and scoped alternatives.
 
 ## Reference Map
 
@@ -122,7 +123,9 @@ For conceptual figures:
 - `references/data-figures.md`: reproducible data-driven plotting workflow.
 - `references/data-profiling.md`, `references/chart-selection.md`, `references/visual-pitfalls.md`: data profiling, chart selection, and visual-risk guidance.
 - `references/journal-specs.md`, `references/visual-qa.md`, `references/publication-checklist.md`: venue sizing, final-size rendering, and visual QA.
-- `references/conceptual-figures.md`: generated conceptual figure planning and rendering.
+- `references/conceptual-figures.md`: figure classification, placement/density planning, and ImageGen-to-SVG workflow.
+- `references/conceptual-style-reference.md`: distilled sample layouts, semantic palettes, and optional user-supplied visual references.
+- `references/conceptual-vector-rebuild.md`: editable reconstruction, icon fidelity, and separate semantic/visual acceptance checks.
 - `references/captions.md`: self-contained captions and artifact callouts.
 - `references/source-data-and-statistics.md`: source data, statistical summaries, and placeholders.
 - `references/quality-checks.md`: artifact QA checklist.

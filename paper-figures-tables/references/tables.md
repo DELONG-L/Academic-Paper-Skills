@@ -84,6 +84,41 @@ Prefer the smallest layout that preserves a fair, readable comparison.
 - If a table becomes wide because the column names are verbose, shorten the headers before switching to `table*`.
 - Do not add a Notes block unless the table cannot be read without it.
 
+## Experimental Table Density by Placement
+
+For empirical/result tables, distinguish ordinary readability checks from the
+additional density review for large tables spanning both columns:
+
+- **Single-column small tables:** no additional minimum rows, columns, cells,
+  groups, or information-density threshold. A small table is valid when it serves
+  its comparison. Accuracy, sourcing and final-size readability still apply.
+- **Two-column-spanning tables:** review effective information density before
+  accepting `table*`. Record actual width and height, the supported comparison
+  axes, and why this occupied area is useful. Inspect the rendered table at its
+  intended placement, not only the LaTeX source.
+
+The cross-column density review checks:
+
+1. **Comparison value:** the space supports meaningful comparisons across methods,
+   datasets, metrics, conditions or uncertainty. Each retained row/column has a
+   scientific role; repeated labels or verbose prose do not count as richer evidence.
+2. **Area use:** column spacing, header length, repeated headings and blank regions
+   do not inflate a sparse table into a full-width artifact. Consider height as
+   well as width; do not impose an arbitrary numerical row or column minimum.
+3. **Organization:** grouped headers and row blocks make the comparison scannable;
+   units, direction and uncertainty remain interpretable without excessive lookup.
+4. **Readable alternative:** if the same comparison fits naturally in one column,
+   reduce placement. If the full width is needed for legitimate content, organize
+   it compactly without shrinking type into illegibility or dropping unfavorable
+   evidence. A justified wider layout for readability may be retained with the
+   density tradeoff recorded; never add fabricated/redundant cells to fill space.
+
+Summarize the review in existing artifact notes: placement and dimensions,
+comparison content, density issues found, and the resulting layout decision.
+Do not treat `table*`, many cells, a small font, or successful compilation as proof
+of information density. Do not apply the experimental figure's 2/4-panel rule to
+tables. This density review does not impose new size quotas on single-column tables.
+
 ## Related Work Comparison Tables
 
 Rows should be paper families, systems, datasets, mechanisms, or approaches. Columns should expose the missing comparison axis from the paper.

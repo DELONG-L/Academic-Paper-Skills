@@ -15,6 +15,9 @@ Use this before finishing any figure or table task.
 
 ## Table Checks
 
+- Single-column experimental tables have no added minimum size or density quota; normal correctness and readability checks remain.
+- Cross-column experimental tables have a recorded density review of comparison value, occupied width/height, grouping, avoidable whitespace/repetition, and readable alternatives under `tables.md`. No arbitrary row/column quota or 2/4-panel rule is applied to tables.
+
 - Uses `booktabs` when the final-table hard rule or venue requires it; otherwise the selected rule style is internally consistent.
 - Aligns with `\columnwidth`, `\textwidth`, or `\linewidth`; uses `\resizebox` only when the active rule requires it or structural fitting is insufficient and the scaled text remains readable.
 - Uses the smallest readable placement; Related Work and comparison tables are single-column by default after pruning to high-signal dimensions.
@@ -32,6 +35,9 @@ Use this before finishing any figure or table task.
 
 ## Precise Data Figure Checks
 
+- Experimental figure placement and each row's meaningful plot-panel count are recorded: at least 2 for single-column, at least 4 for spanning both columns, including the last row. Curves, legends, insets, duplicates and empty panels do not count.
+- Panels serve a coherent scientific comparison and remain readable at final width. Any unresolved count/readability conflict or explicit override is disclosed rather than marked compliant.
+
 - Source-to-placement scaling is understood, and text remains readable at the actual final width.
 - Generated from source data or explicitly supplied values.
 - No image-generation model was used to create numeric axes, points, bars, lines, trends, error bars, or p-values.
@@ -48,14 +54,16 @@ Use this before finishing any figure or table task.
 
 ## Conceptual Figure Checks
 
-- Renderer and format suit the topology, editing needs, and available tools.
-- Components, mathematical symbols, labels, and flow match the manuscript.
-- Trust boundaries and transformations are clear.
-- Any structural reference agrees with the final figure or records intentional changes.
-- Fonts, contrast, spacing, and labels remain readable at the actual paper width.
-- Presentation supports the figure’s scientific purpose and any verified venue requirements.
-- Source and transformations are recorded; a prompt alone does not prove fidelity.
-- Caption explains scope and non-obvious visual semantics.
+- Figure type is explicit: process, framework, hybrid, mechanism, comparison, or protocol/timing; connection semantics match that type.
+- Target column span, actual width, and height budget are recorded; screenshot shape is not treated as original publication placement.
+- Effective information content justifies the occupied area. Cross-column figures add meaningful supported relationships or detail, not stretched geometry or decorative filler.
+- New conceptual designs follow ImageGen design -> SVG reconstruction, or explain a scoped exception from `conceptual-figures.md`; small vector edits reuse their source.
+- Semantic QA against manuscript/brief verifies components, labels, formulas, boundaries, and edge endpoints/directions independently of the design image.
+- Visual QA compares the actual reconstruction with the selected design for composition, icon fidelity, hierarchy, palette roles, proportions and spacing. See `conceptual-vector-rebuild.md`.
+- Core SVG content is editable geometry/text, not an embedded raster wrapper; residual raster elements and material simplifications are disclosed.
+- Fonts, contrast, icons, connectors and labels remain readable in the actual final-size export; no density target is met by shrinking text into illegibility.
+- Source, selected design, prompt and transformations are retained; generation provenance is not erased by vectorization.
+- Caption explains scope and non-obvious visual semantics. Agent inspection is accurately distinguished from formal human evidence.
 
 ## Stop Conditions
 

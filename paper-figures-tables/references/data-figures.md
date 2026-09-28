@@ -8,13 +8,51 @@ Use this for precise, reproducible plots from data artifacts or explicit numeric
 - Do not use a generative image model for numeric plots, axes, data points, error bars, p-values, trends, or metric labels.
 - If the task is a system overview, architecture, pipeline, threat model, workflow, or method intuition with no exact plotted values, use `conceptual-figures.md`.
 
+## Experimental Figure Placement and Panel Minimums
+
+Apply this skill's default layout requirement to experimental/data figures in
+paper placement, independently of the conceptual-figure workflow:
+
+| Placement | Minimum meaningful plot panels in each row |
+|---|---|
+| Single column | 2 |
+| Spanning both columns of a two-column paper | 4 |
+
+These are minimums, not exact counts. Count distinct, meaningful plot panels
+arranged horizontally in the final manuscript layout, not separate files,
+curves, methods, bars, legends, colorbars, insets, or decorative boxes. Multiple
+series within one axes do not satisfy a multi-panel minimum. A composite exported
+as one PDF still counts by its constituent plot panels. Apply the minimum to
+every row, including the last row; do not average panel counts across rows.
+
+Plan the panel grid before rendering. Record target column span, actual width,
+height budget, and panels per row in existing figure notes. For a one-column
+paper, do not infer a two-column-spanning placement merely from a wide canvas;
+use its actual full text-column width and state the placement interpretation.
+
+Group related datasets, metrics, conditions, or scientifically meaningful views
+of supplied data under a coherent question. Shared legends/axes can save space
+when their scales and semantics genuinely agree. Four horizontally placed panels
+still require readable axes, labels, uncertainty and distinctions at final width.
+The minimum count is necessary for this layout requirement, not proof of quality.
+
+Do not manufacture data, launch additional experiments, duplicate views, split a
+single comparison artificially, add empty panels, or combine unrelated results
+just to reach the count. If the supported panels cannot meet the minimum and stay
+readable, first reorganize related available evidence, consider a smaller column
+span, or use a table when it serves the same scientific purpose. If no faithful
+layout works, report the precise conflict and leave that placement requirement
+unmet; do not silently waive the count or claim full compliance. Request a user
+exception only if needed to finish a concrete artifact. Explicit later user
+instructions and binding venue constraints take precedence; disclose deviations.
+
 ## Workflow
 
 1. Identify the paper claim the figure supports.
 2. Locate source data. If no source data exists, stop at a figure spec or ask for the data.
 3. Profile raw tabular data with `scripts/profile_data.py` when available; use `data-profiling.md` to interpret the report.
 4. Choose the plot family from the claim and data shape using `chart-selection.md`, `visual-pitfalls.md`, and `plot-patterns.md`.
-5. Reuse existing source/encoding notes; use `figure-contract.md` for a complex figure when a spec helps.
+5. Plan column span and the per-row panel grid under the experimental placement rule above. Reuse existing source/encoding notes; use `figure-contract.md` for a complex figure when a spec helps.
 6. Use or write a reproducible plotting script, notebook or shared-pipeline entrypoint; record its inputs and execution command.
 7. Use `scripts/paperfig_style.py` for reusable plot helpers when it fits the plot.
 8. Derive canvas dimensions and text sizes from final placement; scale strokes and markers consistently if working on an enlarged source canvas.
@@ -73,7 +111,7 @@ For venue-ready plots, inspect an exported artifact at final placement; an in-me
 1. Run `layout_tools.finalize_figure(fig)` when appropriate.
 2. Render preview with `visual_qa.render_preview`.
 3. Run `visual_qa.audit_layout` for glyph, clipping, and overlap issues.
-4. Visually inspect the preview for legend occlusion, unreadable labels, grayscale failure, panel misalignment, and cropped data.
+4. Check every row against the 2-panel single-column or 4-panel cross-column minimum, then visually inspect for legend occlusion, unreadable labels, grayscale failure, panel misalignment, and cropped data.
 5. Fix and rerender until the issues are resolved or explicitly accepted by the user.
 
 Use `visual-qa.md`, `journal-specs.md`, and `publication-checklist.md` for detailed checks.

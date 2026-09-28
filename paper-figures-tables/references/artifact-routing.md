@@ -16,8 +16,10 @@ preserve uncertainty/distribution when relevant.
 
 For long heatmap labels, consider meaningful abbreviations with an accessible
 mapping, wrapping, or a different layout. Select single-column, full-width or
-multi-panel form by actual final-size readability. No fixed aspect ratio, panel
-count, column budget or source-canvas font size proves that the figure works.
+multi-panel form by actual final-size readability. Experimental figures must also
+meet the per-row placement minimums in `data-figures.md`: 2 at single-column width
+and 4 when spanning both columns. Meeting a count, aspect ratio, column budget
+or source-canvas font size does not by itself prove that a figure works.
 
 Use this to choose between tables, precise data figures, and conceptual figures.
 
@@ -32,7 +34,7 @@ Use this to choose between tables, precise data figures, and conceptual figures.
 For Related Work, choose an axis-based table when it adds comparative value or
 is explicitly required. Sufficient axis-based prose does not need a redundant table.
 
-Before choosing a wide table, ask whether the table can make its point with fewer columns. Prefer a single-column table when the relevant dimensions fit clearly; choose `table*` only when the additional dimensions are essential and still readable.
+Before choosing a wide table, ask whether the table can make its point with fewer columns. Prefer a single-column table when the relevant dimensions fit clearly; choose `table*` only when the additional dimensions are essential and still readable. For experimental tables, apply the cross-column density review in `tables.md`; single-column small tables have no added density quota.
 
 ## Use A Precise Data Figure When
 
@@ -49,7 +51,7 @@ Use data-visualization data profiling and chart-selection references before draw
 - The artifact should orient the paper before details or explain a mechanism that prose alone cannot keep clear.
 - The visual does not encode exact experimental values.
 
-Choose conceptual-figure tools from topology, editability, available capabilities, and venue requirements. Code-native vector diagrams and image generation are both valid when suited to the requested artifact.
+For new conceptual figures, follow `conceptual-figures.md`: define supported content and placement, design with ImageGen, reconstruct editable SVG, and check semantic correctness plus visual fidelity. Existing vector edits and explicit user/venue requirements follow its scoped exceptions. Data figures and tables retain their native workflows.
 
 ## If Both Table And Figure Are Plausible
 

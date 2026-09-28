@@ -62,16 +62,19 @@ validation:
 
 ## Conceptual Figure Structure Policy
 
-For topology-sensitive conceptual figures, record the manuscript-supported
-components, connections, boundaries, and labels before rendering. A structure.svg
-wireframe is useful as a reference for image generation; a code-native diagram
-may already serve as the editable structure and final source.
+Before visual design, record manuscript-supported components, directed/typed
+connections, boundaries, exact labels and the reader takeaway. Classify figure
+type separately from column span; include actual target width, height budget,
+layout choice and how supported information justifies the occupied area.
+An optional `structure.svg` can constrain complex topology.
 
-Record the selected renderer, source artifact, typography choices, and any
-explicit venue requirements. Inspect the final figure for topology, labels,
-mathematical accuracy, contrast, and readability. Correct discrepancies using
-the selected tools and keep the transformation record. A clean white background
-is a presentation default, not a hard requirement.
+For new conceptual figures, follow `conceptual-figures.md`: ImageGen visual design
+followed by editable SVG reconstruction. Keep the selected design/prompt and
+content brief as distinct references; content controls semantics, the design
+controls visual fidelity. Check both independently using
+`conceptual-vector-rebuild.md`, then inspect the final placement. Record material
+deviations and residual raster content. Existing small editable-source changes
+and explicit user/venue requirements follow the workflow's scoped exceptions.
 
 ## Source Data Policy
 

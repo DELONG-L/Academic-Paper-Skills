@@ -43,6 +43,21 @@ Use $paper-review to check the argument structure and suggest specific edits.
 
 Each skill's linked guide above contains its detailed workflow and tools.
 
+### Figure and table workflow
+
+New conceptual figures start with manuscript-supported content and a placement
+plan, use ImageGen for visual design, then reconstruct editable SVG with separate
+semantic and visual checks. This design stage uses Codex's `imagegen` skill and
+built-in image tool when available; existing vector edits reuse their source.
+The [style guide](paper-figures-tables/references/conceptual-style-reference.md)
+provides layout and palette guidance without requiring reference screenshots.
+
+Experimental plots remain data-driven. The default layout requires at least two
+meaningful plot panels per row in a single column and four when spanning both
+columns, while preserving final-size readability. Small single-column result
+tables have no added density quota; cross-column tables receive an information
+density review. Explicit user and applicable venue requirements take precedence.
+
 ## License and acknowledgments
 
 MIT. See [LICENSE](LICENSE).
