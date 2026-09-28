@@ -1,15 +1,27 @@
-# Changes
+# Changelog
 
-## Unreleased — focus manuscript requirements
+## Unreleased
+
+### Repository presentation and navigation
+
+- Add equivalent English/Chinese homepages, setup guides, repository conventions and contribution guides.
+- Add a generated design reference, editable bilingual SVG banners, a reusable logo, and factual status badges.
+- Add repository documentation/asset checks, collaboration templates and formatting conventions.
+- Keep public repository and installed skill identifiers stable; correct obsolete policy display metadata.
+
+### Figure and table production
+
+- Design new conceptual figures with ImageGen, then reconstruct editable SVG and check semantics, visual fidelity and final-size readability.
+- Distinguish figure type, column span and height budget; preserve source-grounded content and generation provenance.
+- Require at least two experimental plot panels per row in one column and four across both columns, subject to explicit overrides and actual readability.
+- Review cross-column experimental-table density without adding a quota for single-column small tables.
 
 ### Separate editorial guidance from compliance
 
 - Move contextual writing and artifact advice into task guides; remove the soft-rule registry, preference outcomes, generated preference worklists and selectable policy bundles.
 - Retain manuscript requirements and their conditional activation, evidence provenance, source freshness and manual-check authority.
-- Choose contribution lists, section structure, comparison dimensions and figure layout from the argument and actual placement rather than numerical style quotas.
+- Choose contribution lists, section structure and comparison dimensions from the argument; keep explicit figure-layout defaults in the figure guide, separate from manuscript compliance.
 - Use configurable plotting presets at placement size; replace source-font threshold tests with dimension, configuration and export checks.
-
-
 - Move contextual editing guidance and assistant execution instructions out of
   manuscript compliance. Keep their useful substance in the owning guides.
 - Retain scientific integrity, source verification, artifact validity and sourced
@@ -19,7 +31,7 @@
   review hints from deterministic failures in runner counts.
 - A scope with no active manuscript requirements yields `NOT_EVALUATED`.
 
-## Unreleased — unified academic workflow
+### Unified academic workflow
 
 The previous public release split default policy from a strict house-style set.
 This update uses one shared workflow: `integrity-core` and `academic-defaults`,
@@ -43,7 +55,7 @@ with applicable hard requirements and adaptable presentation preferences.
   bilingual documentation and CI. Add regression cases for legitimate text and
   artifacts that must survive checking as well as actual failures.
 
-### Upgrade
+### Upgrade notes
 
 Replace all four skill folders together, retaining a backup of local changes.
 Retired strict policy sets are not compatibility aliases. Review old explicit

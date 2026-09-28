@@ -1,0 +1,34 @@
+name: Bug report / 问题报告
+description: Report a reproducible skill or helper failure / 报告可复现的问题
+title: "[Bug]: "
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area / 影响范围
+      options:
+        - paper-writing
+        - paper-figures-tables
+        - paper-review
+        - paper-policy
+        - Documentation or repository tooling / 文档或仓库工具
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction / 最小复现
+      description: Include the request or command and minimal input. Remove confidential material. / 提供请求或命令及最小输入，移除保密材料。
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior / 预期与实际行为
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment and version / 环境与版本
+      description: Repository commit, Python/tool versions and relevant diagnostics. / 仓库提交、Python／工具版本和相关诊断。

@@ -1,0 +1,22 @@
+name: Workflow proposal / 工作流提议
+description: Propose a concrete improvement / 提出具体改进
+title: "[Workflow]: "
+body:
+  - type: textarea
+    id: task
+    attributes:
+      label: User task and limitation / 用户任务与现有限制
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior / 建议行为
+      description: Explain scope and provide a small example. / 说明范围并提供简短示例。
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence or alternatives / 依据或替代方案
+      description: Cite sources for any proposed venue requirement. / 涉及会议要求时提供来源。
