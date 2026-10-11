@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/hero-zh-CN.svg" alt="Academic Paper Skills 学术论文技能集——从证据到论文" width="100%">
+  <img src="docs/assets/skills-overview-zh.png" alt="稿件与证据支持四项按任务选用的技能：论文写作、论文图表、作者侧审阅与论文要求。" width="100%">
 </p>
 
 <h1 align="center">Academic Paper Skills · 学术论文技能集</h1>

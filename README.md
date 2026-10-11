@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/hero-en.svg" alt="Academic Paper Skills — from evidence to manuscript" width="100%">
+  <img src="docs/assets/skills-overview-en.png" alt="Shared manuscript evidence supports four task-specific skills: writing, figures and tables, author review, and requirements." width="100%">
 </p>
 
 <h1 align="center">Academic Paper Skills</h1>
